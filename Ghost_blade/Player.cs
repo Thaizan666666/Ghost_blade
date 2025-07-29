@@ -23,6 +23,15 @@ namespace Ghost_blade
         public byte currentAmmo;
         bool switch_sword = true;
         private KeyboardState previousKState;
+
+        private bool isDashing = false;
+        private float dashTimer = 0f;
+        private float dashDuration = 0.2f;
+        private float dashSpeedMultiplier = 3.0f;
+        private Vector2 dashDirection;
+
+        private float dashCooldown = 0.5f;
+        private float dashCooldownTimer = 0f;
     public Player(Texture2D playerTexture, Texture2D bulletTexture, Vector2 initialPosition)
         {
             this.texture = playerTexture;
@@ -40,25 +49,69 @@ namespace Ghost_blade
 
             KeyboardState kState = Keyboard.GetState();
 
-
-            velocity = Vector2.Zero;
-
-
-            if (kState.IsKeyDown(Keys.W))
+            if (dashCooldownTimer > 0)
             {
-                velocity.Y -= 1;
+                dashCooldownTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
-            if (kState.IsKeyDown(Keys.S))
+
+            if (kState.IsKeyDown(Keys.Space) && !previousKState.IsKeyDown(Keys.Space) && !isDashing && dashCooldownTimer <= 0)
             {
-                velocity.Y += 1;
+                {
+                    isDashing = true;
+                    dashTimer = dashDuration;
+                    dashCooldownTimer = dashCooldown;
+
+                    if (velocity != Vector2.Zero)
+                    {
+                        dashDirection = velocity;
+                    }
+                    else
+                    {
+                        if (currentSpriteEffect == SpriteEffects.FlipHorizontally)
+                        {
+                            dashDirection = new Vector2(-1, 0);
+                        }
+                        else
+                        {
+                            dashDirection = new Vector2(1, 0);
+                        }
+                    }
+                    if (dashDirection != Vector2.Zero)
+                    {
+                        dashDirection.Normalize();
+                    }
+
+                    Debug.WriteLine("Dash Activated!");
+                }
             }
-            if (kState.IsKeyDown(Keys.D))
+            if (!isDashing)
             {
-                velocity.X += 1;
+                velocity = Vector2.Zero;
+
+                if (kState.IsKeyDown(Keys.W)) { velocity.Y -= 1; }
+                if (kState.IsKeyDown(Keys.S)) { velocity.Y += 1; }
+                if (kState.IsKeyDown(Keys.D)) { velocity.X += 1; }
+                if (kState.IsKeyDown(Keys.A)) { velocity.X -= 1; }
+
+                if (velocity != Vector2.Zero)
+                {
+                    velocity.Normalize();
+                }
             }
-            if (kState.IsKeyDown(Keys.A))
+            if (isDashing)
             {
-                velocity.X -= 1;
+                position += dashDirection * speed * dashSpeedMultiplier;
+                dashTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (dashTimer <= 0)
+                {
+                    isDashing = false; // สิ้นสุด Dash
+                    Debug.WriteLine("Dash Ended.");
+                }
+            }
+            else
+            {
+                position += velocity * speed;
             }
             if (kState.IsKeyDown(Keys.R))
             {
@@ -77,13 +130,6 @@ namespace Ghost_blade
                     Debug.WriteLine("Weapon: Gun");
                 }
             }
-
-            if (velocity != Vector2.Zero)
-            {
-                velocity.Normalize();
-            }
-
-            position += velocity * speed;
 
             MouseState mouseState = Mouse.GetState();
             Vector2 mousePosition = new Vector2(mouseState.X, mouseState.Y);
