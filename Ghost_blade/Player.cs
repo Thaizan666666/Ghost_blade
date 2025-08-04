@@ -27,7 +27,7 @@ namespace Ghost_blade
         private bool isDashing = false;
         private float dashTimer = 0f;
         private float dashDuration = 0.2f;
-        private float dashSpeedMultiplier = 4.0f;
+        private float dashSpeedMultiplier = 5.0f;
         private Vector2 dashDirection;
 
         private float dashCooldown = 0.5f;
@@ -101,7 +101,7 @@ namespace Ghost_blade
             if (isDashing)
             {
                 position += dashDirection * speed * dashSpeedMultiplier;
-                dashTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                dashTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds*1.5f;
 
                 if (dashTimer <= 0)
                 {
