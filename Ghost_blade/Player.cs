@@ -30,7 +30,7 @@ namespace Ghost_blade
         private float dashSpeedMultiplier = 5.0f;
         private Vector2 dashDirection;
 
-        private float dashCooldown = 0.5f;
+        private float dashCooldown = 2f;
         private float dashCooldownTimer = 0f;
     public Player(Texture2D playerTexture, Texture2D bulletTexture, Vector2 initialPosition)
         {
@@ -51,7 +51,9 @@ namespace Ghost_blade
 
             if (dashCooldownTimer > 0)
             {
+                Debug.WriteLine($"before = {dashCooldownTimer}");
                 dashCooldownTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Debug.WriteLine($"After = {dashCooldownTimer}");
             }
 
             if (kState.IsKeyDown(Keys.Space) && !previousKState.IsKeyDown(Keys.Space) && !isDashing && dashCooldownTimer <= 0)
