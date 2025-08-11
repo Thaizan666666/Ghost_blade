@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|c:\\users\\thaizan\\source\\repos\\monogame\\ghost_blade\\ghost_blade\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|solutionrelative:ghost_blade\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|c:\\users\\thaizan\\source\\repos\\monogame\\ghost_blade\\ghost_blade\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|solutionrelative:ghost_blade\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|c:\\users\\thaizan\\source\\repos\\monogame\\ghost_blade\\ghost_blade\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|solutionrelative:ghost_blade\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|c:\\users\\thaizan\\source\\repos\\monogame\\ghost_blade\\ghost_blade\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|solutionrelative:ghost_blade\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|c:\\users\\thaizan\\source\\repos\\monogame\\ghost_blade\\ghost_blade\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|solutionrelative:ghost_blade\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|c:\\users\\thaizan\\source\\repos\\monogame\\ghost_blade\\ghost_blade\\followscamera.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D89D12AE-8847-4B26-8A25-5D98AC12F7FF}|Ghost_blade\\Ghost_blade.csproj|solutionrelative:ghost_blade\\followscamera.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,17 +26,30 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
+              "Title": "FollowsCamera.cs",
+              "DocumentMoniker": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\Ghost_blade\\FollowsCamera.cs",
+              "RelativeDocumentMoniker": "Ghost_blade\\FollowsCamera.cs",
+              "ToolTip": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\Ghost_blade\\FollowsCamera.cs",
+              "RelativeToolTip": "Ghost_blade\\FollowsCamera.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-11T16:40:57.019Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "Game1.cs",
               "DocumentMoniker": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\Ghost_blade\\Game1.cs",
               "RelativeDocumentMoniker": "Ghost_blade\\Game1.cs",
               "ToolTip": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\Ghost_blade\\Game1.cs",
               "RelativeToolTip": "Ghost_blade\\Game1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-04T06:14:55.485Z",
               "EditorCaption": ""
@@ -45,20 +62,20 @@
               "RelativeDocumentMoniker": "Ghost_blade\\Bullet.cs",
               "ToolTip": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\Ghost_blade\\Bullet.cs",
               "RelativeToolTip": "Ghost_blade\\Bullet.cs",
-              "ViewState": "AgIAADEAAAAAAAAAAAAkwBgAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAADEAAAAAAAAAAAAkwDkAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-28T11:29:22.899Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\Ghost_blade\\Player.cs",
               "RelativeDocumentMoniker": "Ghost_blade\\Player.cs",
               "ToolTip": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\Ghost_blade\\Player.cs",
               "RelativeToolTip": "Ghost_blade\\Player.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAD4vx8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAgwMMAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-28T08:01:47.128Z",
               "EditorCaption": ""

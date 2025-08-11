@@ -13,6 +13,8 @@ namespace Ghost_blade
         Player _player;
         private List<Bullet> _bullets;
         private Texture2D _bulletTexture;
+        private FollowsCamera camera;
+        private Texture2D BG1;
 
         public Game1()
         {
@@ -22,8 +24,9 @@ namespace Ghost_blade
 
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
-            //_graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
+            camera = new(Vector2.Zero);
+
         }
 
         protected override void Initialize()
@@ -43,7 +46,7 @@ namespace Ghost_blade
                 (GraphicsDevice.Viewport.Height / 2) - (playerTexture.Height / 2)
             );
             _player = new Player(playerTexture, _bulletTexture, initialPlayerPosition);
-            // TODO: use this.Content to load your game content here
+            BG1 = Content.Load<Texture2D>("room_01");
         }
 
         protected override void Update(GameTime gameTime)
@@ -51,7 +54,7 @@ namespace Ghost_blade
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            camera.Follow(_player.drect, new Vector2(_graphics.PreferredBackBufferWidth,_graphics.PreferredBackBufferHeight));
             _player.Update(gameTime);
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed || mouseState.RightButton == ButtonState.Pressed)
@@ -76,8 +79,9 @@ namespace Ghost_blade
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            _spriteBatch.Begin();
+            var transformMatrix = Matrix.CreateTranslation(camera.position.X, camera.position.Y, 0);
+            _spriteBatch.Begin(transformMatrix: transformMatrix);
+            _spriteBatch.Draw(BG1, new Rectangle(0, 0, 600, 800), Color.White);
             _player.Draw(_spriteBatch);
             foreach (Bullet bullet in _bullets)
             {

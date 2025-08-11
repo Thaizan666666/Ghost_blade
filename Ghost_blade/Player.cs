@@ -32,7 +32,12 @@ namespace Ghost_blade
 
         private float dashCooldown = 2f;
         private float dashCooldownTimer = 0f;
-    public Player(Texture2D playerTexture, Texture2D bulletTexture, Vector2 initialPosition)
+        public Rectangle drect
+        {
+            get { return new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height); }
+        }
+
+        public Player(Texture2D playerTexture, Texture2D bulletTexture, Vector2 initialPosition)
         {
             this.texture = playerTexture;
             this.bulletTexture = bulletTexture;
@@ -44,9 +49,9 @@ namespace Ghost_blade
             this.currentAmmo = 10;
             this.previousKState = Keyboard.GetState();
         }
+
         public void Update(GameTime gameTime)
         {
-
             KeyboardState kState = Keyboard.GetState();
 
             if (dashCooldownTimer > 0)
@@ -86,6 +91,7 @@ namespace Ghost_blade
                     Debug.WriteLine("Dash Activated!");
                 }
             }
+
             if (!isDashing)
             {
                 velocity = Vector2.Zero;
@@ -100,14 +106,16 @@ namespace Ghost_blade
                     velocity.Normalize();
                 }
             }
+
             if (isDashing)
             {
                 position += dashDirection * speed * dashSpeedMultiplier;
-                dashTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds*1.5f;
+                // Corrected dash timer update: remove the multiplier to ensure a consistent dash duration
+                dashTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                 if (dashTimer <= 0)
                 {
-                    isDashing = false; // สิ้นสุด Dash
+                    isDashing = false; // End Dash
                     Debug.WriteLine("Dash Ended.");
                 }
             }
@@ -115,6 +123,7 @@ namespace Ghost_blade
             {
                 position += velocity * speed;
             }
+
             if (kState.IsKeyDown(Keys.R))
             {
                 this.currentAmmo = 10;
@@ -144,9 +153,11 @@ namespace Ghost_blade
             {
                 currentSpriteEffect = SpriteEffects.None;
             }
+
             timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             previousKState = kState;
         }
+
         public Bullet Shoot(Vector2 mousePosition)
         {
             if (currentAmmo <= 0 || switch_sword == true)
@@ -180,9 +191,7 @@ namespace Ghost_blade
 
         public void Draw(SpriteBatch spriteBatch)
         {
-
             Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
-
 
             spriteBatch.Draw(
                 texture,
