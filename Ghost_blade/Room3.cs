@@ -1,0 +1,21 @@
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+
+
+namespace Ghost_blade
+{
+    public class Room3 : Room
+    {
+        public Room3(Texture2D bg, Texture2D door)
+            : base(bg, door, new Rectangle(600, 500, 50, 100), new Vector2(100, 300), new Rectangle(0, 0, 1920, 1080))
+        {
+            NextRooms = new List<int> { 0, 1 };
+        }
+    }
+
+}

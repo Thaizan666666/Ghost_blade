@@ -16,12 +16,13 @@ namespace Ghost_blade
         private Vector2 position;
         private Vector2 velocity;
         private float speed;
+        private float rotation;
         private SpriteEffects currentSpriteEffect;
         private float fireDelay = 0.2f;
         private float timer = 0f;
         private Texture2D bulletTexture;
         public byte currentAmmo;
-        bool switch_sword = true;
+        private bool switch_sword = true;
         private KeyboardState previousKState;
 
         private bool isDashing = false;
@@ -32,10 +33,20 @@ namespace Ghost_blade
 
         private float dashCooldown = 2f;
         private float dashCooldownTimer = 0f;
+
         public Rectangle drect
         {
-            get { return new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height); }
+            get
+            {
+                return new Rectangle(
+                    (int)(position.X - texture.Width / 2),
+                    (int)(position.Y - texture.Height / 2),
+                    texture.Width,
+                    texture.Height
+                );
+            }
         }
+
 
         public Player(Texture2D playerTexture, Texture2D bulletTexture, Vector2 initialPosition)
         {
@@ -50,7 +61,7 @@ namespace Ghost_blade
             this.previousKState = Keyboard.GetState();
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Vector2 cameraPosition)
         {
             KeyboardState kState = Keyboard.GetState();
 
@@ -142,20 +153,37 @@ namespace Ghost_blade
                 }
             }
 
+            // หมุนตามเมาส์ 8 ทิศ
             MouseState mouseState = Mouse.GetState();
-            Vector2 mousePosition = new Vector2(mouseState.X, mouseState.Y);
+            Vector2 mousePosWorld = new Vector2(mouseState.X, mouseState.Y) - cameraPosition;
+            Vector2 dirToMouse = mousePosWorld - position;
 
-            if (mousePosition.X < position.X)
-            {
-                currentSpriteEffect = SpriteEffects.FlipHorizontally;
-            }
-            else
-            {
-                currentSpriteEffect = SpriteEffects.None;
-            }
+            float angle = MathF.Atan2(dirToMouse.Y, dirToMouse.X); // มุมจริง
+            float snapAngle = MathF.PI / 4f; // 45° per direction
+            angle = MathF.Round(angle / snapAngle) * snapAngle;
+            rotation = angle;
 
             timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             previousKState = kState;
+        }
+
+        public void SetPosition(Vector2 newPosition)
+        {
+            position = newPosition;
+        }
+
+        public void ClampPosition(Rectangle bounds, List<Rectangle> obstacles)
+        {
+            position.X = MathHelper.Clamp(position.X, bounds.Left + texture.Width / 2, bounds.Right - texture.Width / 2);
+            position.Y = MathHelper.Clamp(position.Y, bounds.Top + texture.Height / 2, bounds.Bottom - texture.Height / 2);
+
+            foreach (var obs in obstacles)
+            {
+                if (drect.Intersects(obs))
+                {
+                    position -= velocity * speed; // simple fix
+                }
+            }
         }
 
         public Bullet Shoot(Vector2 mousePosition)
@@ -192,18 +220,8 @@ namespace Ghost_blade
         public void Draw(SpriteBatch spriteBatch)
         {
             Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
-
-            spriteBatch.Draw(
-                texture,
-                position,
-                null,
-                Color.White,
-                0f,
-                origin,
-                1.0f,
-                currentSpriteEffect,
-                0f
-            );
+            spriteBatch.Draw(texture, position, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
         }
     }
+
 }
