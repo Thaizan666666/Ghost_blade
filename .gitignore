@@ -52,7 +52,7 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
-.vs/Ghost_blade/v17/.suo
-.vs/Ghost_blade/v17/.futdcache.v2
-.vs/Ghost_blade/FileContentIndex
+.vs
+
+
 
