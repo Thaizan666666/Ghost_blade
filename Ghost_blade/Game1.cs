@@ -20,6 +20,7 @@ namespace Ghost_blade
         private List<Room> rooms;
         private int currentRoomIndex;
         private Random random;
+        private Enemy _enemy;
 
         public Game1()
         {
@@ -49,7 +50,10 @@ namespace Ghost_blade
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _bulletTexture = Content.Load<Texture2D>("A_job");
             Texture2D playerTexture = Content.Load<Texture2D>("firefoxBall");
+            Texture2D EnemyTexture = Content.Load<Texture2D>("firefoxBall");
+
             _player = new Player(playerTexture, _bulletTexture, new Vector2(960, 540));
+            _enemy = new Enemy(EnemyTexture,new Vector2(50,50),1.0f,500f);
 
             // Door texture
             Texture2D doorTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -103,6 +107,8 @@ namespace Ghost_blade
                 _player.SetPosition(rooms[currentRoomIndex].StartPosition);
             }
 
+            _enemy.Update(_player.drect.Location.ToVector2());
+
             base.Update(gameTime);
         }
 
@@ -115,6 +121,7 @@ namespace Ghost_blade
             rooms[currentRoomIndex].Draw(_spriteBatch);
 
             _player.Draw(_spriteBatch);
+            _enemy.Draw(_spriteBatch);
             foreach (var b in _bullets) b.Draw(_spriteBatch);
 
             _spriteBatch.End();
