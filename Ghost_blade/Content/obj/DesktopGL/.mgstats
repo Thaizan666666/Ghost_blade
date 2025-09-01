@@ -1,0 +1,4 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/A_job.png","C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/A_job.xnb","TextureProcessor","Texture2DContent",155,841,0.0937095
+"C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/firefoxBall.png","C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/firefoxBall.xnb","TextureProcessor","Texture2DContent",5449,9301,0.0029105
+"C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/room_01.png","C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/room_01.xnb","TextureProcessor","Texture2DContent",34545,1447285,0.0352197
