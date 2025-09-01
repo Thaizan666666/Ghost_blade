@@ -32,3 +32,6 @@ C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\obj\Debug\net8.0\
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\obj\Debug\net8.0\Ghost_blade.pdb
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\obj\Debug\net8.0\Ghost_blade.genruntimeconfig.cache
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\obj\Debug\net8.0\ref\Ghost_blade.dll
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\room_01.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\room_02.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\room_03.xnb
