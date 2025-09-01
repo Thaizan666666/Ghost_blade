@@ -54,13 +54,5 @@ TestResult.xml
 nunit-*.xml
 .vs/Ghost_blade/v17/.suo
 .vs/Ghost_blade/v17/.futdcache.v2
-.vs/Ghost_blade/FileContentIndex/da64d32a-49c3-438a-8beb-742a7bde69ff.vsidx
-.vs/Ghost_blade/FileContentIndex/93b8a5cb-7a99-4689-b337-2eec35f3234c.vsidx
-.vs/Ghost_blade/FileContentIndex/9006b669-f373-4920-854e-1ae073574141.vsidx
-.vs/Ghost_blade/FileContentIndex/438cad27-fa6d-4e5f-a1cc-be2285ec1d44.vsidx
-.vs/Ghost_blade/FileContentIndex/3795671b-fb5e-4550-9cc4-e52b8a9def59.vsidx
-.vs/Ghost_blade/FileContentIndex/1a0546ed-a8aa-4635-81cb-1c70c88a2db8.vsidx
-.vs/Ghost_blade/FileContentIndex/557049f4-c648-4317-bd01-61a5eba4cc02.vsidx
-.vs/Ghost_blade/FileContentIndex/8d232ff9-b86a-47c6-a752-e858132212df.vsidx
-.vs/Ghost_blade/FileContentIndex/e02216c6-1a55-4e7d-afb6-9cf22e5d8b1c.vsidx
-.vs/Ghost_blade/FileContentIndex/478df0dc-f70b-48b0-8b18-447eee669566.vsidx
+.vs/Ghost_blade/FileContentIndex
+
