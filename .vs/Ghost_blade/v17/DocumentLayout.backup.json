@@ -28,7 +28,7 @@
               "RelativeDocumentMoniker": "Ghost_blade\\Game1.cs",
               "ToolTip": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\Ghost_blade\\Game1.cs",
               "RelativeToolTip": "Ghost_blade\\Game1.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAYwB8AAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAgwEYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-01T06:57:57.843Z",
               "EditorCaption": ""
@@ -36,15 +36,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Ghost_blade",
+              "Title": "Ghost_blade.csproj",
               "DocumentMoniker": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\Ghost_blade\\Ghost_blade.csproj",
               "RelativeDocumentMoniker": "Ghost_blade\\Ghost_blade.csproj",
               "ToolTip": "C:\\Users\\Thaizan\\source\\repos\\monogame\\Ghost_blade\\Ghost_blade\\Ghost_blade.csproj",
               "RelativeToolTip": "Ghost_blade\\Ghost_blade.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-09-01T06:57:48.73Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-01T06:57:48.73Z"
             }
           ]
         }
