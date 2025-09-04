@@ -21,6 +21,7 @@ namespace Ghost_blade
         private int currentRoomIndex;
         private Random random;
         private Enemy _enemy;
+        private Enemy_Shooting _enemyShooting;
 
         public Game1()
         {
@@ -54,6 +55,7 @@ namespace Ghost_blade
 
             _player = new Player(playerTexture, _bulletTexture, new Vector2(960, 540));
             _enemy = new Enemy(EnemyTexture,new Vector2(50,50),1.0f,500f);
+            _enemyShooting = new Enemy_Shooting(EnemyTexture, new Vector2(50, 200), 1.5f, 500f, _bulletTexture);
 
             // Door texture
             Texture2D doorTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -107,8 +109,8 @@ namespace Ghost_blade
                 _player.SetPosition(rooms[currentRoomIndex].StartPosition);
             }
 
-            _enemy.Update(_player.drect.Location.ToVector2());
-
+            _enemy.Update(_player.drect.Location.ToVector2(), currentRoom.Obstacles);
+            _enemyShooting.Update(_player.drect.Location.ToVector2(), currentRoom.Obstacles);
             base.Update(gameTime);
         }
 
@@ -122,6 +124,7 @@ namespace Ghost_blade
 
             _player.Draw(_spriteBatch);
             _enemy.Draw(_spriteBatch);
+            _enemyShooting.Draw(_spriteBatch);
             foreach (var b in _bullets) b.Draw(_spriteBatch);
 
             _spriteBatch.End();

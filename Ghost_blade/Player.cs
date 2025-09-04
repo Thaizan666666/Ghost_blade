@@ -174,6 +174,7 @@ namespace Ghost_blade
 
         public void ClampPosition(Rectangle bounds, List<Rectangle> obstacles)
         {
+            // การจำกัดขอบเขตของหน้าจอ
             position.X = MathHelper.Clamp(position.X, bounds.Left + texture.Width / 2, bounds.Right - texture.Width / 2);
             position.Y = MathHelper.Clamp(position.Y, bounds.Top + texture.Height / 2, bounds.Bottom - texture.Height / 2);
 
@@ -181,7 +182,29 @@ namespace Ghost_blade
             {
                 if (drect.Intersects(obs))
                 {
-                    position -= velocity * speed; // simple fix
+                    // ถ้าชนกำแพงระหว่าง Dash ให้หยุด Dash ทันที
+                    if (isDashing)
+                    {
+                        isDashing = false;
+                        Debug.WriteLine("Dash interrupted by obstacle.");
+                    }
+                    // ผลักผู้เล่นออกไปจากกำแพง
+                    // ใช้ทิศทางการเคลื่อนที่ปัจจุบันเพื่อผลักผู้เล่นกลับ
+                    Vector2 movementDirection = Vector2.Zero;
+                    if (isDashing)
+                    {
+                        movementDirection = dashDirection;
+                    }
+                    else
+                    {
+                        movementDirection = velocity;
+                    }
+
+                    if (movementDirection != Vector2.Zero)
+                    {
+                        // ผลักผู้เล่นออกตามทิศทางตรงข้าม
+                        position -= movementDirection * speed;
+                    }
                 }
             }
         }
