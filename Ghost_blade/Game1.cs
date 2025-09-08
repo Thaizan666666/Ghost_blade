@@ -109,8 +109,8 @@ namespace Ghost_blade
                 _player.SetPosition(rooms[currentRoomIndex].StartPosition);
             }
 
-            _enemy.Update(_player.drect.Location.ToVector2(), currentRoom.Obstacles);
-            _enemyShooting.Update(_player.drect.Location.ToVector2(), currentRoom.Obstacles);
+            _enemy.Update(_player, currentRoom.Obstacles);
+            _enemyShooting.Update(_player, currentRoom.Obstacles);
             base.Update(gameTime);
         }
 

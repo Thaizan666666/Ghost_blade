@@ -1,5 +1,4 @@
-﻿// ในไฟล์ Enemy_Shooting.cs
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,6 +26,9 @@ namespace Ghost_blade
         private float fireTimer;
         private const float FIRE_RATE = 1.0f;
 
+        // An event that fires when a bullet is shot.
+        public Action<Bullet> OnShoot;
+
         public Enemy_Shooting(Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture)
             : base(texture, startPosition, speed, detectionRadius)
         {
@@ -36,18 +38,12 @@ namespace Ghost_blade
             this.fireTimer = FIRE_RATE;
         }
 
-        // *** แก้ไข: เมธอด Update นี้จะเรียกใช้เมธอด Update ของคลาสแม่ที่ถูกต้อง
-        public override void Update(Vector2 playerPosition, List<Rectangle> obstacles)
+        public override void Update(Player player, List<Rectangle> obstacles)
         {
-            float distance = Vector2.Distance(Position, playerPosition);
+            float deltaTime = 1f / 60f;
+            float distance = Vector2.Distance(Position, player.position);
 
-            direction = playerPosition - Position;
-            if (direction != Vector2.Zero)
-            {
-                direction.Normalize();
-            }
-
-            Vector2 desiredMovement = Vector2.Zero; // ต้องประกาศและกำหนดค่าที่นี่
+            Vector2 desiredMovement = Vector2.Zero;
 
             switch (currentState)
             {
@@ -60,8 +56,14 @@ namespace Ghost_blade
                     break;
 
                 case EnemyState.MovingAway:
-                    desiredMovement = -direction;
-                    stateTimer -= 1 / 60f;
+                    Vector2 directionToPlayer = player.position - Position;
+                    if (directionToPlayer != Vector2.Zero)
+                    {
+                        directionToPlayer.Normalize();
+                    }
+                    desiredMovement = -directionToPlayer; // Move away from the player
+
+                    stateTimer -= deltaTime;
                     if (stateTimer <= 0)
                     {
                         currentState = EnemyState.Shooting;
@@ -70,14 +72,14 @@ namespace Ghost_blade
                     break;
 
                 case EnemyState.Shooting:
-                    fireTimer -= 1 / 60f;
+                    fireTimer -= deltaTime;
                     if (fireTimer <= 0)
                     {
-                        // โค้ดสำหรับสร้างกระสุน
+                        Shoot(player.position);
                         fireTimer = FIRE_RATE;
                     }
 
-                    stateTimer -= 1 / 60f;
+                    stateTimer -= deltaTime;
                     if (stateTimer <= 0)
                     {
                         currentState = EnemyState.Cooldown;
@@ -86,7 +88,7 @@ namespace Ghost_blade
                     break;
 
                 case EnemyState.Cooldown:
-                    stateTimer -= 1 / 60f;
+                    stateTimer -= deltaTime;
                     if (stateTimer <= 0)
                     {
                         currentState = EnemyState.Idle;
@@ -94,13 +96,28 @@ namespace Ghost_blade
                     break;
             }
 
-            // *** แก้ไข: เรียกใช้เมธอด Update ของคลาสแม่ด้วย desiredMovement ที่คำนวณได้
+            // Apply the desired movement and handle collision.
             Vector2 newPosition = Position + desiredMovement * Speed;
             Position = HandleCollision(newPosition, obstacles);
         }
 
+        private void Shoot(Vector2 targetPosition)
+        {
+            Vector2 direction = targetPosition - Position;
+            if (direction != Vector2.Zero)
+            {
+                direction.Normalize();
+            }
+
+            // Create a new bullet
+            var bullet = new Bullet(bulletTexture, Position, direction, 8f, 0f, 2f);
+            // Invoke the OnShoot event to let the game know a bullet was created.
+            OnShoot?.Invoke(bullet);
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // Draw enemy as a green sprite
             spriteBatch.Draw(Texture, Position, null, Color.Green, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
         }
     }

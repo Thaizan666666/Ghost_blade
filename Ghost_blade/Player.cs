@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,9 +9,10 @@ namespace Ghost_blade
 {
     public class Player
     {
-        private Texture2D texture;
-        private Vector2 position;
-        private Vector2 velocity;
+        public Texture2D texture { get; set; }
+        public Vector2 position { get; set; }
+        public Vector2 velocity { get; private set; }
+        
         private float speed;
         private float rotation;
         private SpriteEffects currentSpriteEffect;
@@ -22,16 +20,17 @@ namespace Ghost_blade
         private float timer = 0f;
         private Texture2D bulletTexture;
         public byte currentAmmo;
-        private bool switch_sword = true;
+        private bool isSwordEquipped = true;
         private KeyboardState previousKState;
+        private Vector2 lastMovementDirection = new Vector2(1, 0); // Stores the last direction the player moved
 
         private bool isDashing = false;
         private float dashTimer = 0f;
-        private float dashDuration = 0.2f;
-        private float dashSpeedMultiplier = 5.0f;
+        private const float DashDuration = 0.2f;
+        private const float DashSpeedMultiplier = 5.0f;
         private Vector2 dashDirection;
 
-        private float dashCooldown = 2f;
+        private const float DashCooldown = 2f;
         private float dashCooldownTimer = 0f;
 
         public Rectangle drect
@@ -46,7 +45,6 @@ namespace Ghost_blade
                 );
             }
         }
-
 
         public Player(Texture2D playerTexture, Texture2D bulletTexture, Vector2 initialPosition)
         {
@@ -64,86 +62,110 @@ namespace Ghost_blade
         public void Update(GameTime gameTime, Vector2 cameraPosition)
         {
             KeyboardState kState = Keyboard.GetState();
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            HandleDash(kState, deltaTime);
+            HandleMovement(kState);
+            HandleRotation(cameraPosition);
+            HandleWeaponSwitching(kState);
+            HandleReload(kState);
+
+            timer += deltaTime;
+            previousKState = kState;
+        }
+
+        private void HandleDash(KeyboardState kState, float deltaTime)
+        {
             if (dashCooldownTimer > 0)
             {
-                Debug.WriteLine($"before = {dashCooldownTimer}");
-                dashCooldownTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                Debug.WriteLine($"After = {dashCooldownTimer}");
+                dashCooldownTimer -= deltaTime;
             }
 
             if (kState.IsKeyDown(Keys.Space) && !previousKState.IsKeyDown(Keys.Space) && !isDashing && dashCooldownTimer <= 0)
             {
-                {
-                    isDashing = true;
-                    dashTimer = dashDuration;
-                    dashCooldownTimer = dashCooldown;
+                isDashing = true;
+                dashTimer = DashDuration;
+                dashCooldownTimer = DashCooldown;
 
-                    if (velocity != Vector2.Zero)
-                    {
-                        dashDirection = velocity;
-                    }
-                    else
-                    {
-                        if (currentSpriteEffect == SpriteEffects.FlipHorizontally)
-                        {
-                            dashDirection = new Vector2(-1, 0);
-                        }
-                        else
-                        {
-                            dashDirection = new Vector2(1, 0);
-                        }
-                    }
-                    if (dashDirection != Vector2.Zero)
-                    {
-                        dashDirection.Normalize();
-                    }
-
-                    Debug.WriteLine("Dash Activated!");
-                }
-            }
-
-            if (!isDashing)
-            {
-                velocity = Vector2.Zero;
-
-                if (kState.IsKeyDown(Keys.W)) { velocity.Y -= 1; }
-                else if (kState.IsKeyDown(Keys.S)) { velocity.Y += 1; }
-                if (kState.IsKeyDown(Keys.D)) { velocity.X += 1; }
-                else if (kState.IsKeyDown(Keys.A)) { velocity.X -= 1; }
-
+                // Use the current velocity for the dash direction if the player is moving
                 if (velocity != Vector2.Zero)
                 {
-                    velocity.Normalize();
+                    dashDirection = velocity;
                 }
+                else
+                {
+                    // Use the last known movement direction for the dash if the player is stationary
+                    dashDirection = lastMovementDirection;
+                }
+
+                if (dashDirection != Vector2.Zero)
+                {
+                    dashDirection.Normalize();
+                }
+
+                Debug.WriteLine("Dash Activated!");
             }
 
             if (isDashing)
             {
-                position += dashDirection * speed * dashSpeedMultiplier;
-                // Corrected dash timer update: remove the multiplier to ensure a consistent dash duration
-                dashTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                // Corrected position update for dashing
+                Vector2 newPosition = position + dashDirection * speed * DashSpeedMultiplier;
+                position = newPosition;
 
+                dashTimer -= deltaTime;
                 if (dashTimer <= 0)
                 {
-                    isDashing = false; // End Dash
+                    isDashing = false;
                     Debug.WriteLine("Dash Ended.");
                 }
             }
-            else
-            {
-                position += velocity * speed;
-            }
+        }
 
-            if (kState.IsKeyDown(Keys.R))
+        private void HandleMovement(KeyboardState kState)
+        {
+            if (!isDashing)
             {
-                this.currentAmmo = 10;
-                Debug.WriteLine("Ammo = 10");
+                Vector2 newVelocity = Vector2.Zero;
+
+                if (kState.IsKeyDown(Keys.W)) { newVelocity.Y -= 1; }
+                if (kState.IsKeyDown(Keys.S)) { newVelocity.Y += 1; }
+                if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; }
+                if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1; }
+
+                // Update the velocity property
+                velocity = newVelocity;
+
+                if (velocity != Vector2.Zero)
+                {
+                    velocity.Normalize();
+                    // Store the current movement direction for stationary dashes
+                    lastMovementDirection = velocity;
+                }
+
+                // Update the position property
+                Vector2 newPosition = position + velocity * speed;
+                position = newPosition;
             }
+        }
+
+        private void HandleRotation(Vector2 cameraPosition)
+        {
+            MouseState mouseState = Mouse.GetState();
+            Vector2 mousePosWorld = new Vector2(mouseState.X, mouseState.Y) - cameraPosition;
+            Vector2 dirToMouse = mousePosWorld - position;
+
+            float angle = MathF.Atan2(dirToMouse.Y, dirToMouse.X);
+            float snapAngle = MathF.PI / 4f;
+            angle = MathF.Round(angle / snapAngle) * snapAngle;
+            rotation = angle;
+        }
+
+        private void HandleWeaponSwitching(KeyboardState kState)
+        {
             if (kState.IsKeyDown(Keys.E) && !previousKState.IsKeyDown(Keys.E))
             {
-                switch_sword = !switch_sword;
-                if (switch_sword)
+                isSwordEquipped = !isSwordEquipped;
+                if (isSwordEquipped)
                 {
                     Debug.WriteLine("Weapon: Sword");
                 }
@@ -152,19 +174,15 @@ namespace Ghost_blade
                     Debug.WriteLine("Weapon: Gun");
                 }
             }
+        }
 
-            // หมุนตามเมาส์ 8 ทิศ
-            MouseState mouseState = Mouse.GetState();
-            Vector2 mousePosWorld = new Vector2(mouseState.X, mouseState.Y) - cameraPosition;
-            Vector2 dirToMouse = mousePosWorld - position;
-
-            float angle = MathF.Atan2(dirToMouse.Y, dirToMouse.X); // มุมจริง
-            float snapAngle = MathF.PI / 4f; // 45° per direction
-            angle = MathF.Round(angle / snapAngle) * snapAngle;
-            rotation = angle;
-
-            timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            previousKState = kState;
+        private void HandleReload(KeyboardState kState)
+        {
+            if (kState.IsKeyDown(Keys.R))
+            {
+                this.currentAmmo = 10;
+                Debug.WriteLine("Ammo = 10");
+            }
         }
 
         public void SetPosition(Vector2 newPosition)
@@ -174,36 +192,29 @@ namespace Ghost_blade
 
         public void ClampPosition(Rectangle bounds, List<Rectangle> obstacles)
         {
-            // การจำกัดขอบเขตของหน้าจอ
-            position.X = MathHelper.Clamp(position.X, bounds.Left + texture.Width / 2, bounds.Right - texture.Width / 2);
-            position.Y = MathHelper.Clamp(position.Y, bounds.Top + texture.Height / 2, bounds.Bottom - texture.Height / 2);
+            // Fix: Create a local variable to modify and then reassign
+            Vector2 newPosition = position;
+            newPosition.X = MathHelper.Clamp(newPosition.X, bounds.Left + texture.Width / 2, bounds.Right - texture.Width / 2);
+            newPosition.Y = MathHelper.Clamp(newPosition.Y, bounds.Top + texture.Height / 2, bounds.Bottom - texture.Height / 2);
+            position = newPosition;
 
             foreach (var obs in obstacles)
             {
                 if (drect.Intersects(obs))
                 {
-                    // ถ้าชนกำแพงระหว่าง Dash ให้หยุด Dash ทันที
                     if (isDashing)
                     {
                         isDashing = false;
                         Debug.WriteLine("Dash interrupted by obstacle.");
                     }
-                    // ผลักผู้เล่นออกไปจากกำแพง
-                    // ใช้ทิศทางการเคลื่อนที่ปัจจุบันเพื่อผลักผู้เล่นกลับ
-                    Vector2 movementDirection = Vector2.Zero;
-                    if (isDashing)
-                    {
-                        movementDirection = dashDirection;
-                    }
-                    else
-                    {
-                        movementDirection = velocity;
-                    }
+                    
+                    Vector2 movementDirection = isDashing ? dashDirection : velocity;
 
                     if (movementDirection != Vector2.Zero)
                     {
-                        // ผลักผู้เล่นออกตามทิศทางตรงข้าม
-                        position -= movementDirection * speed;
+                        // Fix: Create a local variable to modify and then reassign
+                        Vector2 pushedPosition = position - movementDirection * speed;
+                        position = pushedPosition;
                     }
                 }
             }
@@ -211,9 +222,9 @@ namespace Ghost_blade
 
         public Bullet Shoot(Vector2 mousePosition)
         {
-            if (currentAmmo <= 0 || switch_sword == true)
+            if (currentAmmo <= 0 || isSwordEquipped)
             {
-                Debug.WriteLine("Ammo = 0");
+                Debug.WriteLine("Ammo = 0 or Sword is Equipped");
                 return null;
             }
             if (timer >= fireDelay)
@@ -231,8 +242,9 @@ namespace Ghost_blade
                 }
 
                 float bulletRotation = MathF.Atan2(direction.Y, direction.X);
-
-                Vector2 bulletStartPosition = position;
+                
+                // Bullet starts at the player's position
+                Vector2 bulletStartPosition = position; 
                 currentAmmo--;
 
                 return new Bullet(bulletTexture, bulletStartPosition, direction, 10f, bulletRotation, 2f);
@@ -246,5 +258,4 @@ namespace Ghost_blade
             spriteBatch.Draw(texture, position, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
         }
     }
-
 }
