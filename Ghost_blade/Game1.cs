@@ -54,8 +54,11 @@ namespace Ghost_blade
             Texture2D EnemyTexture = Content.Load<Texture2D>("firefoxBall");
 
             _player = new Player(playerTexture, _bulletTexture, new Vector2(960, 540));
-            _enemy = new Enemy(EnemyTexture,new Vector2(50,50),1.0f,500f);
+            _enemy = new Enemy(EnemyTexture, new Vector2(50, 50), 1.0f, 500f);
             _enemyShooting = new Enemy_Shooting(EnemyTexture, new Vector2(50, 200), 1.5f, 500f, _bulletTexture);
+
+            // Subscribe to the enemy's OnShoot event to add its bullets to the main list.
+            _enemyShooting.OnShoot += _bullets.Add;
 
             // Door texture
             Texture2D doorTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -132,4 +135,3 @@ namespace Ghost_blade
         }
     }
 }
-

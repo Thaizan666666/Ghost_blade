@@ -48,7 +48,8 @@ namespace Ghost_blade
             switch (currentState)
             {
                 case EnemyState.Idle:
-                    if (distance <= detectionRadius)
+                    // Only transition from Idle if the player is in range AND there is a clear line of sight.
+                    if (distance <= detectionRadius && CanSeePlayer(player, obstacles))
                     {
                         currentState = EnemyState.MovingAway;
                         stateTimer = MOVE_AWAY_DURATION;
@@ -119,6 +120,54 @@ namespace Ghost_blade
         {
             // Draw enemy as a green sprite
             spriteBatch.Draw(Texture, Position, null, Color.Green, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
+        }
+
+        // Method to check for clear line of sight to the player.
+        public bool CanSeePlayer(Player player, List<Rectangle> obstacles)
+        {
+            // First, check if the player is within the maximum detection radius.
+            if (Vector2.Distance(this.Position, player.position) > detectionRadius)
+            {
+                return false;
+            }
+
+            // Create a vector representing the line between the enemy and the player.
+            Vector2 lineOfSight = player.position - this.Position;
+            Vector2 normalizedDirection = lineOfSight;
+            if (normalizedDirection != Vector2.Zero)
+            {
+                normalizedDirection.Normalize();
+            }
+
+            // Determine the number of steps to check along the line.
+            float distance = lineOfSight.Length();
+            float stepSize = 5.0f; // Adjust this value for accuracy vs. performance.
+
+            // Step from the enemy's position towards the player.
+            for (float i = 0; i < distance; i += stepSize)
+            {
+                // Calculate the position of the current point on the line.
+                Vector2 currentPoint = this.Position + normalizedDirection * i;
+
+                // Create a small rectangle for the collision check.
+                Rectangle pointRect = new Rectangle(
+                    (int)currentPoint.X,
+                    (int)currentPoint.Y,
+                    1,
+                    1
+                );
+
+                // Check for intersection with any obstacle.
+                foreach (var obs in obstacles)
+                {
+                    if (obs.Intersects(pointRect))
+                    {
+                        // Line of sight is blocked.
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

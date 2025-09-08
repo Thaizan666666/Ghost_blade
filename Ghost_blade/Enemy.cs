@@ -41,15 +41,21 @@ public class Enemy
         oldPosition = Position;
         Vector2 desiredMovement = Vector2.Zero;
 
-        // Check if the player is within the detection radius.
-        if (Vector2.Distance(Position, player.position) <= detectionRadius)
+        // Check if the player is both within the detection radius AND has a clear line of sight.
+        if (Vector2.Distance(Position, player.position) <= detectionRadius && CanSeePlayer(player, obstacles))
         {
-            // Correctly calculate the direction vector from the enemy to the player.
+            // If true, the enemy will actively pursue the player.
             desiredMovement = player.position - Position;
             if (desiredMovement != Vector2.Zero)
             {
                 desiredMovement.Normalize();
             }
+        }
+        else
+        {
+            // If the player is not in range or the line of sight is blocked, the enemy will stop moving
+            // or you could add logic for a patrolling behavior here.
+            desiredMovement = Vector2.Zero;
         }
 
         // Apply movement

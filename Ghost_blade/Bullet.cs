@@ -13,8 +13,17 @@ namespace Ghost_blade
         private float speed;
         private float lifeTime;
         private float currentLifeTime;
+        private readonly int hitboxSize = 10;
 
         public bool IsActive { get; private set; }
+
+        public Rectangle boundingBox
+        {
+            get
+            {
+                return new Rectangle((int)position.X, (int)position.Y, hitboxSize, hitboxSize);
+            }
+        }
 
         public Bullet(Texture2D texture, Vector2 startPosition, Vector2 direction, float bulletSpeed, float bulletRotation, float lifeDuration)
         {
@@ -32,18 +41,17 @@ namespace Ghost_blade
         {
             if (!IsActive) return;
 
+            // Update position based on velocity and speed, using delta time for smooth movement.
+            position += velocity * speed * (float)gameTime.ElapsedGameTime.TotalSeconds * 60f;
 
-            position += velocity * speed;
-
-
+            // Update lifetime.
             currentLifeTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-
+            // Deactivate the bullet if its lifetime has expired.
             if (currentLifeTime >= lifeTime)
             {
                 IsActive = false;
             }
-
         }
 
         public void Draw(SpriteBatch spriteBatch)
