@@ -13,6 +13,8 @@ public class Enemy
     private Vector2 oldPosition;
     private readonly int hitboxWidth = 32;
     private readonly int hitboxHeight = 32;
+    public bool IsActive { get; set; }
+
 
     public Rectangle boundingBox
     {
@@ -33,6 +35,7 @@ public class Enemy
         this.Position = startPosition;
         this.Speed = speed;
         this.detectionRadius = detectionRadius;
+        this.IsActive = true; // Add this line
     }
 
     // Main Update method for the enemy's logic.

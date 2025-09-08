@@ -13,7 +13,7 @@ public class Bullet
     private float currentLifeTime;
     private readonly int hitboxSize = 10;
 
-    public bool IsActive { get; private set; }
+    public bool IsActive { get; set; }
 
     public Rectangle boundingBox
     {

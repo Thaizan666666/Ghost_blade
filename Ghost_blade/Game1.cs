@@ -12,7 +12,8 @@ namespace Ghost_blade
         private SpriteBatch _spriteBatch;
 
         private Player _player;
-        private List<Bullet> _bullets;
+        private List<Bullet> _playerBullets;
+        private List<EnemyBullet> _enemyBullets;
         private Texture2D _bulletTexture;
         private FollowsCamera camera;
 
@@ -37,7 +38,8 @@ namespace Ghost_blade
 
         protected override void Initialize()
         {
-            _bullets = new List<Bullet>();
+            _playerBullets = new List<Bullet>();
+            _enemyBullets = new List<EnemyBullet>();
             rooms = new List<Room>();
             random = new Random();
             currentRoomIndex = 0;
@@ -57,7 +59,8 @@ namespace Ghost_blade
             _enemyShooting = new Enemy_Shooting(EnemyTexture, new Vector2(50, 200), 1.5f, 500f, _bulletTexture);
 
             // สมัครรับ Event OnShoot ของศัตรู เพื่อเพิ่มกระสุนที่ยิงใหม่เข้าสู่ List หลัก
-            _enemyShooting.OnShoot += _bullets.Add;
+            _enemyShooting.OnShoot += bullet => _enemyBullets.Add((EnemyBullet)bullet);
+
 
             // Door texture
             Texture2D doorTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -86,38 +89,81 @@ namespace Ghost_blade
             Room currentRoom = rooms[currentRoomIndex];
 
             camera.Follow(_player.drect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
-            _player.Update(gameTime, camera.position);
+
+            if (_player.IsAlive)
+            {
+                _player.Update(gameTime, camera.position);
+            }
+            else {return;}
 
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed || mouseState.RightButton == ButtonState.Pressed)
             {
                 Vector2 mouseWorld = new Vector2(mouseState.X, mouseState.Y) - camera.position;
                 Bullet newBullet = _player.Shoot(mouseWorld);
-                if (newBullet != null) _bullets.Add(newBullet);
+                if (newBullet != null) _playerBullets.Add(newBullet);
             }
 
-            // อัปเดตและตรวจสอบการชนของกระสุน
-            for (int i = _bullets.Count - 1; i >= 0; i--)
+            // Update and check for bullet collisions
+            for (int i = _playerBullets.Count - 1; i >= 0; i--)
             {
-                _bullets[i].Update(gameTime, currentRoom.Obstacles);
+                Bullet bullet = _playerBullets[i];
+                bullet.Update(gameTime, currentRoom.Obstacles);
 
-                if (!_bullets[i].IsActive)
+                // Check for player bullet hitting enemies
+                if (_enemy.IsActive && bullet.boundingBox.Intersects(_enemy.boundingBox))
                 {
-                    _bullets.RemoveAt(i);
+                    _enemy.IsActive = false;
+                    bullet.IsActive = false;
+                }
+
+                if (_enemyShooting.IsActive && bullet.boundingBox.Intersects(_enemyShooting.boundingBox))
+                {
+                    _enemyShooting.IsActive = false;
+                    bullet.IsActive = false;
+                }
+
+                // Remove inactive bullets
+                if (!bullet.IsActive)
+                {
+                    _playerBullets.RemoveAt(i);
                 }
             }
 
-            _player.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
-
-            if (_player.drect.Intersects(currentRoom.Door) && currentRoom.NextRooms.Count > 0)
+            // Enemy bullets update and collision checks
+            for (int i = _enemyBullets.Count - 1; i >= 0; i--)
             {
-                int next = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
-                currentRoomIndex = next;
-                _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                EnemyBullet bullet = _enemyBullets[i];
+                bullet.Update(gameTime, currentRoom.Obstacles, _player);
+
+                // No need for explicit IsActive check here, the bullet's Update handles it.
+                if (!bullet.IsActive)
+                {
+                    _enemyBullets.RemoveAt(i);
+                }
             }
 
-            _enemy.Update(_player, currentRoom.Obstacles);
-            _enemyShooting.Update(_player, currentRoom.Obstacles);
+            if (_player.IsAlive)
+            {
+                _player.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
+                if (_player.drect.Intersects(currentRoom.Door) && currentRoom.NextRooms.Count > 0)
+                {
+                    int next = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
+                    currentRoomIndex = next;
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                }
+            }
+
+            if (_enemy.IsActive)
+            {
+                _enemy.Update(_player, currentRoom.Obstacles);
+            }
+
+            if (_enemyShooting.IsActive)
+            {
+                _enemyShooting.Update(_player, currentRoom.Obstacles);
+            }
+
             base.Update(gameTime);
         }
 
@@ -127,12 +173,34 @@ namespace Ghost_blade
             var transform = Matrix.CreateTranslation(camera.position.X, camera.position.Y, 0);
 
             _spriteBatch.Begin(transformMatrix: transform);
+
+            // Draw the current room
             rooms[currentRoomIndex].Draw(_spriteBatch);
 
+            // Draw the player
             _player.Draw(_spriteBatch);
-            _enemy.Draw(_spriteBatch);
-            _enemyShooting.Draw(_spriteBatch);
-            foreach (var b in _bullets) b.Draw(_spriteBatch);
+
+            // Draw active enemies
+            if (_enemy.IsActive)
+            {
+                _enemy.Draw(_spriteBatch);
+            }
+            if (_enemyShooting.IsActive)
+            {
+                _enemyShooting.Draw(_spriteBatch);
+            }
+
+            // Draw player bullets
+            foreach (var bullet in _playerBullets)
+            {
+                bullet.Draw(_spriteBatch);
+            }
+
+            // Draw enemy bullets
+            foreach (var bullet in _enemyBullets)
+            {
+                bullet.Draw(_spriteBatch);
+            }
 
             _spriteBatch.End();
             base.Draw(gameTime);

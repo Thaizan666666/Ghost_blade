@@ -23,6 +23,7 @@ namespace Ghost_blade
         private bool isSwordEquipped = true;
         private KeyboardState previousKState;
         private Vector2 lastMovementDirection = new Vector2(1, 0); // Stores the last direction the player moved
+        public int Health { get; set; } = 3;
 
         private bool isDashing = false;
         private float dashTimer = 0f;
@@ -32,6 +33,12 @@ namespace Ghost_blade
 
         private const float DashCooldown = 2f;
         private float dashCooldownTimer = 0f;
+
+        public bool IsInvincible { get; private set; }
+        private float invincibilityTimer;
+        private const float InvincibilityDuration = 0.5f; // ระยะเวลา i-frames (วินาที)
+
+        public bool IsAlive { get; private set; }
 
         public Rectangle drect
         {
@@ -57,6 +64,7 @@ namespace Ghost_blade
             this.timer = 0f;
             this.currentAmmo = 10;
             this.previousKState = Keyboard.GetState();
+            this.IsAlive = true;
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
@@ -86,6 +94,10 @@ namespace Ghost_blade
                 isDashing = true;
                 dashTimer = DashDuration;
                 dashCooldownTimer = DashCooldown;
+
+                // เปิดใช้งาน i-frames และใช้ DashDuration เป็นระยะเวลา
+                IsInvincible = true;
+                invincibilityTimer = DashDuration; // ตั้งค่าให้เวลา i-frames เท่ากับระยะเวลา Dash
 
                 // Use the current velocity for the dash direction if the player is moving
                 if (velocity != Vector2.Zero)
@@ -117,6 +129,16 @@ namespace Ghost_blade
                 {
                     isDashing = false;
                     Debug.WriteLine("Dash Ended.");
+                }
+            }
+
+            // อัปเดตตัวนับเวลา i-frames และปิดใช้งานเมื่อหมดเวลา
+            if (IsInvincible)
+            {
+                invincibilityTimer -= deltaTime;
+                if (invincibilityTimer <= 0)
+                {
+                    IsInvincible = false;
                 }
             }
         }
@@ -280,6 +302,25 @@ namespace Ghost_blade
                 return new Bullet(bulletTexture, bulletStartPosition, direction, 10f, bulletRotation, 2f);
             }
             return null;
+        }
+        public void Die()
+        {
+            IsAlive = false;
+            // You can add more logic here, like playing a death animation or sound
+            // For now, this is enough to stop the player from being updated and drawn.
+            System.Diagnostics.Debug.WriteLine("Player has been hit and is no longer alive.");
+        }
+        public void TakeDamage(int damage)
+        {
+            // Only reduce health if the character is NOT invincible.
+            if (!IsInvincible)
+            {
+                Health -= damage;
+            }
+            if (Health <= 0)
+            {
+                Die();
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

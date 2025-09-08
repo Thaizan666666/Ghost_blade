@@ -18,9 +18,17 @@ namespace Ghost_blade
         private EnemyState currentState;
         private float stateTimer;
 
+        // ระยะเวลาที่ใช้ในการเปลี่ยนสถานะ
         private const float MOVE_AWAY_DURATION = 1.0f;
         private const float COOLDOWN_DURATION = 2.0f;
         private const float SHOOTING_DURATION = 0.5f;
+
+        // ตัวแปรสำหรับระบบยิงแบบเบิร์สต์ (burst fire)
+        private const int BURST_COUNT = 3;
+        private const float BURST_DELAY = 0.15f;
+
+        private int bulletsShotInBurst;
+        private float burstTimer;
 
         public Texture2D bulletTexture;
         private float fireTimer;
@@ -28,6 +36,7 @@ namespace Ghost_blade
 
         // An event that fires when a bullet is shot.
         public Action<Bullet> OnShoot;
+        public bool IsActive { get; set; }
 
         public Enemy_Shooting(Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture)
             : base(texture, startPosition, speed, detectionRadius)
@@ -36,10 +45,12 @@ namespace Ghost_blade
             this.stateTimer = 0f;
             this.bulletTexture = bulletTexture;
             this.fireTimer = FIRE_RATE;
+            this.IsActive = true;
         }
 
         public override void Update(Player player, List<Rectangle> obstacles)
         {
+            // ใช้ gameTime.ElapsedGameTime.TotalSeconds เพื่อค่า deltaTime ที่แม่นยำขึ้น
             float deltaTime = 1f / 60f;
             float distance = Vector2.Distance(Position, player.position);
 
@@ -48,11 +59,17 @@ namespace Ghost_blade
             switch (currentState)
             {
                 case EnemyState.Idle:
-                    // Only transition from Idle if the player is in range AND there is a clear line of sight.
-                    if (distance <= detectionRadius && CanSeePlayer(player, obstacles))
+                    if (distance <= 200f && CanSeePlayer(player, obstacles)) // ตั้งค่า 200f เป็นระยะที่ต้องการให้ถอยหลัง
                     {
                         currentState = EnemyState.MovingAway;
                         stateTimer = MOVE_AWAY_DURATION;
+                    }
+                    else if (distance <= detectionRadius && CanSeePlayer(player, obstacles))
+                    {
+                        currentState = EnemyState.Shooting;
+                        stateTimer = SHOOTING_DURATION;
+                        bulletsShotInBurst = 0; // รีเซ็ตตัวนับกระสุนเมื่อเริ่มสถานะยิง
+                        burstTimer = BURST_DELAY; // เริ่มต้น timer สำหรับนัดแรก
                     }
                     break;
 
@@ -69,22 +86,29 @@ namespace Ghost_blade
                     {
                         currentState = EnemyState.Shooting;
                         stateTimer = SHOOTING_DURATION;
+                        bulletsShotInBurst = 0;
+                        burstTimer = BURST_DELAY;
                     }
                     break;
 
                 case EnemyState.Shooting:
-                    fireTimer -= deltaTime;
-                    if (fireTimer <= 0)
+                    burstTimer -= deltaTime;
+                    stateTimer -= deltaTime;
+
+                    // ยิงกระสุนถ้านับเวลาได้และยังยิงไม่ครบ 3 นัด
+                    if (burstTimer <= 0 && bulletsShotInBurst < BURST_COUNT)
                     {
                         Shoot(player.position);
-                        fireTimer = FIRE_RATE;
+                        bulletsShotInBurst++;
+                        burstTimer = BURST_DELAY; // รีเซ็ต timer สำหรับนัดถัดไป
                     }
 
-                    stateTimer -= deltaTime;
-                    if (stateTimer <= 0)
+                    // ถ้าเวลาในสถานะ Shooting หมด หรือยิงครบ 3 นัดแล้ว ให้เปลี่ยนไปสถานะ Cooldown
+                    if (stateTimer <= 0 || bulletsShotInBurst >= BURST_COUNT)
                     {
                         currentState = EnemyState.Cooldown;
                         stateTimer = COOLDOWN_DURATION;
+                        bulletsShotInBurst = 0; // รีเซ็ตตัวนับกระสุนสำหรับรอบถัดไป
                     }
                     break;
 
@@ -110,9 +134,12 @@ namespace Ghost_blade
                 direction.Normalize();
             }
 
-            // Create a new bullet
-            var bullet = new Bullet(bulletTexture, Position, direction, 8f, 0f, 2f);
-            // Invoke the OnShoot event to let the game know a bullet was created.
+            float offsetDistance = 20f;
+            Vector2 startPosition = Position + direction * offsetDistance;
+
+            // สร้าง EnemyBullet
+            var bullet = new EnemyBullet(bulletTexture, startPosition, direction, 8f, 0f, 2f);
+
             OnShoot?.Invoke(bullet);
         }
 
@@ -125,13 +152,11 @@ namespace Ghost_blade
         // Method to check for clear line of sight to the player.
         public bool CanSeePlayer(Player player, List<Rectangle> obstacles)
         {
-            // First, check if the player is within the maximum detection radius.
             if (Vector2.Distance(this.Position, player.position) > detectionRadius)
             {
                 return false;
             }
 
-            // Create a vector representing the line between the enemy and the player.
             Vector2 lineOfSight = player.position - this.Position;
             Vector2 normalizedDirection = lineOfSight;
             if (normalizedDirection != Vector2.Zero)
@@ -139,17 +164,13 @@ namespace Ghost_blade
                 normalizedDirection.Normalize();
             }
 
-            // Determine the number of steps to check along the line.
             float distance = lineOfSight.Length();
-            float stepSize = 5.0f; // Adjust this value for accuracy vs. performance.
+            float stepSize = 5.0f;
 
-            // Step from the enemy's position towards the player.
             for (float i = 0; i < distance; i += stepSize)
             {
-                // Calculate the position of the current point on the line.
                 Vector2 currentPoint = this.Position + normalizedDirection * i;
 
-                // Create a small rectangle for the collision check.
                 Rectangle pointRect = new Rectangle(
                     (int)currentPoint.X,
                     (int)currentPoint.Y,
@@ -157,12 +178,10 @@ namespace Ghost_blade
                     1
                 );
 
-                // Check for intersection with any obstacle.
                 foreach (var obs in obstacles)
                 {
                     if (obs.Intersects(pointRect))
                     {
-                        // Line of sight is blocked.
                         return false;
                     }
                 }
