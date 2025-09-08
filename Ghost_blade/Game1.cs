@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-
 namespace Ghost_blade
 {
     public class Game1 : Game
@@ -57,7 +56,7 @@ namespace Ghost_blade
             _enemy = new Enemy(EnemyTexture, new Vector2(50, 50), 1.0f, 500f);
             _enemyShooting = new Enemy_Shooting(EnemyTexture, new Vector2(50, 200), 1.5f, 500f, _bulletTexture);
 
-            // Subscribe to the enemy's OnShoot event to add its bullets to the main list.
+            // สมัครรับ Event OnShoot ของศัตรู เพื่อเพิ่มกระสุนที่ยิงใหม่เข้าสู่ List หลัก
             _enemyShooting.OnShoot += _bullets.Add;
 
             // Door texture
@@ -97,10 +96,15 @@ namespace Ghost_blade
                 if (newBullet != null) _bullets.Add(newBullet);
             }
 
+            // อัปเดตและตรวจสอบการชนของกระสุน
             for (int i = _bullets.Count - 1; i >= 0; i--)
             {
-                _bullets[i].Update(gameTime);
-                if (!_bullets[i].IsActive) _bullets.RemoveAt(i);
+                _bullets[i].Update(gameTime, currentRoom.Obstacles);
+
+                if (!_bullets[i].IsActive)
+                {
+                    _bullets.RemoveAt(i);
+                }
             }
 
             _player.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
