@@ -325,8 +325,11 @@ namespace Ghost_blade
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
-            spriteBatch.Draw(texture, position, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
+            if (IsAlive)
+            {
+                Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
+                spriteBatch.Draw(texture, position, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
+            }
         }
     }
 }

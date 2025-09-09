@@ -11,7 +11,7 @@ namespace Ghost_blade
     public class Room1 : Room
     {
         public Room1(Texture2D bg, Texture2D door)
-            : base(bg, door, new Rectangle(550, 300, 50, 100), new Vector2(100, 300), new Rectangle(0, 0, 1920, 1080))
+            : base(bg, door, new Rectangle(550, 300, 50, 100), new Vector2(100, 300), new Rectangle(0, 0, 1920, 1080)) //
         {
             NextRooms = new List<int> { 1, 2 };
 
