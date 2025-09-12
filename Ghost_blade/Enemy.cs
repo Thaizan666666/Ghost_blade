@@ -14,6 +14,7 @@ public class Enemy
     private readonly int hitboxWidth = 32;
     private readonly int hitboxHeight = 32;
     public bool IsActive { get; set; }
+    public int Health { get; set; } = 200;
 
 
     public Rectangle boundingBox
@@ -113,8 +114,10 @@ public class Enemy
 
     public virtual void Draw(SpriteBatch spriteBatch)
     {
-        // Draw enemy centered on its position
-        spriteBatch.Draw(Texture, Position, null, Color.Red, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
+        if (IsActive)
+        {
+            spriteBatch.Draw(Texture, Position, null, Color.Red, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
+        }
     }
     public bool CanSeePlayer(Player player, List<Rectangle> obstacles)
     {
@@ -166,5 +169,13 @@ public class Enemy
 
         // If the loop completes without an intersection, the line of sight is clear.
         return true;
+    }
+    public void TakeDamage(int damage)
+    {
+            Health -= damage;
+        if (Health <= 0)
+        {
+            this.IsActive = false;
+        }
     }
 }

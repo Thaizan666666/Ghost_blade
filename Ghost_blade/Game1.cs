@@ -25,6 +25,7 @@ namespace Ghost_blade
         private Enemy_Shooting _enemyShooting;
         private Texture2D _swordTexture;
 
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -114,14 +115,26 @@ namespace Ghost_blade
             {
                 if (_enemy.IsActive && _player.MeleeAttackRectangle.Intersects(_enemy.boundingBox))
                 {
-                    _enemy.IsActive = false;
-                    Debug.WriteLine("Enemy hit by sword!");
+                    if (_player._isSlash)
+                    {
+                        Random random = new Random();
+                        int r = random.Next(50, 70);
+                        _enemy.TakeDamage(r);
+                        Debug.WriteLine($"Enemy hit by sword! {r}");
+                        _player._isSlash = false;
+                    }
                 }
 
                 if (_enemyShooting.IsActive && _player.MeleeAttackRectangle.Intersects(_enemyShooting.boundingBox))
                 {
-                    _enemyShooting.IsActive = false;
-                    Debug.WriteLine("Shooting enemy hit by sword!");
+                    if (_player._isSlash)
+                    {
+                        Random random = new Random();
+                        int r = random.Next(50, 70);
+                        _enemyShooting.TakeDamage(r);
+                        Debug.WriteLine($"Shooting enemy hit by sword! {r}");
+                        _player._isSlash = false;
+                    }
                 }
             }
 
@@ -134,13 +147,13 @@ namespace Ghost_blade
                 // Check for player bullet hitting enemies
                 if (_enemy.IsActive && bullet.boundingBox.Intersects(_enemy.boundingBox))
                 {
-                    _enemy.IsActive = false;
+                    _enemy.TakeDamage(40);
                     bullet.IsActive = false;
                 }
 
                 if (_enemyShooting.IsActive && bullet.boundingBox.Intersects(_enemyShooting.boundingBox))
                 {
-                    _enemyShooting.IsActive = false;
+                    _enemyShooting.TakeDamage(40);
                     bullet.IsActive = false;
                 }
 
@@ -201,17 +214,10 @@ namespace Ghost_blade
             // Draw the player
             _player.Draw(_spriteBatch);
 
-            // Draw active enemies
-            if (_enemy.IsActive)
-            {
-                _enemy.Draw(_spriteBatch);
-            }
-            if (_enemyShooting.IsActive)
-            {
-                _enemyShooting.Draw(_spriteBatch);
-            }
+            _enemy.Draw(_spriteBatch);
 
-            // Draw player bullets
+            _enemyShooting.Draw(_spriteBatch);
+
             foreach (var bullet in _playerBullets)
             {
                 bullet.Draw(_spriteBatch);
@@ -222,7 +228,6 @@ namespace Ghost_blade
             {
                 bullet.Draw(_spriteBatch);
             }
-
             _spriteBatch.End();
             base.Draw(gameTime);
         }

@@ -26,7 +26,7 @@ namespace Ghost_blade
         private Vector2 lastMovementDirection = new Vector2(1, 0); // Stores the last direction the player moved
         private MeleeWeapon meleeWeapon;
         public Rectangle MeleeAttackRectangle { get { return meleeWeapon.AttackRectangle; } }
-        public int Health { get; set; } = 3;
+        public int Health { get; set; } = 10;
 
         private bool isDashing = false;
         private float dashTimer = 0f;
@@ -42,6 +42,7 @@ namespace Ghost_blade
         private const float InvincibilityDuration = 0.5f; // ระยะเวลา i-frames (วินาที)
 
         public bool IsAlive { get; private set; }
+        public bool _isSlash { get; set; } = true;
 
         public Rectangle drect
         {
@@ -223,6 +224,7 @@ namespace Ghost_blade
             {
                 if (isSwordEquipped)
                 {
+                    _isSlash = true;
                     meleeWeapon.Swing();
                 }
             }

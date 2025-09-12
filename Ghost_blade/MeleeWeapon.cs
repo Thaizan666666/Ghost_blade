@@ -38,7 +38,6 @@ namespace Ghost_blade
             this.position = playerPosition + rotatedOffset;
             this.rotation = playerRotation;
 
-            // Handle the swing timer
             if (isSwinging)
             {
                 swingTimer += deltaTime;
@@ -50,12 +49,8 @@ namespace Ghost_blade
             }
         }
 
-        /// <summary>
-        /// Starts the melee swing animation.
-        /// </summary>
         public void Swing()
         {
-            // Only swing if not already in the middle of a swing
             if (!isSwinging)
             {
                 isSwinging = true;

@@ -37,6 +37,7 @@ namespace Ghost_blade
         // An event that fires when a bullet is shot.
         public Action<Bullet> OnShoot;
         public bool IsActive { get; set; }
+        public int Health { get; set; } = 150;
 
         public Enemy_Shooting(Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture)
             : base(texture, startPosition, speed, detectionRadius)
@@ -145,8 +146,10 @@ namespace Ghost_blade
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // Draw enemy as a green sprite
-            spriteBatch.Draw(Texture, Position, null, Color.Green, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
+            if (IsActive)
+            {
+                spriteBatch.Draw(Texture, Position, null, Color.Green, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
+            }
         }
 
         // Method to check for clear line of sight to the player.
@@ -187,6 +190,14 @@ namespace Ghost_blade
                 }
             }
             return true;
+        }
+        public void TakeDamage(int damage)
+        {
+            Health -= damage;
+            if (Health <= 0)
+            {
+                this.IsActive = false;
+            }
         }
     }
 }
