@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,6 +23,7 @@ namespace Ghost_blade
         private Random random;
         private Enemy _enemy;
         private Enemy_Shooting _enemyShooting;
+        private Texture2D _swordTexture;
 
         public Game1()
         {
@@ -53,8 +55,12 @@ namespace Ghost_blade
             _bulletTexture = Content.Load<Texture2D>("A_job");
             Texture2D playerTexture = Content.Load<Texture2D>("firefoxBall");
             Texture2D EnemyTexture = Content.Load<Texture2D>("firefoxBall");
+            _swordTexture = new Texture2D(GraphicsDevice, 50, 20); // Create a 50x20 pixel texture
+            Color[] data = new Color[50 * 20];
+            for (int i = 0; i < data.Length; ++i) data[i] = Color.Red; // Fill with red color
+            _swordTexture.SetData(data); // Apply the color data
 
-            _player = new Player(playerTexture, _bulletTexture, new Vector2(960, 540));
+            _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960, 540));
             _enemy = new Enemy(EnemyTexture, new Vector2(50, 50), 1.0f, 500f);
             _enemyShooting = new Enemy_Shooting(EnemyTexture, new Vector2(50, 200), 1.5f, 500f, _bulletTexture);
 
@@ -102,6 +108,21 @@ namespace Ghost_blade
                 Vector2 mouseWorld = new Vector2(mouseState.X, mouseState.Y) - camera.position;
                 Bullet newBullet = _player.Shoot(mouseWorld);
                 if (newBullet != null) _playerBullets.Add(newBullet);
+            }
+            // Check if the sword is swinging and if it collides with an active enemy.
+            if (_player.MeleeAttackRectangle != Rectangle.Empty)
+            {
+                if (_enemy.IsActive && _player.MeleeAttackRectangle.Intersects(_enemy.boundingBox))
+                {
+                    _enemy.IsActive = false;
+                    Debug.WriteLine("Enemy hit by sword!");
+                }
+
+                if (_enemyShooting.IsActive && _player.MeleeAttackRectangle.Intersects(_enemyShooting.boundingBox))
+                {
+                    _enemyShooting.IsActive = false;
+                    Debug.WriteLine("Shooting enemy hit by sword!");
+                }
             }
 
             // Update and check for bullet collisions

@@ -12,7 +12,7 @@ namespace Ghost_blade
         public Texture2D texture { get; set; }
         public Vector2 position { get; set; }
         public Vector2 velocity { get; private set; }
-        
+
         private float speed;
         private float rotation;
         private SpriteEffects currentSpriteEffect;
@@ -22,7 +22,10 @@ namespace Ghost_blade
         public byte currentAmmo;
         private bool isSwordEquipped = true;
         private KeyboardState previousKState;
+        private MouseState previousMState;
         private Vector2 lastMovementDirection = new Vector2(1, 0); // Stores the last direction the player moved
+        private MeleeWeapon meleeWeapon;
+        public Rectangle MeleeAttackRectangle { get { return meleeWeapon.AttackRectangle; } }
         public int Health { get; set; } = 3;
 
         private bool isDashing = false;
@@ -53,7 +56,7 @@ namespace Ghost_blade
             }
         }
 
-        public Player(Texture2D playerTexture, Texture2D bulletTexture, Vector2 initialPosition)
+        public Player(Texture2D playerTexture, Texture2D bulletTexture, Texture2D meleeWeaponTexture, Vector2 initialPosition)
         {
             this.texture = playerTexture;
             this.bulletTexture = bulletTexture;
@@ -64,12 +67,15 @@ namespace Ghost_blade
             this.timer = 0f;
             this.currentAmmo = 10;
             this.previousKState = Keyboard.GetState();
+            this.previousMState = Mouse.GetState();
             this.IsAlive = true;
+            this.meleeWeapon = new MeleeWeapon(meleeWeaponTexture);
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
         {
             KeyboardState kState = Keyboard.GetState();
+            MouseState mState = Mouse.GetState();
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             HandleDash(kState, deltaTime);
@@ -77,9 +83,14 @@ namespace Ghost_blade
             HandleRotation(cameraPosition);
             HandleWeaponSwitching(kState);
             HandleReload(kState);
+            HandleAttacks(mState);
+
+            // Update the melee weapon's state
+            meleeWeapon.Update(gameTime, position, rotation);
 
             timer += deltaTime;
             previousKState = kState;
+            previousMState = mState;
         }
 
         private void HandleDash(KeyboardState kState, float deltaTime)
@@ -206,6 +217,16 @@ namespace Ghost_blade
                 Debug.WriteLine("Ammo = 10");
             }
         }
+        private void HandleAttacks(MouseState mState)
+        {
+            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
+            {
+                if (isSwordEquipped)
+                {
+                    meleeWeapon.Swing();
+                }
+            }
+        }
 
         public void SetPosition(Vector2 newPosition)
         {
@@ -294,15 +315,16 @@ namespace Ghost_blade
                 }
 
                 float bulletRotation = MathF.Atan2(direction.Y, direction.X);
-                
+
                 // Bullet starts at the player's position
-                Vector2 bulletStartPosition = position; 
+                Vector2 bulletStartPosition = position;
                 currentAmmo--;
 
                 return new Bullet(bulletTexture, bulletStartPosition, direction, 10f, bulletRotation, 2f);
             }
             return null;
         }
+
         public void Die()
         {
             IsAlive = false;
@@ -310,6 +332,7 @@ namespace Ghost_blade
             // For now, this is enough to stop the player from being updated and drawn.
             System.Diagnostics.Debug.WriteLine("Player has been hit and is no longer alive.");
         }
+
         public void TakeDamage(int damage)
         {
             // Only reduce health if the character is NOT invincible.
@@ -329,6 +352,7 @@ namespace Ghost_blade
             {
                 Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
                 spriteBatch.Draw(texture, position, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
+                meleeWeapon.Draw(spriteBatch);
             }
         }
     }
