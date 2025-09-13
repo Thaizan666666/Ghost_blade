@@ -25,6 +25,9 @@ namespace Ghost_blade
         private Enemy_Shooting _enemyShooting;
         private Texture2D _swordTexture;
 
+        private Texture2D _bossTexture;
+        private Boss boss;
+
 
         public Game1()
         {
@@ -58,7 +61,7 @@ namespace Ghost_blade
             Texture2D EnemyTexture = Content.Load<Texture2D>("firefoxBall");
             _swordTexture = new Texture2D(GraphicsDevice, 50, 20); // Create a 50x20 pixel texture
             Color[] data = new Color[50 * 20];
-            for (int i = 0; i < data.Length; ++i) data[i] = Color.Red; // Fill with red color
+            for (int i = 0; i < data.Length; ++i) data[i] = Color.White; // Fill with red color
             _swordTexture.SetData(data); // Apply the color data
 
             _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960, 540));
@@ -67,6 +70,12 @@ namespace Ghost_blade
 
             // สมัครรับ Event OnShoot ของศัตรู เพื่อเพิ่มกระสุนที่ยิงใหม่เข้าสู่ List หลัก
             _enemyShooting.OnShoot += bullet => _enemyBullets.Add((EnemyBullet)bullet);
+
+            _bossTexture = new Texture2D(GraphicsDevice, 1, 1);
+            _bossTexture.SetData(new[] { Color.White });
+
+            // Pass the pixel texture to the Beholster constructor
+            boss = new Boss(_bossTexture);
 
 
             // Door texture
@@ -197,6 +206,7 @@ namespace Ghost_blade
             {
                 _enemyShooting.Update(_player, currentRoom.Obstacles);
             }
+            boss.Update(gameTime,_player);
 
             base.Update(gameTime);
         }
@@ -228,6 +238,7 @@ namespace Ghost_blade
             {
                 bullet.Draw(_spriteBatch);
             }
+            boss.Draw(_spriteBatch);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
