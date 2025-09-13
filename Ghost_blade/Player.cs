@@ -357,5 +357,12 @@ namespace Ghost_blade
                 meleeWeapon.Draw(spriteBatch);
             }
         }
+        public void Reset()
+        {
+            IsAlive = true;
+            Health = 10;
+
+        }
+
     }
 }

@@ -37,6 +37,18 @@
 /processorParam:TextureFormat=Color
 /build:firefoxBall.png
 
+#begin Main_title_Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Main_title_Sheet.png
+
 #begin room_01.png
 /importer:TextureImporter
 /processor:TextureProcessor

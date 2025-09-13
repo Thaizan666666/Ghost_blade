@@ -199,5 +199,10 @@ namespace Ghost_blade
                 this.IsActive = false;
             }
         }
+        public void Reset()
+        {
+            IsActive = true;
+            Health = 150;
+        }
     }
 }

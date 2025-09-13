@@ -103,4 +103,8 @@ public class Boss
         Debug.WriteLine($"Attack = {randomIndex}");
         currentAttack.Start(player);
     }
+    public void Reset()
+    {
+        Health = 1500;
+    }
 }

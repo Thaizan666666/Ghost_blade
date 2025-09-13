@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using static Ghost_blade.Game1;
 
 namespace Ghost_blade
 {
@@ -28,9 +29,19 @@ namespace Ghost_blade
         private Texture2D _bossTexture;
         private Boss boss;
 
+        private GameState gameState = GameState.MainMenu;
+        private MainMenuScreen mainMenu;
+
+
+        public enum GameState
+        {
+            MainMenu,
+            Playing
+        }
 
         public Game1()
         {
+
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -40,6 +51,7 @@ namespace Ghost_blade
             _graphics.ApplyChanges();
 
             camera = new FollowsCamera(Vector2.Zero);
+
         }
 
         protected override void Initialize()
@@ -95,12 +107,48 @@ namespace Ghost_blade
             };
 
             _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+
+            mainMenu = new MainMenuScreen(GraphicsDevice, Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                if (gameState == GameState.Playing)
+                {
+                    gameState = GameState.MainMenu;
+                    // เริ่มเกมตั้งค่า player position, reset enemies
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                    _player.Reset();
+                    _enemy.Reset();
+                    _enemyShooting.Reset();                 
+                    _enemyBullets.Clear();
+                    _playerBullets.Clear();
+                    mainMenu.StartGame = false;
+                    mainMenu.ExitGame = false;
+                }
+                return;
+            }
+
+            if (gameState == GameState.MainMenu)
+            {
+                mainMenu.Update(gameTime);
+
+                if (mainMenu.StartGame)
+                {
+                    gameState = GameState.Playing;
+                    // เริ่มเกมตั้งค่า player position, reset enemies
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                }
+                if (mainMenu.ExitGame)
+                {
+                    Exit();
+                }
+
+                return;
+            }
 
             Room currentRoom = rooms[currentRoomIndex];
 
@@ -214,32 +262,43 @@ namespace Ghost_blade
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            var transform = Matrix.CreateTranslation(camera.position.X, camera.position.Y, 0);
 
-            _spriteBatch.Begin(transformMatrix: transform);
-
-            // Draw the current room
-            rooms[currentRoomIndex].Draw(_spriteBatch);
-
-            // Draw the player
-            _player.Draw(_spriteBatch);
-
-            _enemy.Draw(_spriteBatch);
-
-            _enemyShooting.Draw(_spriteBatch);
-
-            foreach (var bullet in _playerBullets)
+            if (gameState == GameState.MainMenu)
             {
-                bullet.Draw(_spriteBatch);
+                // สำหรับเมนู ไม่ต้องใช้ camera
+                _spriteBatch.Begin();
+                mainMenu.Draw(_spriteBatch);
+                _spriteBatch.End();
+            }
+            else if (gameState == GameState.Playing)
+            {
+                // สำหรับเกม ใช้ camera transform
+                var transform = Matrix.CreateTranslation(camera.position.X, camera.position.Y, 0);
+                _spriteBatch.Begin(transformMatrix: transform);
+
+                // Draw current room
+                rooms[currentRoomIndex].Draw(_spriteBatch);
+
+                // Draw player
+                _player.Draw(_spriteBatch);
+
+                // Draw enemies
+                _enemy.Draw(_spriteBatch);
+                _enemyShooting.Draw(_spriteBatch);
+
+                // Draw bullets
+                foreach (var bullet in _playerBullets)
+                    bullet.Draw(_spriteBatch);
+
+                foreach (var bullet in _enemyBullets)
+                    bullet.Draw(_spriteBatch);
+
+                // Draw boss
+                boss.Draw(_spriteBatch);
+
+                _spriteBatch.End();
             }
 
-            // Draw enemy bullets
-            foreach (var bullet in _enemyBullets)
-            {
-                bullet.Draw(_spriteBatch);
-            }
-            boss.Draw(_spriteBatch);
-            _spriteBatch.End();
             base.Draw(gameTime);
         }
     }

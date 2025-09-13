@@ -178,4 +178,10 @@ public class Enemy
             this.IsActive = false;
         }
     }
+     
+    public void Reset()
+    {
+        IsActive = true;
+        Health = 200;
+    }
 }

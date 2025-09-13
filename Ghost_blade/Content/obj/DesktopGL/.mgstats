@@ -1,4 +1,7 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/A_job.png","C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/A_job.xnb","TextureProcessor","Texture2DContent",155,841,0.0937095
-"C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/firefoxBall.png","C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/firefoxBall.xnb","TextureProcessor","Texture2DContent",5449,9301,0.0029105
-"C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/room_01.png","C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/room_01.xnb","TextureProcessor","Texture2DContent",34545,1447285,0.0352197
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/A_job.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/A_job.xnb","TextureProcessor","Texture2DContent",155,841,0.0759953
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/firefoxBall.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/firefoxBall.xnb","TextureProcessor","Texture2DContent",5449,9301,0.0053279
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Main_title_Sheet.xnb","TextureProcessor","Texture2DContent",428993,49766485,0.8336353
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/room_01.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/room_01.xnb","TextureProcessor","Texture2DContent",34545,1447285,0.0452674
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/room_02.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/room_02.xnb","TextureProcessor","Texture2DContent",57758,1447285,0.043867
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/room_03.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/room_03.xnb","TextureProcessor","Texture2DContent",59918,1447285,0.0435765
