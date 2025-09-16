@@ -27,6 +27,7 @@ namespace Ghost_blade
 
         private Texture2D _bossTexture;
         private Boss boss;
+        private Texture2D _pixel;
 
 
         public Game1()
@@ -57,12 +58,14 @@ namespace Ghost_blade
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _bulletTexture = Content.Load<Texture2D>("A_job");
-            Texture2D playerTexture = Content.Load<Texture2D>("firefoxBall");
+            Texture2D playerTexture = Content.Load<Texture2D>("GB_Idle-Sheet");
             Texture2D EnemyTexture = Content.Load<Texture2D>("firefoxBall");
             _swordTexture = new Texture2D(GraphicsDevice, 50, 20); // Create a 50x20 pixel texture
             Color[] data = new Color[50 * 20];
             for (int i = 0; i < data.Length; ++i) data[i] = Color.White; // Fill with red color
             _swordTexture.SetData(data); // Apply the color data
+            _pixel = new Texture2D(GraphicsDevice, 1, 1);
+            _pixel.SetData(new[] { Color.White });
 
             _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960, 540));
             _enemy = new Enemy(EnemyTexture, new Vector2(50, 50), 1.0f, 500f);
@@ -239,8 +242,14 @@ namespace Ghost_blade
                 bullet.Draw(_spriteBatch);
             }
             boss.Draw(_spriteBatch);
+            DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
             _spriteBatch.End();
             base.Draw(gameTime);
+        }
+        private void DrawRectangle(SpriteBatch spriteBatch, Rectangle rectangle, Color color, float thickness)
+        {
+            // Draw the filled rectangle
+            spriteBatch.Draw(_pixel, rectangle, color);
         }
     }
 }

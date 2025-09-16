@@ -7,6 +7,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Ghost_blade
 {
+    public enum PlayerState
+    {
+        Idle,
+        Running,
+        Attacking,
+        Dashing
+    }
     public class Player
     {
         public Texture2D texture { get; set; }
@@ -43,15 +50,26 @@ namespace Ghost_blade
 
         public bool IsAlive { get; private set; }
         public bool _isSlash { get; set; } = true;
+        private int currentFrame;
+        private float frameTimer;
+        private float frameRate = 0.1f; // Adjust this to change animation speed
+        private int frameWidth = 48;
+        private int frameHeight = 48;
+        public PlayerState currentState { get; private set; }
+        // Animation frame data for each state
+        private readonly int[] idleFrames = { 0, 1, 2, 3 }; // Frame indices for idle animation
+        private readonly float idleFrameRate = 0.15f; // Faster rate for idle animation
 
+        private readonly int[] runningFrames = { 4, 5, 6, 7 }; // Assuming running animation starts at frame 4
+        private readonly float runningFrameRate = 0.1f;
         public Rectangle drect
         {
             get
             {
                 return new Rectangle(
-                    (int)(position.X - texture.Width / 2),
-                    (int)(position.Y - texture.Height / 2),
-                    texture.Width,
+                    (int)(position.X - texture.Width/4 + 24),
+                    (int)(position.Y - texture.Height/2),
+                    24,
                     texture.Height
                 );
             }
@@ -81,11 +99,37 @@ namespace Ghost_blade
 
             HandleDash(kState, deltaTime);
             HandleMovement(kState);
-            HandleRotation(cameraPosition);
+            //HandleRotation(cameraPosition);
             HandleWeaponSwitching(kState);
             HandleReload(kState);
             HandleAttacks(mState);
+            if (isDashing)
+            {
+                currentState = PlayerState.Dashing;
+            }
+            else if (velocity != Vector2.Zero)
+            {
+                currentState = PlayerState.Running;
+            }
+            //else if (meleeWeapon.IsSwinging) // Assuming MeleeWeapon has an IsSwinging property
+            //{
+            //    currentState = PlayerState.Attacking;
+            //}
+            else
+            {
+                currentState = PlayerState.Idle;
+            }
 
+            switch (currentState)
+            {
+                case PlayerState.Idle:
+                    UpdateAnimation(gameTime, idleFrames, idleFrameRate);
+                    break;
+                case PlayerState.Running:
+                    UpdateAnimation(gameTime, runningFrames, runningFrameRate);
+                    break;
+                    // Add more cases for Attacking and Dashing
+            }
             // Update the melee weapon's state
             meleeWeapon.Update(gameTime, position, rotation);
 
@@ -110,7 +154,7 @@ namespace Ghost_blade
                 // เปิดใช้งาน i-frames และใช้ DashDuration เป็นระยะเวลา
                 IsInvincible = true;
                 invincibilityTimer = DashDuration; // ตั้งค่าให้เวลา i-frames เท่ากับระยะเวลา Dash
-
+                    
                 // Use the current velocity for the dash direction if the player is moving
                 if (velocity != Vector2.Zero)
                 {
@@ -348,12 +392,30 @@ namespace Ghost_blade
             }
         }
 
+        private void UpdateAnimation(GameTime gameTime, int[] frames, float rate)
+        {
+            frameRate = rate;
+            frameTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (frameTimer >= frameRate)
+            {
+                frameTimer = 0f;
+                currentFrame++;
+                if (currentFrame >= frames.Length)
+                {
+                    currentFrame = 0; // Loop the animation
+                }
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             if (IsAlive)
             {
-                Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
-                spriteBatch.Draw(texture, position, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
+                Rectangle sourceRect = new Rectangle(currentFrame * frameWidth, 0, frameWidth, frameHeight);
+                Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
+
+                spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
                 meleeWeapon.Draw(spriteBatch);
             }
         }
