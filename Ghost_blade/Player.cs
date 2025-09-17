@@ -62,16 +62,31 @@ namespace Ghost_blade
 
         private readonly int[] runningFrames = { 4, 5, 6, 7 }; // Assuming running animation starts at frame 4
         private readonly float runningFrameRate = 0.1f;
+        bool _isLeft = false;
         public Rectangle drect
         {
             get
             {
+                {
+                      return new Rectangle(
+                            (int)(position.X - texture.Width / 4 + 24),
+                            (int)(position.Y - texture.Height / 2 + 24),
+                            24,
+                            texture.Height - 24
+                      );
+                }
+            }
+        }
+        public Rectangle HitboxgetDamage
+        {
+            get
+            {
                 return new Rectangle(
-                    (int)(position.X - texture.Width/4 + 24),
-                    (int)(position.Y - texture.Height/2),
-                    24,
-                    texture.Height
-                );
+                            (int)(position.X - texture.Width / 4 + 24),
+                            (int)(position.Y - texture.Height),
+                            24,
+                            texture.Height
+                      );
             }
         }
 
@@ -89,6 +104,7 @@ namespace Ghost_blade
             this.previousMState = Mouse.GetState();
             this.IsAlive = true;
             this.meleeWeapon = new MeleeWeapon(meleeWeaponTexture);
+            
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
@@ -207,8 +223,8 @@ namespace Ghost_blade
 
                 if (kState.IsKeyDown(Keys.W)) { newVelocity.Y -= 1; }
                 if (kState.IsKeyDown(Keys.S)) { newVelocity.Y += 1; }
-                if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; }
-                if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1; }
+                if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; currentSpriteEffect = SpriteEffects.None; }
+                if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1; currentSpriteEffect = SpriteEffects.FlipHorizontally; }
 
                 // Update the velocity property
                 velocity = newVelocity;
@@ -415,7 +431,7 @@ namespace Ghost_blade
                 Rectangle sourceRect = new Rectangle(currentFrame * frameWidth, 0, frameWidth, frameHeight);
                 Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
 
-                spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
                 meleeWeapon.Draw(spriteBatch);
             }
         }
