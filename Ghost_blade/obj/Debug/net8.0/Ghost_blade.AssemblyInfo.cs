@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Ghost_blade")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+564c6a6a8babe1b16507080b0ff123c9bd5b946e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+33ed6a91ccf6c257cab79ff21606f4128d69a8de")]
 [assembly: System.Reflection.AssemblyProductAttribute("Ghost_blade")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Ghost_blade")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

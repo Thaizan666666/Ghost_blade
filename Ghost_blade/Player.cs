@@ -68,12 +68,21 @@ namespace Ghost_blade
             get
             {
                 {
-                      return new Rectangle(
-                            (int)(position.X - texture.Width / 4 + 24),
-                            (int)(position.Y - texture.Height / 2 + 24),
-                            24,
-                            texture.Height - 24
-                      );
+                    int x;
+                    if (currentSpriteEffect == SpriteEffects.None) // Unflipped (facing right)
+                    {
+                        x = (int)(position.X - texture.Width / 4 + 24);
+                    }
+                    else // Flipped (facing left)
+                    {
+                        x = (int)(position.X - texture.Width / 4 + 48);
+                    }
+                    return new Rectangle(
+                          x,
+                          (int)(position.Y - texture.Height / 2 + 24),
+                          24,
+                          texture.Height - 24
+                    );
                 }
             }
         }
@@ -104,7 +113,7 @@ namespace Ghost_blade
             this.previousMState = Mouse.GetState();
             this.IsAlive = true;
             this.meleeWeapon = new MeleeWeapon(meleeWeaponTexture);
-            
+
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
@@ -170,7 +179,7 @@ namespace Ghost_blade
                 // เปิดใช้งาน i-frames และใช้ DashDuration เป็นระยะเวลา
                 IsInvincible = true;
                 invincibilityTimer = DashDuration; // ตั้งค่าให้เวลา i-frames เท่ากับระยะเวลา Dash
-                    
+
                 // Use the current velocity for the dash direction if the player is moving
                 if (velocity != Vector2.Zero)
                 {
@@ -222,9 +231,9 @@ namespace Ghost_blade
                 Vector2 newVelocity = Vector2.Zero;
 
                 if (kState.IsKeyDown(Keys.W)) { newVelocity.Y -= 1; }
-                if (kState.IsKeyDown(Keys.S)) { newVelocity.Y += 1; }
+                else if (kState.IsKeyDown(Keys.S)) { newVelocity.Y += 1; }
                 if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; currentSpriteEffect = SpriteEffects.None; }
-                if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1; currentSpriteEffect = SpriteEffects.FlipHorizontally; }
+                else if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1; currentSpriteEffect = SpriteEffects.FlipHorizontally; }
 
                 // Update the velocity property
                 velocity = newVelocity;
