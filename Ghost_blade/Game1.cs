@@ -67,7 +67,7 @@ namespace Ghost_blade
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
 
-            _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960, 540));
+            _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960, 540), GraphicsDevice);
             _enemy = new Enemy(EnemyTexture, new Vector2(50, 50), 1.0f, 500f);
             _enemyShooting = new Enemy_Shooting(EnemyTexture, new Vector2(50, 200), 1.5f, 500f, _bulletTexture);
 
