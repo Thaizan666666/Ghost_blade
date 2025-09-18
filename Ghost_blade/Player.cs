@@ -439,7 +439,6 @@ namespace Ghost_blade
             {
                 Rectangle sourceRect = new Rectangle(currentFrame * frameWidth, 0, frameWidth, frameHeight);
                 Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
-
                 spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
                 meleeWeapon.Draw(spriteBatch);
             }

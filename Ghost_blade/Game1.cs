@@ -86,9 +86,9 @@ namespace Ghost_blade
             doorTexture.SetData(new[] { Color.Red });
 
             // Backgrounds
-            Texture2D room1BG = Content.Load<Texture2D>("room_01");
-            Texture2D room2BG = Content.Load<Texture2D>("room_02");
-            Texture2D room3BG = Content.Load<Texture2D>("room_03");
+            Texture2D room1BG = Content.Load<Texture2D>("Map_lab_01");
+            Texture2D room2BG = Content.Load<Texture2D>("Map_lab_02");
+            Texture2D room3BG = Content.Load<Texture2D>("Map_lab_03");
 
             rooms = new List<Room>
             {
@@ -102,6 +102,8 @@ namespace Ghost_blade
 
         protected override void Update(GameTime gameTime)
         {
+            Debug.WriteLine($"Player Position: X={_player.position.X/24}, Y={_player.position.Y/24}");
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 

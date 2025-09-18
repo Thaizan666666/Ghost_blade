@@ -34,14 +34,16 @@ namespace Ghost_blade
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Background, new Rectangle(0, 0, 1920, 1080), Color.White);
+            spriteBatch.Draw(Background, new Rectangle(0, 0, 3285, 2970), Color.White);
+
             if (DoorTexture != null) spriteBatch.Draw(DoorTexture, Door, Color.White);
 
             // วาดสิ่งกีดขวางสีเทา
             foreach (var rect in Obstacles)
             {
                 Texture2D tex = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-                tex.SetData(new[] { Color.Gray });
+                tex.SetData(new[] { Color.Transparent });
+                //tex.SetData(new[] { Color.Gray });
                 spriteBatch.Draw(tex, rect, Color.White);
             }
         }

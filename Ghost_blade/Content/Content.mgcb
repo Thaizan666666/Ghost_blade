@@ -49,7 +49,7 @@
 /processorParam:TextureFormat=Color
 /build:GB_Idle-Sheet.png
 
-#begin room_01.png
+#begin Map_lab_01.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -59,9 +59,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:room_01.png
+/build:Map_lab_01.png
 
-#begin room_02.png
+#begin Map_lab_02.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -71,9 +71,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:room_02.png
+/build:Map_lab_02.png
 
-#begin room_03.png
+#begin Map_lab_03.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -83,5 +83,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:room_03.png
+/build:Map_lab_03.png
 
