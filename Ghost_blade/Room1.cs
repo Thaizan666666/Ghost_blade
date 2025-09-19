@@ -10,8 +10,8 @@ namespace Ghost_blade
 {
     public class Room1 : Room
     {
-        public Room1(Texture2D bg, Texture2D door)
-            : base(bg, door, new Rectangle(109*24, 47*24, 4*24, 3*24), new Vector2(55* 24, 98*24), new Rectangle(0, 0, 3285, 2970)) //
+        public Room1(Texture2D bg, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
+            : base(bg, door, new Rectangle(109 * 24, 47 * 24, 4 * 24, 3 * 24), new Vector2(55 * 24, 98 * 24), new Rectangle(0, 0, 3285, 2970))
         {
             NextRooms = new List<int> { 1, 2 };
             int tileSize = 24;
@@ -21,6 +21,7 @@ namespace Ghost_blade
                 Obstacles.Add(new Rectangle(xTile * tileSize, yTile * tileSize, widthTile * tileSize, heightTile * tileSize));
             }
 
+            // ... (Your obstacle code remains the same) ...
             AddObstacle(4, 7, 18, 1);
             AddObstacle(4, 26, 18, 1);
             AddObstacle(3, 5, 1, 22);
@@ -103,6 +104,15 @@ namespace Ghost_blade
             AddObstacle(54, 104, 2, 2);
             AddObstacle(60, 104, 2, 2);
             AddObstacle(110, 62, 4, 8);
+
+            // Add enemies specific to this room
+            AddEnemy(new Enemy(enemyTexture, new Vector2(43* tileSize, 60* tileSize), 1.0f, 500f));
+            AddEnemy(new Enemy(enemyTexture, new Vector2(44 * tileSize, 70 * tileSize), 1.0f, 500f));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(70 * tileSize, 56 * tileSize), 1.5f, 500f, bulletTexture));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(68 * tileSize, 70 * tileSize), 1.5f, 500f, bulletTexture));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(78 * tileSize, 10 * tileSize), 1.5f, 500f, bulletTexture));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(12 * tileSize, 15 * tileSize), 1.5f, 500f, bulletTexture));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(120 * tileSize, 62 * tileSize), 1.5f, 500f, bulletTexture));
         }
     }
 }

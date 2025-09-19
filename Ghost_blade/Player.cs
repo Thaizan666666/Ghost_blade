@@ -316,8 +316,119 @@ namespace Ghost_blade
 
         public void ClampPosition(Rectangle bounds, List<Rectangle> obstacles)
         {
-            // (โค้ดส่วนนี้ไม่ได้เปลี่ยนแปลง)
-            // ...
+
+            // 1. Apply normal movement if not dashing
+
+            if (!isDashing)
+
+            {
+
+                position += velocity; // Apply normal movement here
+
+            }
+
+
+
+            // 2. Clamp to world bounds first
+
+            position = Vector2.Clamp(position,
+
+                  new Vector2(bounds.Left + texture.Width / 2, bounds.Top + texture.Height / 2),
+
+                  new Vector2(bounds.Right - texture.Width / 2, bounds.Bottom - texture.Height / 2));
+
+
+
+            // 3. Handle obstacle collisions
+
+            foreach (var obs in obstacles)
+
+            {
+
+                // If the player's bounding box intersects an obstacle
+
+                while (drect.Intersects(obs)) // Use a while loop to ensure player is fully out
+
+                {
+
+                    if (isDashing)
+
+                    {
+
+                        isDashing = false; // Stop dashing immediately upon collision
+
+                        Debug.WriteLine("Dash interrupted by obstacle.");
+
+                    }
+
+
+
+                    // Determine the direction to push the player out
+
+                    Vector2 separationVector = Vector2.Zero;
+
+                    Rectangle intersection = Rectangle.Intersect(drect, obs);
+
+
+
+                    // Find the smallest axis of overlap to push along
+
+                    if (intersection.Width < intersection.Height)
+
+                    {
+
+                        // Push horizontally
+
+                        if (drect.Center.X < obs.Center.X) // Player is to the left of obstacle
+
+                        {
+
+                            separationVector.X = -intersection.Width;
+
+                        }
+
+                        else // Player is to the right of obstacle
+
+                        {
+
+                            separationVector.X = intersection.Width;
+
+                        }
+
+                    }
+
+                    else
+
+                    {
+
+                        // Push vertically
+
+                        if (drect.Center.Y < obs.Center.Y) // Player is above obstacle
+
+                        {
+
+                            separationVector.Y = -intersection.Height;
+
+                        }
+
+                        else // Player is below obstacle
+
+                        {
+
+                            separationVector.Y = intersection.Height;
+
+                        }
+
+                    }
+
+                    position += separationVector;
+
+                    Debug.WriteLine($"Collision! Pushing player by {separationVector}");
+
+                }
+
+            }
+
         }
 
         public Bullet Shoot(Vector2 mousePosition)
@@ -389,6 +500,12 @@ namespace Ghost_blade
                 spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
                 meleeWeapon.Draw(spriteBatch);
             }
+        }
+        public void Reset()
+        {
+            IsAlive = true;
+            Health = 10;
+
         }
     }
 }

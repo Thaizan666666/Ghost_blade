@@ -21,14 +21,22 @@ namespace Ghost_blade
         private List<Room> rooms;
         private int currentRoomIndex;
         private Random random;
-        private Enemy _enemy;
-        private Enemy_Shooting _enemyShooting;
+
         private Texture2D _swordTexture;
 
         private Texture2D _bossTexture;
         private Boss boss;
         private Texture2D _pixel;
+        private Texture2D EnemyTexture;
 
+        private GameState gameState = GameState.MainMenu;
+        private MainMenuScreen mainMenu;
+
+        public enum GameState
+        {
+            MainMenu,
+            Playing
+        }
 
         public Game1()
         {
@@ -59,7 +67,7 @@ namespace Ghost_blade
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _bulletTexture = Content.Load<Texture2D>("A_job");
             Texture2D playerTexture = Content.Load<Texture2D>("GB_Idle-Sheet");
-            Texture2D EnemyTexture = Content.Load<Texture2D>("firefoxBall");
+            EnemyTexture = Content.Load<Texture2D>("firefoxBall");
             _swordTexture = new Texture2D(GraphicsDevice, 50, 20); // Create a 50x20 pixel texture
             Color[] data = new Color[50 * 20];
             for (int i = 0; i < data.Length; ++i) data[i] = Color.White; // Fill with red color
@@ -68,17 +76,13 @@ namespace Ghost_blade
             _pixel.SetData(new[] { Color.White });
 
             _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960, 540));
-            _enemy = new Enemy(EnemyTexture, new Vector2(50, 50), 1.0f, 500f);
-            _enemyShooting = new Enemy_Shooting(EnemyTexture, new Vector2(50, 200), 1.5f, 500f, _bulletTexture);
-
-            // สมัครรับ Event OnShoot ของศัตรู เพื่อเพิ่มกระสุนที่ยิงใหม่เข้าสู่ List หลัก
-            _enemyShooting.OnShoot += bullet => _enemyBullets.Add((EnemyBullet)bullet);
+            // Removed direct Enemy and Enemy_Shooting creation.
 
             _bossTexture = new Texture2D(GraphicsDevice, 1, 1);
             _bossTexture.SetData(new[] { Color.White });
 
             // Pass the pixel texture to the Beholster constructor
-            boss = new Boss(_bossTexture);
+            //boss = new Boss(_bossTexture);
 
 
             // Door texture
@@ -90,22 +94,63 @@ namespace Ghost_blade
             Texture2D room2BG = Content.Load<Texture2D>("Map_lab_02");
             Texture2D room3BG = Content.Load<Texture2D>("Map_lab_03");
 
+            // Now, pass the textures to the Room constructors
             rooms = new List<Room>
             {
-                new Room1(room1BG, doorTexture),
-                new Room2(room2BG, doorTexture),
-                new Room3(room3BG, doorTexture)
+                new Room1(room1BG, doorTexture, EnemyTexture, _bulletTexture),
+                new Room2(room2BG, doorTexture, EnemyTexture, _bulletTexture),
+                new Room3(room3BG, doorTexture, EnemyTexture, _bulletTexture)
             };
 
+            // Set up a reference to the shooting enemy's OnShoot event.
+            // This is still a bit clunky, but necessary for now.
+            var room1ShootingEnemy = rooms[0].Enemies.Find(e => e is Enemy_Shooting) as Enemy_Shooting;
+            if (room1ShootingEnemy != null)
+            {
+                room1ShootingEnemy.OnShoot += bullet => _enemyBullets.Add((EnemyBullet)bullet);
+            }
+
             _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+            mainMenu = new MainMenuScreen(GraphicsDevice, Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
             //Debug.WriteLine($"Player Position: X={_player.position.X/24}, Y={_player.position.Y/24}");
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                if (gameState == GameState.Playing)
+                {
+                    gameState = GameState.MainMenu;
+                    // เริ่มเกมตั้งค่า player position, reset enemies
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                    _player.Reset();
+                    _enemyBullets.Clear();
+                    _playerBullets.Clear();
+                    mainMenu.StartGame = false;
+                    mainMenu.ExitGame = false;
+                }
+                return;
+            }
+
+            if (gameState == GameState.MainMenu)
+            {
+                mainMenu.Update(gameTime);
+
+                if (mainMenu.StartGame)
+                {
+                    gameState = GameState.Playing;
+                    // เริ่มเกมตั้งค่า player position, reset enemies
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                }
+                if (mainMenu.ExitGame)
+                {
+                    Exit();
+                }
+
+                return;
+            }
 
             Room currentRoom = rooms[currentRoomIndex];
 
@@ -115,7 +160,7 @@ namespace Ghost_blade
             {
                 _player.Update(gameTime, camera.position);
             }
-            else {return;}
+            else { return; }
 
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed || mouseState.RightButton == ButtonState.Pressed)
@@ -124,45 +169,47 @@ namespace Ghost_blade
                 Bullet newBullet = _player.Shoot(mouseWorld);
                 if (newBullet != null) _playerBullets.Add(newBullet);
             }
-            // Check if the sword is swinging and if it collides with an active enemy.
+
+            // Update all enemies in the current room
+            foreach (var enemy in currentRoom.Enemies)
+            {
+                if (enemy.IsActive)
+                {
+                    enemy.Update(_player, currentRoom.Obstacles);
+                }
+            }
+
+            // Check for player sword collisions with all enemies
             if (_player.meleeWeapon.AttackHitbox != Rectangle.Empty)
             {
-                if (_enemy.IsActive && _player.meleeWeapon.AttackHitbox.Intersects(_enemy.boundingBox))
+                foreach (var enemy in currentRoom.Enemies)
                 {
-                    if (_player._isSlash)
+                    if (enemy.IsActive && _player.meleeWeapon.AttackHitbox.Intersects(enemy.boundingBox))
                     {
-                        _enemy.TakeDamage(70);
-                        _player._isSlash = false;
-                    }
-                }
-
-                if (_enemyShooting.IsActive && _player.meleeWeapon.AttackHitbox.Intersects(_enemyShooting.boundingBox))
-                {
-                    if (_player._isSlash)
-                    {
-                        _enemyShooting.TakeDamage(70);
-                        _player._isSlash = false;
+                        if (_player._isSlash)
+                        {
+                            enemy.TakeDamage(70);
+                            _player._isSlash = false;
+                            break; // Exit the loop after hitting the first enemy
+                        }
                     }
                 }
             }
 
-            // Update and check for bullet collisions
+            // Update and check for player bullet collisions with all enemies
             for (int i = _playerBullets.Count - 1; i >= 0; i--)
             {
                 Bullet bullet = _playerBullets[i];
                 bullet.Update(gameTime, currentRoom.Obstacles);
 
-                // Check for player bullet hitting enemies
-                if (_enemy.IsActive && bullet.boundingBox.Intersects(_enemy.boundingBox))
+                foreach (var enemy in currentRoom.Enemies)
                 {
-                    _enemy.TakeDamage(40);
-                    bullet.IsActive = false;
-                }
-
-                if (_enemyShooting.IsActive && bullet.boundingBox.Intersects(_enemyShooting.boundingBox))
-                {
-                    _enemyShooting.TakeDamage(40);
-                    bullet.IsActive = false;
+                    if (enemy.IsActive && bullet.boundingBox.Intersects(enemy.boundingBox))
+                    {
+                        enemy.TakeDamage(40);
+                        bullet.IsActive = false;
+                        break; // Exit the inner loop after hitting an enemy
+                    }
                 }
 
                 // Remove inactive bullets
@@ -178,7 +225,6 @@ namespace Ghost_blade
                 EnemyBullet bullet = _enemyBullets[i];
                 bullet.Update(gameTime, currentRoom.Obstacles, _player);
 
-                // No need for explicit IsActive check here, the bullet's Update handles it.
                 if (!bullet.IsActive)
                 {
                     _enemyBullets.RemoveAt(i);
@@ -195,17 +241,7 @@ namespace Ghost_blade
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                 }
             }
-
-            if (_enemy.IsActive)
-            {
-                _enemy.Update(_player, currentRoom.Obstacles);
-            }
-
-            if (_enemyShooting.IsActive)
-            {
-                _enemyShooting.Update(_player, currentRoom.Obstacles);
-            }
-            boss.Update(gameTime,_player);
+            //boss.Update(gameTime, _player);
 
             base.Update(gameTime);
         }
@@ -213,36 +249,59 @@ namespace Ghost_blade
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            var transform = Matrix.CreateTranslation(camera.position.X, camera.position.Y, 0);
-
-            _spriteBatch.Begin(transformMatrix: transform);
-
-            // Draw the current room
-            rooms[currentRoomIndex].Draw(_spriteBatch);
-
-            // Draw the player
-            _player.Draw(_spriteBatch);
-
-            _enemy.Draw(_spriteBatch);
-
-            _enemyShooting.Draw(_spriteBatch);
-
-            foreach (var bullet in _playerBullets)
+            if (gameState == GameState.MainMenu)
             {
-                bullet.Draw(_spriteBatch);
+                // สำหรับเมนู ไม่ต้องใช้ camera
+                _spriteBatch.Begin();
+                mainMenu.Draw(_spriteBatch);
+                _spriteBatch.End();
             }
-
-            // Draw enemy bullets
-            foreach (var bullet in _enemyBullets)
+            else if (gameState == GameState.Playing)
             {
-                bullet.Draw(_spriteBatch);
+                var transform = Matrix.CreateTranslation(camera.position.X, camera.position.Y, 0);
+
+                _spriteBatch.Begin(transformMatrix: transform);
+
+                // Draw the current room
+                rooms[currentRoomIndex].Draw(_spriteBatch);
+
+                // Draw the player
+                _player.Draw(_spriteBatch);
+
+                // Draw all active enemies in the current room
+                foreach (var enemy in rooms[currentRoomIndex].Enemies)
+                {
+                    enemy.Draw(_spriteBatch);
+                }
+
+                foreach (var bullet in _playerBullets)
+                {
+                    bullet.Draw(_spriteBatch);
+                }
+
+                // Draw enemy bullets
+                foreach (var bullet in _enemyBullets)
+                {
+                    bullet.Draw(_spriteBatch);
+                }
+                //boss.Draw(_spriteBatch);
+
+                // Draw hitboxes
+                DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
+                DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
+                foreach (var enemy in rooms[currentRoomIndex].Enemies)
+                {
+                    if (enemy.IsActive)
+                    {
+                        DrawRectangle(_spriteBatch, enemy.boundingBox, Color.Orange, 1);
+                    }
+                }
+
+                _spriteBatch.End();
             }
-            boss.Draw(_spriteBatch);
-            DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
-            DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
-            _spriteBatch.End();
             base.Draw(gameTime);
         }
+
         private void DrawRectangle(SpriteBatch spriteBatch, Rectangle rectangle, Color color, float thickness)
         {
             // Draw the filled rectangle

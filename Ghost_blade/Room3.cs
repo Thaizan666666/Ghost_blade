@@ -11,7 +11,7 @@ namespace Ghost_blade
 {
     public class Room3 : Room
     {
-        public Room3(Texture2D bg, Texture2D door)
+        public Room3(Texture2D bg, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
             : base(bg, door, new Rectangle(89 * 24, 37 * 24, 4 * 24, 3 * 24), new Vector2(23 * 24, 96 * 24), new Rectangle(0, 0, 3285, 2970)) //
         {
             NextRooms = new List<int> { 0, 1};
@@ -59,6 +59,12 @@ namespace Ghost_blade
             AddObstacle(18, 56, 2, 4);
             AddObstacle(22, 66, 10, 2);
             AddObstacle(30, 60, 2, 8);
+
+            AddEnemy(new Enemy(enemyTexture, new Vector2(15 * tileSize, 70 * tileSize), 1.0f, 500f));
+            AddEnemy(new Enemy(enemyTexture, new Vector2(16 * tileSize, 30 * tileSize), 1.0f, 500f));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(37 * tileSize, 70 * tileSize), 1.5f, 500f, bulletTexture));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(33 * tileSize, 54 * tileSize), 1.5f, 500f, bulletTexture));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(85 * tileSize, 48 * tileSize), 1.5f, 500f, bulletTexture));
         }
     }
 }
