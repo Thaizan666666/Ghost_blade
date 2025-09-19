@@ -102,7 +102,7 @@ namespace Ghost_blade
 
         protected override void Update(GameTime gameTime)
         {
-            Debug.WriteLine($"Player Position: X={_player.position.X/24}, Y={_player.position.Y/24}");
+            //Debug.WriteLine($"Player Position: X={_player.position.X/24}, Y={_player.position.Y/24}");
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -125,28 +125,22 @@ namespace Ghost_blade
                 if (newBullet != null) _playerBullets.Add(newBullet);
             }
             // Check if the sword is swinging and if it collides with an active enemy.
-            if (_player.MeleeAttackRectangle != Rectangle.Empty)
+            if (_player.meleeWeapon.AttackHitbox != Rectangle.Empty)
             {
-                if (_enemy.IsActive && _player.MeleeAttackRectangle.Intersects(_enemy.boundingBox))
+                if (_enemy.IsActive && _player.meleeWeapon.AttackHitbox.Intersects(_enemy.boundingBox))
                 {
                     if (_player._isSlash)
                     {
-                        Random random = new Random();
-                        int r = random.Next(50, 70);
-                        _enemy.TakeDamage(r);
-                        Debug.WriteLine($"Enemy hit by sword! {r}");
+                        _enemy.TakeDamage(70);
                         _player._isSlash = false;
                     }
                 }
 
-                if (_enemyShooting.IsActive && _player.MeleeAttackRectangle.Intersects(_enemyShooting.boundingBox))
+                if (_enemyShooting.IsActive && _player.meleeWeapon.AttackHitbox.Intersects(_enemyShooting.boundingBox))
                 {
                     if (_player._isSlash)
                     {
-                        Random random = new Random();
-                        int r = random.Next(50, 70);
-                        _enemyShooting.TakeDamage(r);
-                        Debug.WriteLine($"Shooting enemy hit by sword! {r}");
+                        _enemyShooting.TakeDamage(70);
                         _player._isSlash = false;
                     }
                 }
@@ -245,6 +239,7 @@ namespace Ghost_blade
             }
             boss.Draw(_spriteBatch);
             DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
+            DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -252,6 +247,7 @@ namespace Ghost_blade
         {
             // Draw the filled rectangle
             spriteBatch.Draw(_pixel, rectangle, color);
+
         }
     }
 }

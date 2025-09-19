@@ -1,95 +1,101 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
-namespace Ghost_blade
+public class MeleeWeapon
 {
-    /// <summary>
-    /// Represents the player's melee weapon, handling its state and attack logic.
-    /// </summary>
-    public class MeleeWeapon
+    private Texture2D texture;
+    private Vector2 position; // ตำแหน่งจุดหมุนของอาวุธ (ตรงกับผู้เล่น)
+    private Vector2 origin;
+    private float rotation;
+    private float realhitbox;
+    private float snapAngle = MathF.PI / 4f; // 45 องศา
+
+    public Rectangle AttackHitbox { get; private set; }
+
+    public MeleeWeapon(Texture2D weaponTexture)
     {
-        private Texture2D texture;
-        private Vector2 position;
-        private Vector2 origin;
-        private float rotation;
+        this.texture = weaponTexture;
+        this.origin = new Vector2(texture.Width / 2, texture.Height / 2);
+    }
 
-        // Melee attack state
-        private bool isSwinging = false;
-        private float swingTimer = 0f;
-        private const float swingDuration = 0.2f; // The duration of the swing in seconds
+    public void Update(GameTime gameTime, Vector2 playerPosition, Vector2 cameraPosition, bool isAttacking)
+    {
+        // อัปเดตตำแหน่งจุดหมุนของอาวุธให้ตรงกับผู้เล่น
+        this.position = playerPosition;
 
-        public MeleeWeapon(Texture2D weaponTexture)
+        MouseState mouseState = Mouse.GetState();
+        // แปลงพิกัดเมาส์จาก Screen Space เป็น World Space
+        Vector2 mousePosWorld = new Vector2(mouseState.X, mouseState.Y) - cameraPosition;
+        Vector2 dirToMouse = mousePosWorld - position;
+
+        // คำนวณมุมและล็อกให้อยู่ใน 8 ทิศทางหลัก
+        float angle = MathF.Atan2(dirToMouse.Y, dirToMouse.X);
+        rotation = MathF.Round(angle / snapAngle) * snapAngle;
+
+        // กำหนดขนาดและระยะห่างของ Hitbox จากผู้เล่น
+        if (angle < 0)
         {
-            this.texture = weaponTexture;
-            // The origin is at the base of the weapon to rotate correctly from the player
-            this.origin = new Vector2(0, texture.Height / 2);
+            angle += MathF.PI * 2;
         }
 
-        public void Update(GameTime gameTime, Vector2 playerPosition, float playerRotation)
+        // กำหนดขนาดและระยะห่างของ Hitbox จากผู้เล่น
+        if (isAttacking)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            // กำหนดขนาดและระยะห่างของ Hitbox จากผู้เล่น
+            int hitboxSize = 50;
+            int distance = 40;
 
-            // Update the weapon's position and rotation relative to the player.
-            // We rotate the position offset to make the weapon circle around the player.
-            Vector2 offset = new Vector2(texture.Width / 2, 0);
-            Matrix rotationMatrix = Matrix.CreateRotationZ(playerRotation);
-            Vector2 rotatedOffset = Vector2.Transform(offset, rotationMatrix);
-            this.position = playerPosition + rotatedOffset;
-            this.rotation = playerRotation;
-
-            if (isSwinging)
+            // ตรวจสอบมุมให้อยู่ในแต่ละ 90 องศา quadrant
+            if (angle >= MathF.PI * 0.25f && angle < MathF.PI * 0.75f) // 45 ถึง 135 องศา (บน)
             {
-                swingTimer += deltaTime;
-                if (swingTimer >= swingDuration)
-                {
-                    isSwinging = false;
-                    swingTimer = 0f;
-                }
+                rotation = MathF.PI / 2f;
+                realhitbox = 0f;
+                AttackHitbox = new Rectangle((int)position.X - hitboxSize / 2, (int)position.Y - distance - hitboxSize, hitboxSize, hitboxSize);
+            }
+            else if (angle >= MathF.PI * 0.75f && angle < MathF.PI * 1.25f) // 135 ถึง 225 องศา (ซ้าย)
+            {
+                rotation = MathF.PI;
+                realhitbox = 1f;
+                AttackHitbox = new Rectangle((int)position.X - distance - hitboxSize, (int)position.Y - hitboxSize / 2, hitboxSize, hitboxSize);
+            }
+            else if (angle >= MathF.PI * 1.25f && angle < MathF.PI * 1.75f) // 225 ถึง 315 องศา (ล่าง)
+            {
+                rotation = 3f * MathF.PI / 2f;
+                realhitbox = 0f;
+                AttackHitbox = new Rectangle((int)position.X - hitboxSize / 2, (int)position.Y - distance, hitboxSize, hitboxSize);
+            }
+            else // ที่เหลือคือ 315 ถึง 45 องศา (ขวา)
+            {
+                rotation = 0f;
+                realhitbox = 1f;
+                AttackHitbox = new Rectangle((int)position.X + distance, (int)position.Y - hitboxSize / 2, hitboxSize, hitboxSize);
             }
         }
-
-        public void Swing()
+        else
         {
-            if (!isSwinging)
-            {
-                isSwinging = true;
-                swingTimer = 0f;
-                System.Diagnostics.Debug.WriteLine("Sword swing activated!");
-            }
+            // ถ้าไม่ได้โจมตี ให้ Hitbox ว่างเปล่าเพื่อป้องกันการชนที่ไม่ตั้งใจ
+            AttackHitbox = Rectangle.Empty;
         }
+    }
 
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            // Only draw the weapon when it is swinging
-            if (isSwinging)
-            {
-                // The weapon is drawn at its calculated position, rotated and scaled
-                spriteBatch.Draw(texture, position, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
-            }
-        }
+    public void Draw(SpriteBatch spriteBatch)
+    {
+        Vector2 origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
 
-        /// <summary>
-        /// Gets the collision rectangle for the active swing.
-        /// </summary>
-        public Rectangle AttackRectangle
-        {
-            get
-            {
-                if (!isSwinging)
-                {
-                    return Rectangle.Empty; // Return an empty rectangle if not swinging
-                }
-
-                // Calculate the rotated rectangle for collision detection.
-                // This is a simplified AABB (Axis-Aligned Bounding Box) for the sword's current position.
-                return new Rectangle(
-                    (int)(position.X - origin.X),
-                    (int)(position.Y - origin.Y),
-                    (int)texture.Width,
-                    (int)texture.Height
-                );
-            }
-        }
+        // วาดอาวุธโดยใช้ค่า rotation ที่ล็อกไว้
+        spriteBatch.Draw(
+            texture,
+            position,
+            null,
+            Color.White,
+            realhitbox,
+            origin,
+            1.0f,
+            SpriteEffects.None,
+            0f
+        );
     }
 }

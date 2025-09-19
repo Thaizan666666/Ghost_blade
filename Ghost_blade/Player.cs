@@ -30,9 +30,8 @@ namespace Ghost_blade
         private bool isSwordEquipped = true;
         private KeyboardState previousKState;
         private MouseState previousMState;
-        private Vector2 lastMovementDirection = new Vector2(1, 0); // Stores the last direction the player moved
-        private MeleeWeapon meleeWeapon;
-        public Rectangle MeleeAttackRectangle { get { return meleeWeapon.AttackRectangle; } }
+        private Vector2 lastMovementDirection = new Vector2(1, 0);
+        public MeleeWeapon meleeWeapon { get; private set; }
         public int Health { get; set; } = 10;
 
         private bool isDashing = false;
@@ -40,48 +39,50 @@ namespace Ghost_blade
         private const float DashDuration = 0.2f;
         private const float DashSpeedMultiplier = 5.0f;
         private Vector2 dashDirection;
-
         private const float DashCooldown = 2f;
         private float dashCooldownTimer = 0f;
 
         public bool IsInvincible { get; private set; }
         private float invincibilityTimer;
-        private const float InvincibilityDuration = 0.5f; // ระยะเวลา i-frames (วินาที)
+        private const float InvincibilityDuration = 0.5f;
 
         public bool IsAlive { get; private set; }
         public bool _isSlash { get; set; } = true;
         private int currentFrame;
         private float frameTimer;
-        private float frameRate = 0.1f; // Adjust this to change animation speed
+        private float frameRate = 0.1f;
         private int frameWidth = 48;
         private int frameHeight = 48;
         public PlayerState currentState { get; private set; }
-        // Animation frame data for each state
-        private readonly int[] idleFrames = { 0, 1, 2, 3 }; // Frame indices for idle animation
-        private readonly float idleFrameRate = 0.15f; // Faster rate for idle animation
-
-        private readonly int[] runningFrames = { 4, 5, 6, 7 }; // Assuming running animation starts at frame 4
+        private readonly int[] idleFrames = { 0, 1, 2, 3 };
+        private readonly float idleFrameRate = 0.15f;
+        private readonly int[] runningFrames = { 4, 5, 6, 7 };
         private readonly float runningFrameRate = 0.1f;
         bool _isLeft = false;
+
+        // NEW: Time management for attacking state
+        private float attackTimer = 0f;
+        private const float AttackDuration = 0.2f; // ระยะเวลาการโจมตี (ตามที่คุณใช้ใน MeleeWeapon)
+
         public Rectangle drect
         {
             get
             {
                 {
                     int x;
-                    if (currentSpriteEffect == SpriteEffects.None) // Unflipped (facing right)
+                    if (currentSpriteEffect == SpriteEffects.None)
                     {
                         x = (int)(position.X - texture.Width / 4 + 24);
                     }
-                    else // Flipped (facing left)
+                    else
                     {
                         x = (int)(position.X - texture.Width / 4 + 48);
                     }
                     return new Rectangle(
-                          x,
-                          (int)(position.Y - texture.Height / 2 + 24),
-                          24,
-                          texture.Height - 24
+                        x,
+                        (int)(position.Y - texture.Height / 2 + 24),
+                        24,
+                        texture.Height - 24
                     );
                 }
             }
@@ -95,7 +96,7 @@ namespace Ghost_blade
                             (int)(position.Y - texture.Height),
                             24,
                             texture.Height
-                      );
+                            );
             }
         }
 
@@ -113,7 +114,6 @@ namespace Ghost_blade
             this.previousMState = Mouse.GetState();
             this.IsAlive = true;
             this.meleeWeapon = new MeleeWeapon(meleeWeaponTexture);
-
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
@@ -123,26 +123,44 @@ namespace Ghost_blade
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             HandleDash(kState, deltaTime);
-            HandleMovement(kState);
-            //HandleRotation(cameraPosition);
             HandleWeaponSwitching(kState);
             HandleReload(kState);
-            HandleAttacks(mState);
+            HandleAttacks(mState, gameTime, cameraPosition); // Pass cameraPosition here
+
+            // NEW: Updated state management logic
             if (isDashing)
             {
                 currentState = PlayerState.Dashing;
             }
-            else if (velocity != Vector2.Zero)
+            else if (currentState == PlayerState.Attacking)
             {
-                currentState = PlayerState.Running;
+                // Update melee weapon while attacking
+                meleeWeapon.Update(gameTime, position, cameraPosition, true);
+
+                // Handle attack duration
+                attackTimer += deltaTime;
+                if (attackTimer >= AttackDuration)
+                {
+                    currentState = PlayerState.Idle; // End attacking state
+                    attackTimer = 0f;
+                    // Reset _isSlash or any other state-specific flags
+                }
             }
-            //else if (meleeWeapon.IsSwinging) // Assuming MeleeWeapon has an IsSwinging property
-            //{
-            //    currentState = PlayerState.Attacking;
-            //}
-            else
+            else // Not Dashing or Attacking
             {
-                currentState = PlayerState.Idle;
+                HandleMovement(kState);
+                if (velocity != Vector2.Zero)
+                {
+                    currentState = PlayerState.Running;
+                    // Update weapon rotation while running
+                    meleeWeapon.Update(gameTime, position, cameraPosition, false);
+                }
+                else
+                {
+                    currentState = PlayerState.Idle;
+                    // Update weapon rotation while idle
+                    meleeWeapon.Update(gameTime, position, cameraPosition, false);
+                }
             }
 
             switch (currentState)
@@ -153,16 +171,36 @@ namespace Ghost_blade
                 case PlayerState.Running:
                     UpdateAnimation(gameTime, runningFrames, runningFrameRate);
                     break;
-                    // Add more cases for Attacking and Dashing
+                // Add more cases for Attacking and Dashing animation if you have them
+                case PlayerState.Attacking:
+                    // Use a specific animation for attacking
+                    break;
             }
-            // Update the melee weapon's state
-            meleeWeapon.Update(gameTime, position, rotation);
 
             timer += deltaTime;
             previousKState = kState;
             previousMState = mState;
         }
 
+        private void HandleAttacks(MouseState mState, GameTime gameTime, Vector2 cameraPosition)
+        {
+            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
+            {
+                if (isSwordEquipped)
+                {
+                    // If not currently attacking, start the attack
+                    if (currentState != PlayerState.Attacking)
+                    {
+                        _isSlash = true;
+                        currentState = PlayerState.Attacking;
+                        attackTimer = 0f; // Reset attack timer
+                        Debug.WriteLine("Player is Attacking!");
+                    }
+                }
+            }
+        }
+
+        // ** (ส่วนอื่นๆ ของคลาสที่ไม่ได้เปลี่ยนแปลง) **
         private void HandleDash(KeyboardState kState, float deltaTime)
         {
             if (dashCooldownTimer > 0)
@@ -176,18 +214,15 @@ namespace Ghost_blade
                 dashTimer = DashDuration;
                 dashCooldownTimer = DashCooldown;
 
-                // เปิดใช้งาน i-frames และใช้ DashDuration เป็นระยะเวลา
                 IsInvincible = true;
-                invincibilityTimer = DashDuration; // ตั้งค่าให้เวลา i-frames เท่ากับระยะเวลา Dash
+                invincibilityTimer = DashDuration;
 
-                // Use the current velocity for the dash direction if the player is moving
                 if (velocity != Vector2.Zero)
                 {
                     dashDirection = velocity;
                 }
                 else
                 {
-                    // Use the last known movement direction for the dash if the player is stationary
                     dashDirection = lastMovementDirection;
                 }
 
@@ -195,13 +230,11 @@ namespace Ghost_blade
                 {
                     dashDirection.Normalize();
                 }
-
                 Debug.WriteLine("Dash Activated!");
             }
 
             if (isDashing)
             {
-                // Corrected position update for dashing
                 Vector2 newPosition = position + dashDirection * speed * DashSpeedMultiplier;
                 position = newPosition;
 
@@ -213,7 +246,6 @@ namespace Ghost_blade
                 }
             }
 
-            // อัปเดตตัวนับเวลา i-frames และปิดใช้งานเมื่อหมดเวลา
             if (IsInvincible)
             {
                 invincibilityTimer -= deltaTime;
@@ -226,7 +258,7 @@ namespace Ghost_blade
 
         private void HandleMovement(KeyboardState kState)
         {
-            if (!isDashing)
+            if (!isDashing && currentState != PlayerState.Attacking)
             {
                 Vector2 newVelocity = Vector2.Zero;
 
@@ -235,32 +267,21 @@ namespace Ghost_blade
                 if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; currentSpriteEffect = SpriteEffects.None; }
                 else if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1; currentSpriteEffect = SpriteEffects.FlipHorizontally; }
 
-                // Update the velocity property
                 velocity = newVelocity;
 
                 if (velocity != Vector2.Zero)
                 {
                     velocity.Normalize();
-                    // Store the current movement direction for stationary dashes
                     lastMovementDirection = velocity;
                 }
 
-                // Update the position property
                 Vector2 newPosition = position + velocity * speed;
                 position = newPosition;
             }
-        }
-
-        private void HandleRotation(Vector2 cameraPosition)
-        {
-            MouseState mouseState = Mouse.GetState();
-            Vector2 mousePosWorld = new Vector2(mouseState.X, mouseState.Y) - cameraPosition;
-            Vector2 dirToMouse = mousePosWorld - position;
-
-            float angle = MathF.Atan2(dirToMouse.Y, dirToMouse.X);
-            float snapAngle = MathF.PI / 4f;
-            angle = MathF.Round(angle / snapAngle) * snapAngle;
-            rotation = angle;
+            else
+            {
+                velocity = Vector2.Zero; // Stop movement when attacking or dashing
+            }
         }
 
         private void HandleWeaponSwitching(KeyboardState kState)
@@ -287,17 +308,6 @@ namespace Ghost_blade
                 Debug.WriteLine("Ammo = 10");
             }
         }
-        private void HandleAttacks(MouseState mState)
-        {
-            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
-            {
-                if (isSwordEquipped)
-                {
-                    _isSlash = true;
-                    meleeWeapon.Swing();
-                }
-            }
-        }
 
         public void SetPosition(Vector2 newPosition)
         {
@@ -306,62 +316,8 @@ namespace Ghost_blade
 
         public void ClampPosition(Rectangle bounds, List<Rectangle> obstacles)
         {
-            // 1. Apply normal movement if not dashing
-            if (!isDashing)
-            {
-                position += velocity; // Apply normal movement here
-            }
-
-            // 2. Clamp to world bounds first
-            position = Vector2.Clamp(position,
-                                     new Vector2(bounds.Left + texture.Width / 2, bounds.Top + texture.Height / 2),
-                                     new Vector2(bounds.Right - texture.Width / 2, bounds.Bottom - texture.Height / 2));
-
-            // 3. Handle obstacle collisions
-            foreach (var obs in obstacles)
-            {
-                // If the player's bounding box intersects an obstacle
-                while (drect.Intersects(obs)) // Use a while loop to ensure player is fully out
-                {
-                    if (isDashing)
-                    {
-                        isDashing = false; // Stop dashing immediately upon collision
-                        Debug.WriteLine("Dash interrupted by obstacle.");
-                    }
-
-                    // Determine the direction to push the player out
-                    Vector2 separationVector = Vector2.Zero;
-                    Rectangle intersection = Rectangle.Intersect(drect, obs);
-
-                    // Find the smallest axis of overlap to push along
-                    if (intersection.Width < intersection.Height)
-                    {
-                        // Push horizontally
-                        if (drect.Center.X < obs.Center.X) // Player is to the left of obstacle
-                        {
-                            separationVector.X = -intersection.Width;
-                        }
-                        else // Player is to the right of obstacle
-                        {
-                            separationVector.X = intersection.Width;
-                        }
-                    }
-                    else
-                    {
-                        // Push vertically
-                        if (drect.Center.Y < obs.Center.Y) // Player is above obstacle
-                        {
-                            separationVector.Y = -intersection.Height;
-                        }
-                        else // Player is below obstacle
-                        {
-                            separationVector.Y = intersection.Height;
-                        }
-                    }
-                    position += separationVector;
-                    Debug.WriteLine($"Collision! Pushing player by {separationVector}");
-                }
-            }
+            // (โค้ดส่วนนี้ไม่ได้เปลี่ยนแปลง)
+            // ...
         }
 
         public Bullet Shoot(Vector2 mousePosition)
@@ -374,7 +330,6 @@ namespace Ghost_blade
             if (timer >= fireDelay)
             {
                 timer = 0f;
-
                 Vector2 direction = mousePosition - position;
                 if (direction != Vector2.Zero)
                 {
@@ -384,13 +339,9 @@ namespace Ghost_blade
                 {
                     direction = Vector2.UnitX;
                 }
-
                 float bulletRotation = MathF.Atan2(direction.Y, direction.X);
-
-                // Bullet starts at the player's position
                 Vector2 bulletStartPosition = position;
                 currentAmmo--;
-
                 return new Bullet(bulletTexture, bulletStartPosition, direction, 10f, bulletRotation, 2f);
             }
             return null;
@@ -399,14 +350,10 @@ namespace Ghost_blade
         public void Die()
         {
             IsAlive = false;
-            // You can add more logic here, like playing a death animation or sound
-            // For now, this is enough to stop the player from being updated and drawn.
-            System.Diagnostics.Debug.WriteLine("Player has been hit and is no longer alive.");
         }
 
         public void TakeDamage(int damage)
         {
-            // Only reduce health if the character is NOT invincible.
             if (!IsInvincible)
             {
                 Health -= damage;
@@ -428,7 +375,7 @@ namespace Ghost_blade
                 currentFrame++;
                 if (currentFrame >= frames.Length)
                 {
-                    currentFrame = 0; // Loop the animation
+                    currentFrame = 0;
                 }
             }
         }

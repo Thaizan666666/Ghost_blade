@@ -1,7 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/A_job.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/A_job.xnb","TextureProcessor","Texture2DContent",155,841,0.1377751
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/firefoxBall.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/firefoxBall.xnb","TextureProcessor","Texture2DContent",5449,9301,0.0212104
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Idle-Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/GB_Idle-Sheet.xnb","TextureProcessor","Texture2DContent",1550,36949,0.0113058
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_01.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/Map_lab_01.xnb","TextureProcessor","Texture2DContent",178022,39025885,0.7245996
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_02.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/Map_lab_02.xnb","TextureProcessor","Texture2DContent",122969,39025885,0.6581063
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_03.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/Map_lab_03.xnb","TextureProcessor","Texture2DContent",128451,39025885,0.6423546
+"C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/A_job.png","C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/A_job.xnb","TextureProcessor","Texture2DContent",155,841,0.0846176
+"C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/firefoxBall.png","C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/firefoxBall.xnb","TextureProcessor","Texture2DContent",5449,9301,0.0056778
