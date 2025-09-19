@@ -53,7 +53,7 @@ public class MeleeWeapon
             {
                 rotation = MathF.PI / 2f;
                 realhitbox = 0f;
-                AttackHitbox = new Rectangle((int)position.X - hitboxSize / 2, (int)position.Y - distance - hitboxSize, hitboxSize, hitboxSize);
+                AttackHitbox = new Rectangle((int)position.X - hitboxSize / 2, (int)position.Y + hitboxSize, hitboxSize, hitboxSize);
             }
             else if (angle >= MathF.PI * 0.75f && angle < MathF.PI * 1.25f) // 135 ถึง 225 องศา (ซ้าย)
             {
@@ -65,7 +65,7 @@ public class MeleeWeapon
             {
                 rotation = 3f * MathF.PI / 2f;
                 realhitbox = 0f;
-                AttackHitbox = new Rectangle((int)position.X - hitboxSize / 2, (int)position.Y - distance, hitboxSize, hitboxSize);
+                AttackHitbox = new Rectangle((int)position.X - hitboxSize / 2, (int)position.Y - distance - hitboxSize, hitboxSize, hitboxSize);
             }
             else // ที่เหลือคือ 315 ถึง 45 องศา (ขวา)
             {

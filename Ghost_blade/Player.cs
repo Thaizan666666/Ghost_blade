@@ -69,17 +69,8 @@ namespace Ghost_blade
             get
             {
                 {
-                    int x;
-                    if (currentSpriteEffect == SpriteEffects.None)
-                    {
-                        x = (int)(position.X - texture.Width / 4 + 24);
-                    }
-                    else
-                    {
-                        x = (int)(position.X - texture.Width / 4 + 48);
-                    }
                     return new Rectangle(
-                        x,
+                        (int)(position.X - texture.Width / 4 + 24),
                         (int)(position.Y - texture.Height / 2 + 24),
                         24,
                         texture.Height - 24
@@ -93,7 +84,7 @@ namespace Ghost_blade
             {
                 return new Rectangle(
                             (int)(position.X - texture.Width / 4 + 24),
-                            (int)(position.Y - texture.Height),
+                            (int)(position.Y - 24),
                             24,
                             texture.Height
                             );
@@ -497,7 +488,14 @@ namespace Ghost_blade
             {
                 Rectangle sourceRect = new Rectangle(currentFrame * frameWidth, 0, frameWidth, frameHeight);
                 Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
-                spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
+                if (currentSpriteEffect == SpriteEffects.None)
+                {
+                    spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
+                }
+                else
+                {
+                    spriteBatch.Draw(texture, position - new Vector2(24,0), sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
+                }
                 meleeWeapon.Draw(spriteBatch);
             }
         }

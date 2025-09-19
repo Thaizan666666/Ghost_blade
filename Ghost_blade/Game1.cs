@@ -287,7 +287,8 @@ namespace Ghost_blade
                 //boss.Draw(_spriteBatch);
 
                 // Draw hitboxes
-                DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
+                //DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
+                DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
                 DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {
