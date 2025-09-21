@@ -16,6 +16,7 @@ namespace Ghost_blade
         private float chargeTimer;
         private float fireTimer;
         private float coolDownTimer;
+        private float coolDowmRealTimer;
 
         private const float CHARGE_DURATION = 1.5f;
         private const float FIRE_DURATION = 5.0f;
@@ -42,9 +43,11 @@ namespace Ghost_blade
             chargeTimer = 0f;
             fireTimer = 0f;
             coolDownTimer = 0f;
+            coolDowmRealTimer = 0f;
+
 
             // Randomly start the laser pointing either straight down or straight up
-            if (random.Next(2) == 0)
+            if (boss.Position.Y < player.position.Y)
             {
                 laserAngle = MathHelper.PiOver2; // 90 degrees (down)
             }
@@ -75,10 +78,12 @@ namespace Ghost_blade
                     {
                         currentState = LaserState.Firing;
                         fireTimer = 0f;
+                        coolDowmRealTimer = 0f;
                     }
                     break;
 
                 case LaserState.Firing:
+                    coolDowmRealTimer += delta;
                     fireTimer += delta;
 
                     // Gradually increase the rotation speed over the firing duration
@@ -108,7 +113,7 @@ namespace Ghost_blade
                     // Update the laser angle based on the determined rotation direction and the accelerating speed
                     laserAngle += currentRotationSpeed * rotationDirection * delta;
 
-                    if (fireTimer >= FIRE_DURATION)
+                    if (coolDowmRealTimer >= FIRE_DURATION)
                     {
                         currentState = LaserState.CoolingDown;
                         coolDownTimer = 0f;

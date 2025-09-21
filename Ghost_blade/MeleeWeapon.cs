@@ -45,33 +45,34 @@ public class MeleeWeapon
         if (isAttacking)
         {
             // กำหนดขนาดและระยะห่างของ Hitbox จากผู้เล่น
-            int hitboxSize = 50;
-            int distance = 40;
+            int hitboxSize1 = 96;
+            int hitboxSize2 = 36;
+            int distance = 24;
 
             // ตรวจสอบมุมให้อยู่ในแต่ละ 90 องศา quadrant
-            if (angle >= MathF.PI * 0.25f && angle < MathF.PI * 0.75f) // 45 ถึง 135 องศา (บน)
+            if (angle >= MathF.PI * 0.25f && angle < MathF.PI * 0.75f) // (ล่าง)
             {
                 rotation = MathF.PI / 2f;
                 realhitbox = 0f;
-                AttackHitbox = new Rectangle((int)position.X - hitboxSize / 2, (int)position.Y + hitboxSize, hitboxSize, hitboxSize);
+                AttackHitbox = new Rectangle((int)position.X - 48, (int)position.Y + 24, 72, hitboxSize2);
             }
             else if (angle >= MathF.PI * 0.75f && angle < MathF.PI * 1.25f) // 135 ถึง 225 องศา (ซ้าย)
             {
                 rotation = MathF.PI;
                 realhitbox = 1f;
-                AttackHitbox = new Rectangle((int)position.X - distance - hitboxSize, (int)position.Y - hitboxSize / 2, hitboxSize, hitboxSize);
+                AttackHitbox = new Rectangle((int)position.X - distance - hitboxSize2, (int)position.Y - hitboxSize1 / 2, hitboxSize2, hitboxSize1);
             }
-            else if (angle >= MathF.PI * 1.25f && angle < MathF.PI * 1.75f) // 225 ถึง 315 องศา (ล่าง)
+            else if (angle >= MathF.PI * 1.25f && angle < MathF.PI * 1.75f) //(บน)
             {
                 rotation = 3f * MathF.PI / 2f;
                 realhitbox = 0f;
-                AttackHitbox = new Rectangle((int)position.X - hitboxSize / 2, (int)position.Y - distance - hitboxSize, hitboxSize, hitboxSize);
+                AttackHitbox = new Rectangle((int)position.X - 48, (int)position.Y - distance - hitboxSize2, 72, hitboxSize2);
             }
-            else // ที่เหลือคือ 315 ถึง 45 องศา (ขวา)
+            else //(ขวา)
             {
                 rotation = 0f;
                 realhitbox = 1f;
-                AttackHitbox = new Rectangle((int)position.X + distance, (int)position.Y - hitboxSize / 2, hitboxSize, hitboxSize);
+                AttackHitbox = new Rectangle((int)position.X, (int)position.Y - hitboxSize1/2, hitboxSize2, hitboxSize1);
             }
         }
         else

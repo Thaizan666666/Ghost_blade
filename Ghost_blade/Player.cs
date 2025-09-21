@@ -42,8 +42,8 @@ namespace Ghost_blade
         private const float DashCooldown = 2f;
         private float dashCooldownTimer = 0f;
 
-        public bool IsInvincible { get; private set; }
-        private float invincibilityTimer;
+        public bool _isInvincible = false;
+        private float _invincibilityTimer = 0f;
         private const float InvincibilityDuration = 0.5f;
 
         public bool IsAlive { get; private set; }
@@ -168,6 +168,15 @@ namespace Ghost_blade
                     break;
             }
 
+            if (_isInvincible)
+            {
+                _invincibilityTimer -= deltaTime;
+                if (_invincibilityTimer <= 0)
+                {
+                    _isInvincible = false;
+                }
+            }
+
             timer += deltaTime;
             previousKState = kState;
             previousMState = mState;
@@ -205,8 +214,8 @@ namespace Ghost_blade
                 dashTimer = DashDuration;
                 dashCooldownTimer = DashCooldown;
 
-                IsInvincible = true;
-                invincibilityTimer = DashDuration;
+                _isInvincible = true;
+                _invincibilityTimer = DashDuration;
 
                 if (velocity != Vector2.Zero)
                 {
@@ -234,15 +243,6 @@ namespace Ghost_blade
                 {
                     isDashing = false;
                     Debug.WriteLine("Dash Ended.");
-                }
-            }
-
-            if (IsInvincible)
-            {
-                invincibilityTimer -= deltaTime;
-                if (invincibilityTimer <= 0)
-                {
-                    IsInvincible = false;
                 }
             }
         }
@@ -456,10 +456,17 @@ namespace Ghost_blade
 
         public void TakeDamage(int damage)
         {
-            if (!IsInvincible)
+            if (_isInvincible)
             {
-                Health -= damage;
+                return; // Do nothing if invincible
             }
+
+            Health -= damage;
+            Debug.WriteLine($"Player took {damage} damage. Health is now {Health}");
+
+            _isInvincible = true;
+            _invincibilityTimer = InvincibilityDuration;
+
             if (Health <= 0)
             {
                 Die();
