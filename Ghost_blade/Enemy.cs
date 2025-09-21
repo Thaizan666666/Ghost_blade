@@ -13,6 +13,8 @@ public class Enemy
     private Vector2 oldPosition;
     private readonly int hitboxWidth = 32;
     private readonly int hitboxHeight = 32;
+    private Vector2 startPosition;
+
     public bool IsActive { get; set; }
     public int Health { get; set; } = 200;
 
@@ -34,6 +36,7 @@ public class Enemy
     {
         this.Texture = texture;
         this.Position = startPosition;
+        this.startPosition = startPosition;
         this.Speed = speed;
         this.detectionRadius = detectionRadius;
         this.IsActive = true; // Add this line
@@ -182,6 +185,7 @@ public class Enemy
     {
         IsActive = true;
         Health = 200;
+        this.Position = startPosition;
     }
 
 }

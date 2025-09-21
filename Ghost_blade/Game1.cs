@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection.Metadata;
+using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,7 +13,6 @@ namespace Ghost_blade
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
         private Player _player;
         private List<Bullet> _playerBullets;
         private List<EnemyBullet> _enemyBullets;
@@ -21,7 +22,7 @@ namespace Ghost_blade
         private List<Room> rooms;
         private int currentRoomIndex;
         private Random random;
-
+        
         private Texture2D _swordTexture;
 
         private Texture2D _bossTexture;
@@ -29,26 +30,35 @@ namespace Ghost_blade
         private Texture2D _pixel;
         private Texture2D EnemyTexture;
 
-        private GameState gameState = GameState.MainMenu;
+        public GameState gameState = GameState.MainMenu;
         private MainMenuScreen mainMenu;
+        private GameOverScreen gameOver;
 
+        private AnimatedTexture Hp_bar;
+        private AnimatedTexture cursorTexture;
+        private AnimatedTexture cursorReloadTexture;
+        private AnimatedTexture change_Weapon;
         public enum GameState
         {
             MainMenu,
-            Playing
+            Playing,
+            GameOver
         }
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
 
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
             _graphics.ApplyChanges();
 
             camera = new FollowsCamera(Vector2.Zero);
+            Hp_bar = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
+            cursorTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            cursorReloadTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
 
         protected override void Initialize()
@@ -119,6 +129,13 @@ namespace Ghost_blade
 
             _player.SetPosition(rooms[currentRoomIndex].StartPosition);
             mainMenu = new MainMenuScreen(GraphicsDevice, Content);
+            gameOver = new GameOverScreen(GraphicsDevice, Content);
+
+            Hp_bar.Load(Content,"HP-Sheet", 6, 1, 8);
+            cursorTexture.Load(Content, "crosshairs-Sheet", 4, 1, 8);
+            cursorReloadTexture.Load(Content, "crosshairs_reload-Sheet", 4, 1, 8);
+            _player.change_Weapon = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
+            _player.change_Weapon.Load(Content, "UI_weapon-Sheet", 4, 1, 1);
         }
 
         protected override void Update(GameTime gameTime)
@@ -159,8 +176,22 @@ namespace Ghost_blade
                 {
                     Exit();
                 }
-
                 return;
+            }
+
+            if (gameState == GameState.Playing)
+            {
+                if (_player.Health <= 0)
+                {
+                    gameState = GameState.GameOver;
+
+                    return;
+                }
+            }
+
+            if (gameState == GameState.GameOver)
+            {
+                gameOver.Update(gameTime);
             }
 
             camera.Follow(_player.drect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
@@ -170,6 +201,7 @@ namespace Ghost_blade
                 _player.Update(gameTime, camera.position);
             }
             else { return; }
+
 
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed)
@@ -260,9 +292,14 @@ namespace Ghost_blade
             GraphicsDevice.Clear(Color.CornflowerBlue);
             if (gameState == GameState.MainMenu)
             {
-                // สำหรับเมนู ไม่ต้องใช้ camera
                 _spriteBatch.Begin();
                 mainMenu.Draw(_spriteBatch);
+                _spriteBatch.End();
+            }
+            else if (gameState == GameState.GameOver)
+            {
+                _spriteBatch.Begin();
+                gameOver.Draw(_spriteBatch);
                 _spriteBatch.End();
             }
             else if (gameState == GameState.Playing)
@@ -306,9 +343,66 @@ namespace Ghost_blade
                         DrawRectangle(_spriteBatch, enemy.boundingBox, Color.Orange, 1);
                     }
                 }
+                _spriteBatch.End();
+
+                _spriteBatch.Begin();
+
+                switch (_player.Health)
+                {
+                    case 5:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 0, new Vector2(0, 0));
+                            break;
+                        }
+                    case 4:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 1, new Vector2(0, 0));
+                            break;
+                        }
+                    case 3:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 2, new Vector2(0, 0));
+                            break;
+                        }
+                    case 2:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 3, new Vector2(0, 0));
+                            break;
+                        }
+                    case 1:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 4, new Vector2(0, 0));
+                            break;
+                        }
+                    case 0:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 5, new Vector2(0, 0));
+                            break;
+                        }
+                }
+
+                _player.change_Weapon.DrawFrame(_spriteBatch, _player.currentWeaponFrame, new Vector2(50, 100));
 
                 _spriteBatch.End();
             }
+
+            MouseState mouseState = Mouse.GetState();
+            Vector2 cursorPosition = new Vector2(mouseState.X, mouseState.Y);
+            _spriteBatch.Begin();
+            if (_player.isReloading)
+            {
+                cursorReloadTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                cursorReloadTexture.DrawFrame(_spriteBatch,cursorPosition);
+            }
+            else
+            {
+                cursorTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                cursorTexture.DrawFrame(_spriteBatch,cursorPosition);
+            }
+
+
+            _spriteBatch.End();
+
             base.Draw(gameTime);
         }
 

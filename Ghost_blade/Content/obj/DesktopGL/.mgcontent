@@ -4,15 +4,25 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/A_job.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/firefoxBall.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Idle-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_lab_01.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_lab_02.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_lab_03.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/A_job.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs_reload-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/firefoxBall.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/game_over_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Idle-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/HP-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_01.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_02.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_03.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/UI_weapon-Sheet.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

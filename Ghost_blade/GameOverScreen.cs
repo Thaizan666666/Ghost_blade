@@ -11,20 +11,20 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Ghost_blade
 {
-    internal class MainMenuScreen
+    internal class GameOverScreen
     {
         private AnimatedTexture background;
         private Rectangle playButton;
         private Rectangle exitButton;
         private Texture2D buttonTexture;
 
-        public bool StartGame { get;  set; }
-        public bool ExitGame { get;  set; }
-        public MainMenuScreen(GraphicsDevice graphicsDevice, Microsoft.Xna.Framework.Content.ContentManager content)
+        public bool StartGame { get; set; }
+        public bool ExitGame { get; set; }
+        public GameOverScreen(GraphicsDevice graphicsDevice, Microsoft.Xna.Framework.Content.ContentManager content)
         {
 
             background = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
-            background.Load(content, "Main_title_Sheet", 6, 1, 8);
+            background.Load(content, "game_over_Sheet", 12, 1, 8);
 
             buttonTexture = new Texture2D(graphicsDevice, 1, 1);
             buttonTexture.SetData(new[] { Color.White });
@@ -52,7 +52,7 @@ namespace Ghost_blade
         {
 
             background.DrawFrame(spriteBatch, Vector2.Zero);
-            
+
         }
 
     }

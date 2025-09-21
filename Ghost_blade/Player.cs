@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection.Metadata;
+using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using static Ghost_blade.Game1;
 
 namespace Ghost_blade
 {
@@ -27,12 +30,12 @@ namespace Ghost_blade
         private float timer = 0f;
         private Texture2D bulletTexture;
         public byte currentAmmo;
-        private bool isSwordEquipped = true;
+        public bool isSwordEquipped = true;
         private KeyboardState previousKState;
         private MouseState previousMState;
         private Vector2 lastMovementDirection = new Vector2(1, 0);
         public MeleeWeapon meleeWeapon { get; private set; }
-        public int Health { get; set; } = 10;
+        public int Health { get; set; } = 1;
 
         private bool isDashing = false;
         private float dashTimer = 0f;
@@ -41,6 +44,10 @@ namespace Ghost_blade
         private Vector2 dashDirection;
         private const float DashCooldown = 2f;
         private float dashCooldownTimer = 0f;
+
+        public bool isReloading = false;
+        private float reloadTimer = 0f;
+        private const float ReloadTime = 2f;
 
         public bool _isInvincible = false;
         private float _invincibilityTimer = 0f;
@@ -63,6 +70,15 @@ namespace Ghost_blade
         // NEW: Time management for attacking state
         private float attackTimer = 0f;
         private const float AttackDuration = 0.2f; // ระยะเวลาการโจมตี (ตามที่คุณใช้ใน MeleeWeapon)
+
+        public AnimatedTexture change_Weapon; 
+        private bool isWeaponSwitching = false;
+        public int currentWeaponFrame = 0;
+        private bool isWeaponSwitchingBackwards = false;
+        private int weaponSwitchStartFrame = 0;
+        private int weaponSwitchEndFrame = 0;
+        private float weaponFrameTimer = 0f;
+        private float weaponFrameRate = 0.1f;
 
         public Rectangle drect
         {
@@ -115,7 +131,7 @@ namespace Ghost_blade
 
             HandleDash(kState, deltaTime);
             HandleWeaponSwitching(kState);
-            HandleReload(kState);
+            HandleReload(kState, deltaTime);
             HandleAttacks(mState, gameTime, cameraPosition); // Pass cameraPosition here
 
             // NEW: Updated state management logic
@@ -179,6 +195,31 @@ namespace Ghost_blade
             timer += deltaTime;
             previousKState = kState;
             previousMState = mState;
+
+            if (isWeaponSwitching)
+            {
+                weaponFrameTimer += deltaTime;
+
+                if (weaponFrameTimer >= weaponFrameRate)
+                {
+                    weaponFrameTimer = 0f;
+
+                    if (!isWeaponSwitchingBackwards)
+                    {
+                        if (currentWeaponFrame < weaponSwitchEndFrame)
+                            currentWeaponFrame++;
+                        else
+                            isWeaponSwitching = false;
+                    }
+                    else
+                    {
+                        if (currentWeaponFrame > weaponSwitchEndFrame)
+                            currentWeaponFrame--;
+                        else
+                            isWeaponSwitching = false;
+                    }
+                }
+            }
         }
 
         private void HandleAttacks(MouseState mState, GameTime gameTime, Vector2 cameraPosition)
@@ -279,23 +320,49 @@ namespace Ghost_blade
             if (kState.IsKeyDown(Keys.E) && !previousKState.IsKeyDown(Keys.E))
             {
                 isSwordEquipped = !isSwordEquipped;
+                isWeaponSwitching = true;
+
                 if (isSwordEquipped)
                 {
+                    isWeaponSwitchingBackwards = true;
+                    weaponSwitchStartFrame = 3;
+                    weaponSwitchEndFrame = 0;
+                    currentWeaponFrame = weaponSwitchStartFrame;
                     Debug.WriteLine("Weapon: Sword");
                 }
                 else
                 {
+                    isWeaponSwitchingBackwards = false;
+                    weaponSwitchStartFrame = 0;
+                    weaponSwitchEndFrame = 3;
+                    currentWeaponFrame = weaponSwitchStartFrame;
                     Debug.WriteLine("Weapon: Gun");
                 }
             }
         }
 
-        private void HandleReload(KeyboardState kState)
+        private void HandleReload(KeyboardState kState, float deltaTime)
         {
-            if (kState.IsKeyDown(Keys.R))
+            if (!isSwordEquipped)
             {
-                this.currentAmmo = 10;
-                Debug.WriteLine("Ammo = 10");
+                if (!isReloading && kState.IsKeyDown(Keys.R))
+                {
+                    isReloading = true;
+                    reloadTimer = ReloadTime;
+                    Debug.WriteLine("Reloading...");
+                }
+
+                if (isReloading)
+                {
+                    currentAmmo = 0;
+                    reloadTimer -= deltaTime;
+                    if (reloadTimer <= 0f)
+                    {
+                        isReloading = false;
+                        currentAmmo = 10;
+                        Debug.WriteLine("Reload complete. Ammo = 10");
+                    }
+                }
             }
         }
 
@@ -390,7 +457,6 @@ namespace Ghost_blade
                     else
 
                     {
-
                         // Push vertically
 
                         if (drect.Center.Y < obs.Center.Y) // Player is above obstacle
@@ -408,17 +474,13 @@ namespace Ghost_blade
                             separationVector.Y = intersection.Height;
 
                         }
-
                     }
-
                     position += separationVector;
 
                     Debug.WriteLine($"Collision! Pushing player by {separationVector}");
 
                 }
-
             }
-
         }
 
         public Bullet Shoot(Vector2 mousePosition)
@@ -507,7 +569,7 @@ namespace Ghost_blade
         public void Reset()
         {
             IsAlive = true;
-            Health = 10;
+            Health = 5;
 
         }
     }
