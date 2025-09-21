@@ -58,7 +58,7 @@ namespace Ghost_blade
         private readonly float idleFrameRate = 0.15f;
         private readonly int[] runningFrames = { 4, 5, 6, 7 };
         private readonly float runningFrameRate = 0.1f;
-        bool _isLeft = false;
+
 
         // NEW: Time management for attacking state
         private float attackTimer = 0f;
@@ -127,7 +127,6 @@ namespace Ghost_blade
             {
                 // Update melee weapon while attacking
                 meleeWeapon.Update(gameTime, position, cameraPosition, true);
-
                 // Handle attack duration
                 attackTimer += deltaTime;
                 if (attackTimer >= AttackDuration)
@@ -503,7 +502,6 @@ namespace Ghost_blade
                 {
                     spriteBatch.Draw(texture, position - new Vector2(24,0), sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
                 }
-                meleeWeapon.Draw(spriteBatch);
             }
         }
         public void Reset()

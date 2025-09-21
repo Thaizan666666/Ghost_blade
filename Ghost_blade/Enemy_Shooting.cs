@@ -36,18 +36,18 @@ namespace Ghost_blade
 
         // An event that fires when a bullet is shot.
         public Action<Bullet> OnShoot;
-        public bool IsActive { get; set; }
-        public int Health { get; set; } = 150;
 
         public Enemy_Shooting(Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture)
             : base(texture, startPosition, speed, detectionRadius)
         {
+            this.Health = 140;
             this.currentState = EnemyState.Idle;
             this.stateTimer = 0f;
             this.bulletTexture = bulletTexture;
             this.fireTimer = FIRE_RATE;
             this.IsActive = true;
         }
+
 
         public override void Update(Player player, List<Rectangle> obstacles)
         {
@@ -151,47 +151,7 @@ namespace Ghost_blade
                 spriteBatch.Draw(Texture, Position, null, Color.Green, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
             }
         }
-
-        // Method to check for clear line of sight to the player.
-        public bool CanSeePlayer(Player player, List<Rectangle> obstacles)
-        {
-            if (Vector2.Distance(this.Position, player.position) > detectionRadius)
-            {
-                return false;
-            }
-
-            Vector2 lineOfSight = player.position - this.Position;
-            Vector2 normalizedDirection = lineOfSight;
-            if (normalizedDirection != Vector2.Zero)
-            {
-                normalizedDirection.Normalize();
-            }
-
-            float distance = lineOfSight.Length();
-            float stepSize = 5.0f;
-
-            for (float i = 0; i < distance; i += stepSize)
-            {
-                Vector2 currentPoint = this.Position + normalizedDirection * i;
-
-                Rectangle pointRect = new Rectangle(
-                    (int)currentPoint.X,
-                    (int)currentPoint.Y,
-                    1,
-                    1
-                );
-
-                foreach (var obs in obstacles)
-                {
-                    if (obs.Intersects(pointRect))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-        public void TakeDamage(int damage)
+        public override void TakeDamage(int damage)
         {
             Health -= damage;
             if (Health <= 0)
@@ -199,11 +159,5 @@ namespace Ghost_blade
                 this.IsActive = false;
             }
         }
-        public void Reset()
-        {
-            IsActive = true;
-            Health = 150;
-        }
-
     }
 }

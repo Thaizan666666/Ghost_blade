@@ -10,7 +10,6 @@ public class MeleeWeapon
     private Vector2 position; // ตำแหน่งจุดหมุนของอาวุธ (ตรงกับผู้เล่น)
     private Vector2 origin;
     private float rotation;
-    private float realhitbox;
     private float snapAngle = MathF.PI / 4f; // 45 องศา
 
     public Rectangle AttackHitbox { get; private set; }
@@ -40,7 +39,6 @@ public class MeleeWeapon
         {
             angle += MathF.PI * 2;
         }
-
         // กำหนดขนาดและระยะห่างของ Hitbox จากผู้เล่น
         if (isAttacking)
         {
@@ -53,50 +51,27 @@ public class MeleeWeapon
             if (angle >= MathF.PI * 0.25f && angle < MathF.PI * 0.75f) // (ล่าง)
             {
                 rotation = MathF.PI / 2f;
-                realhitbox = 0f;
-                AttackHitbox = new Rectangle((int)position.X - 48, (int)position.Y + 24, 72, hitboxSize2);
+                AttackHitbox = new Rectangle((int)position.X - 60, (int)position.Y + 24, 96, hitboxSize2);
             }
             else if (angle >= MathF.PI * 0.75f && angle < MathF.PI * 1.25f) // 135 ถึง 225 องศา (ซ้าย)
             {
                 rotation = MathF.PI;
-                realhitbox = 1f;
                 AttackHitbox = new Rectangle((int)position.X - distance - hitboxSize2, (int)position.Y - hitboxSize1 / 2, hitboxSize2, hitboxSize1);
             }
             else if (angle >= MathF.PI * 1.25f && angle < MathF.PI * 1.75f) //(บน)
             {
                 rotation = 3f * MathF.PI / 2f;
-                realhitbox = 0f;
-                AttackHitbox = new Rectangle((int)position.X - 48, (int)position.Y - distance - hitboxSize2, 72, hitboxSize2);
+                AttackHitbox = new Rectangle((int)position.X - 60, (int)position.Y - distance - hitboxSize2, 96, hitboxSize2);
             }
             else //(ขวา)
             {
                 rotation = 0f;
-                realhitbox = 1f;
                 AttackHitbox = new Rectangle((int)position.X, (int)position.Y - hitboxSize1/2, hitboxSize2, hitboxSize1);
             }
         }
         else
         {
-            // ถ้าไม่ได้โจมตี ให้ Hitbox ว่างเปล่าเพื่อป้องกันการชนที่ไม่ตั้งใจ
             AttackHitbox = Rectangle.Empty;
         }
-    }
-
-    public void Draw(SpriteBatch spriteBatch)
-    {
-        Vector2 origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
-
-        // วาดอาวุธโดยใช้ค่า rotation ที่ล็อกไว้
-        spriteBatch.Draw(
-            texture,
-            position,
-            null,
-            Color.White,
-            realhitbox,
-            origin,
-            1.0f,
-            SpriteEffects.None,
-            0f
-        );
     }
 }

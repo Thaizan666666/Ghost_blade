@@ -170,7 +170,7 @@ public class Enemy
         // If the loop completes without an intersection, the line of sight is clear.
         return true;
     }
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
             Health -= damage;
         if (Health <= 0)

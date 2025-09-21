@@ -24,7 +24,7 @@ namespace _321_Lab05_3
         private int Frame;
         private int framerow = 1; // frame row
         private int frame_r; // count frame row 
-       private int startframe;
+        private int startframe;
         private int endframe;
         private float TotalElapsed;
         private bool Paused;
@@ -44,12 +44,12 @@ namespace _321_Lab05_3
             this.Scale = scale;
             this.Depth = depth;
         }
-        public void Load(ContentManager content, string asset, int frameCount,int frameRow, int framesPerSec)
+        public void Load(ContentManager content, string asset, int frameCount, int frameRow, int framesPerSec)
         {
             framecount = frameCount;
             framerow = frameRow;
             startframe = 0;
-            endframe = (frameCount * framerow)-1;
+            endframe = (frameCount * framerow) - 1;
             myTexture = content.Load<Texture2D>(asset);
             TimePerFrame = (float)1 / framesPerSec;
             Frame = 0;
@@ -59,7 +59,7 @@ namespace _321_Lab05_3
             Ended = false;
             Overload = 1;
         }
-        public void Load(ContentManager content, string asset, int frameCount, int frameRow, int framesPerSec,int startRow)
+        public void Load(ContentManager content, string asset, int frameCount, int frameRow, int framesPerSec, int startRow)
         {
             framecount = frameCount;
             framerow = frameRow;
@@ -80,13 +80,13 @@ namespace _321_Lab05_3
         {
             if (pauseFrame > -1 && pauseRow > -1)
             {
-                
-                    frame_r = pauseRow;
-                    Frame = pauseFrame;
-                    Paused = true;
-                    pauseFrame = -1;
-                    pauseRow = -1;
-                
+
+                frame_r = pauseRow;
+                Frame = pauseFrame;
+                Paused = true;
+                pauseFrame = -1;
+                pauseRow = -1;
+
             }
             if (Paused)
                 return;
@@ -110,7 +110,7 @@ namespace _321_Lab05_3
                         Ended = true;
                     }
                 }
-                
+
                 // Keep the Frame between 0 and the total frames, minus one.
                 Frame = Frame % framecount;
                 // check start check end
@@ -129,9 +129,9 @@ namespace _321_Lab05_3
         {
             DrawFrame(batch, Frame, screenPos);
         }
-        public void DrawFrame(SpriteBatch batch, Vector2 screenPos,int row)
+        public void DrawFrame(SpriteBatch batch, Vector2 screenPos, int row)
         {
-            DrawFrame(batch, Frame, screenPos,row);
+            DrawFrame(batch, Frame, screenPos, row);
         }
         public void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos)
         {
@@ -145,7 +145,7 @@ namespace _321_Lab05_3
             }
             if (Overload == 2)
             {
-                sourcerect = new Rectangle(FrameWidth * frame, FrameHeight * (startrow-1),
+                sourcerect = new Rectangle(FrameWidth * frame, FrameHeight * (startrow - 1),
                     FrameWidth, FrameHeight);
             }
             if (flip == false)
@@ -159,7 +159,7 @@ namespace _321_Lab05_3
                     Rotation, Origin, Scale, SpriteEffects.FlipHorizontally, Depth);
             }
         }
-        public void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos,int row)
+        public void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos, int row)
         {
             int FrameWidth = myTexture.Width / framecount;
             int FrameHeight = myTexture.Height / framerow;
@@ -204,13 +204,10 @@ namespace _321_Lab05_3
         {
             Paused = true;
         }
-        public void Pause(int frame,int row)
+        public void Pause(int frame, int row)
         {
             this.pauseFrame = frame;
             this.pauseRow = row;
-            
-                
-            
         }
 
     }
