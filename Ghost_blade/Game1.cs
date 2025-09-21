@@ -82,7 +82,7 @@ namespace Ghost_blade
             _bossTexture.SetData(new[] { Color.White });
 
             // Pass the pixel texture to the Beholster constructor
-            boss = new Boss(_bossTexture);
+            boss = new Boss(_bossTexture,_bulletTexture);
 
 
             // Door texture

@@ -11,6 +11,7 @@ public class Boss
     public int Health { get; set; } = 1500;
     public Vector2 Position;
     public Texture2D pixel;
+    public Texture2D bulletTexture;
 
     // Boss State
     private enum BossState { Idle, Attacking, Damaged };
@@ -24,15 +25,21 @@ public class Boss
     private float timeBetweenAttacks;
 
     // Constructor
-    public Boss(Texture2D pixelTexture)
+    public Boss(Texture2D pixelTexture, Texture2D bulletTexture)
     {
-        Position = new Vector2(400, 300);
-        timeBetweenAttacks = 2.0f;
+        Position = new Vector2(55 * 24, 98 * 24 + 50);
+        timeBetweenAttacks = 0.5f;
         this.pixel = pixelTexture;
+        this.bulletTexture = bulletTexture;
         this.random = new Random();
 
         attacks = new List<BossAttack>();
+
+        // Pass the pixel texture for attacks that use it
         attacks.Add(new LaserAttack(this, pixelTexture));
+
+        // **Change this line:** Pass the bulletTexture to the bullet attack
+        attacks.Add(new BossBulletAttacks(this, bulletTexture));
 
         currentState = BossState.Idle;
         attackTimer = 0.1f;

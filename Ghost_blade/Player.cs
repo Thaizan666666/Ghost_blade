@@ -508,7 +508,6 @@ namespace Ghost_blade
         {
             IsAlive = true;
             Health = 10;
-
         }
     }
 }
