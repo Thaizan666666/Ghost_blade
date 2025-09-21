@@ -92,7 +92,7 @@ namespace Ghost_blade
             _bossTexture.SetData(new[] { Color.White });
 
             // Pass the pixel texture to the Beholster constructor
-            boss = new Boss(_bossTexture);
+            boss = new Boss(_bossTexture,_bulletTexture);
 
 
             // Door texture
@@ -150,6 +150,7 @@ namespace Ghost_blade
                     // เริ่มเกมตั้งค่า player position, reset enemies
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     _player.Reset();
+                    currentRoomIndex = 0;
                     foreach (var enemy in currentRoom.Enemies)
                     {
                         enemy.Reset();
@@ -183,8 +184,19 @@ namespace Ghost_blade
             {
                 if (_player.Health <= 0)
                 {
-                    gameState = GameState.GameOver;
-
+                    gameState = GameState.MainMenu;
+                    
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                    _player.Reset();
+                    currentRoomIndex = 0;
+                    foreach (var enemy in currentRoom.Enemies)
+                    {
+                        enemy.Reset();
+                    }
+                    _enemyBullets.Clear();
+                    _playerBullets.Clear();
+                    mainMenu.StartGame = false;
+                    mainMenu.ExitGame = false;
                     return;
                 }
             }

@@ -570,7 +570,9 @@ namespace Ghost_blade
         {
             IsAlive = true;
             Health = 5;
-
+            currentAmmo = 10;
+            isSwordEquipped = true;
+            currentWeaponFrame = 0;
         }
     }
 }

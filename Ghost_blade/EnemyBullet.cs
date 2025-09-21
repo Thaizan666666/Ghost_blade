@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Ghost_blade
 {
@@ -25,6 +26,7 @@ namespace Ghost_blade
             {
                 player.TakeDamage(1);
                 IsActive = false;
+                Debug.WriteLine($"Hp = {player.Health}");
             }
         }
     }
