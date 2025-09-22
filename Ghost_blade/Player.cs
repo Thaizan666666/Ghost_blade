@@ -23,6 +23,7 @@ namespace Ghost_blade
         public Vector2 position { get; set; }
         public Vector2 velocity { get; private set; }
 
+
         private float speed;
         private float rotation;
         private SpriteEffects currentSpriteEffect;
@@ -558,11 +559,11 @@ namespace Ghost_blade
                 Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
                 if (currentSpriteEffect == SpriteEffects.None)
                 {
-                    spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
+                    spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 2f, currentSpriteEffect, 0f);
                 }
                 else
                 {
-                    spriteBatch.Draw(texture, position - new Vector2(24,0), sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
+                    spriteBatch.Draw(texture, position - new Vector2(24,0), sourceRect, Color.White, rotation, origin, 2f, currentSpriteEffect, 0f);
                 }
             }
         }

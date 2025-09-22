@@ -33,7 +33,7 @@ namespace Ghost_blade
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(background, Vector2.Zero, Color.White);
+            spriteBatch.Draw(background, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
             spriteBatch.Draw(doorTexture, Door, Color.Red);
         }
     }

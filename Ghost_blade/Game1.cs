@@ -38,6 +38,8 @@ namespace Ghost_blade
         private AnimatedTexture cursorTexture;
         private AnimatedTexture cursorReloadTexture;
         private AnimatedTexture change_Weapon;
+
+        public const float SCALE = 2f;
         public enum GameState
         {
             MainMenu,
@@ -85,7 +87,7 @@ namespace Ghost_blade
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
 
-            _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960, 540));
+            _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960*2, 540*2));
             // Removed direct Enemy and Enemy_Shooting creation.
 
             _bossTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -171,6 +173,7 @@ namespace Ghost_blade
                 {
                     gameState = GameState.Playing;
                     // เริ่มเกมตั้งค่า player position, reset enemies
+                    mainMenu.StartGame = false ;
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                 }
                 if (mainMenu.ExitGame)
@@ -184,7 +187,7 @@ namespace Ghost_blade
             {
                 if (_player.Health <= 0)
                 {
-                    gameState = GameState.MainMenu;
+                    gameState = GameState.GameOver;
                     
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     _player.Reset();
@@ -195,8 +198,8 @@ namespace Ghost_blade
                     }
                     _enemyBullets.Clear();
                     _playerBullets.Clear();
-                    mainMenu.StartGame = false;
-                    mainMenu.ExitGame = false;
+                    gameOver.StartGame = false;
+                    gameOver.Menu = false;
                     return;
                 }
             }
@@ -204,6 +207,21 @@ namespace Ghost_blade
             if (gameState == GameState.GameOver)
             {
                 gameOver.Update(gameTime);
+
+                if (gameOver.StartGame)
+                {
+                    gameState = GameState.Playing;
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                    gameOver.StartGame = false;
+                    gameOver.Menu = false;
+                }
+                if (gameOver.Menu)
+                {
+                    gameState = GameState.MainMenu;
+                    gameOver.Menu = false;
+                    gameOver.StartGame = false;
+                }
+                return;
             }
 
             camera.Follow(_player.drect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
