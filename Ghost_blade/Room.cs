@@ -24,11 +24,19 @@ namespace Ghost_blade
             this.Bounds = bounds;
             Obstacles = new List<Rectangle>();
             Enemies = new List<Enemy>();
+
         }
 
         public void AddEnemy(Enemy enemy)
         {
             Enemies.Add(enemy);
+        }
+        public void ResetRoom()
+        {
+            foreach (var enemy in Enemies)
+            {
+                enemy.Reset();
+            }
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)

@@ -24,12 +24,12 @@ namespace Ghost_blade
         {
 
             background = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
-            background.Load(content, "Main_title_Sheet", 12, 1, 8);
+            background.Load(content, "gameover-Sheet", 4, 3, 8);
 
             buttonTexture = new Texture2D(graphicsDevice, 1, 1);
             buttonTexture.SetData(new[] { Color.White });
-            playButton = new Rectangle(185, 295, 330, 150);
-            exitButton = new Rectangle(1000, 695, 330, 150);
+            playButton = new Rectangle(1390, 880, 410, 140);
+            exitButton = new Rectangle(170, 880, 350, 140);
         }
         public void Update(GameTime gameTime)
         {
@@ -51,8 +51,7 @@ namespace Ghost_blade
         public void Draw(SpriteBatch spriteBatch)
         {
             background.DrawFrame(spriteBatch, Vector2.Zero);
-            spriteBatch.Draw(buttonTexture, playButton, Color.Green);
-            spriteBatch.Draw(buttonTexture, exitButton, Color.Red);
+
         }
 
     }

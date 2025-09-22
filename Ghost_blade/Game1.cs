@@ -153,10 +153,7 @@ namespace Ghost_blade
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     _player.Reset();
                     currentRoomIndex = 0;
-                    foreach (var enemy in currentRoom.Enemies)
-                    {
-                        enemy.Reset();
-                    }
+                    currentRoom.ResetRoom();
                     _enemyBullets.Clear();
                     _playerBullets.Clear();
                     mainMenu.StartGame = false;
@@ -192,10 +189,7 @@ namespace Ghost_blade
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     _player.Reset();
                     currentRoomIndex = 0;
-                    foreach (var enemy in currentRoom.Enemies)
-                    {
-                        enemy.Reset();
-                    }
+                    currentRoom.ResetRoom();
                     _enemyBullets.Clear();
                     _playerBullets.Clear();
                     gameOver.StartGame = false;
@@ -309,6 +303,9 @@ namespace Ghost_blade
                 {
                     int next = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
                     currentRoomIndex = next;
+                    rooms[currentRoomIndex].ResetRoom();
+                    _playerBullets.Clear();
+                    _enemyBullets.Clear();
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                 }
             }
@@ -432,7 +429,7 @@ namespace Ghost_blade
 
 
             _spriteBatch.End();
-
+            
             base.Draw(gameTime);
         }
 
