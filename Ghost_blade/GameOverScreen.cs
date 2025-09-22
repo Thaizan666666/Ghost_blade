@@ -24,7 +24,7 @@ namespace Ghost_blade
         {
 
             background = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
-            background.Load(content, "game_over_Sheet", 12, 1, 8);
+            background.Load(content, "Main_title_Sheet", 12, 1, 8);
 
             buttonTexture = new Texture2D(graphicsDevice, 1, 1);
             buttonTexture.SetData(new[] { Color.White });

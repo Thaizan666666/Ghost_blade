@@ -9,6 +9,7 @@
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/firefoxBall.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/game_over_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/game_over-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Idle-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/HP-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png</File>
@@ -18,6 +19,7 @@
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/UI_weapon-Sheet.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

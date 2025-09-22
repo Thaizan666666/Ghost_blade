@@ -87,3 +87,4 @@ D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\crosshairs-Sheet
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\crosshairs_reload-Sheet.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\UI_weapon-Sheet.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\game_over_Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\game_over-Sheet.xnb

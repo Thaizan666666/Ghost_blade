@@ -73,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:game_over_Sheet.png
 
+#begin game_over-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:game_over-Sheet.png
+
 #begin GB_Idle-Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
