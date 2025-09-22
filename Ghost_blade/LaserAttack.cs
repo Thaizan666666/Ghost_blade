@@ -22,14 +22,11 @@ namespace Ghost_blade
         private const float FIRE_DURATION = 5.0f;
         private const float COOL_DOWN_DURATION = 1.0f;
 
-        // The angle of the laser beam
         private float laserAngle;
-
-        // Variables for the sweeping motion
         private float currentRotationSpeed;
         private const float MAX_ROTATION_SPEED = 2f;
-        private float rotationDirection; // 1 for clockwise, -1 for counter-clockwise
-        private const float OVERSHOOT_TOLERANCE = 0.5f; // The amount the laser will overshoot before changing direction
+        private float rotationDirection;
+        private const float OVERSHOOT_TOLERANCE = 0.5f;
 
         private Random random = new Random();
 
@@ -45,27 +42,17 @@ namespace Ghost_blade
             coolDownTimer = 0f;
             coolDowmRealTimer = 0f;
 
+            // Set the laser to always start at 0 degrees (pointing right)
+            laserAngle = 0f;
 
-            // Randomly start the laser pointing either straight down or straight up
-            if (boss.Position.Y < player.position.Y)
-            {
-                laserAngle = MathHelper.PiOver2; // 90 degrees (down)
-            }
-            else
-            {
-                laserAngle = -MathHelper.PiOver2; // -90 degrees, same as 270 (up)
-            }
+            // Set a fixed rotation direction (e.g., clockwise)
+            rotationDirection = 1f;
 
-            // Randomly set the initial rotation direction
-            rotationDirection = (random.Next(2) == 0) ? 1 : -1;
-
-            // Start the rotation speed at 0
             currentRotationSpeed = 0f;
-
             IsFinished = false;
         }
 
-        public override void Update(GameTime gameTime, Player player)
+        public override void Update(GameTime gameTime, Player player, List<Rectangle> obstacles)
         {
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -73,7 +60,7 @@ namespace Ghost_blade
             {
                 case LaserState.Charging:
                     chargeTimer += delta;
-
+                    // Note: Boss movement logic is now handled in the Boss class.
                     if (chargeTimer >= CHARGE_DURATION)
                     {
                         currentState = LaserState.Firing;

@@ -82,7 +82,7 @@ namespace Ghost_blade
             _bossTexture.SetData(new[] { Color.White });
 
             // Pass the pixel texture to the Beholster constructor
-            boss = new Boss(_bossTexture,_bulletTexture);
+            boss = new Boss(_bossTexture,new Vector2(55 * 24, 98 * 24), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
 
 
             // Door texture
@@ -184,7 +184,8 @@ namespace Ghost_blade
             {
                 if (enemy.IsActive)
                 {
-                    enemy.Update(_player, currentRoom.Obstacles);
+                    enemy.Update(_player, currentRoom.Obstacles,gameTime);
+                    enemy.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
                 }
             }
 
@@ -197,7 +198,7 @@ namespace Ghost_blade
                     {
                         if (_player._isSlash)
                         {
-                            enemy.TakeDamage(70);
+                            enemy.TakeDamage(70, _player.position);
                             _player._isSlash = false;
                             break; // Exit the loop after hitting the first enemy
                         }
@@ -215,7 +216,7 @@ namespace Ghost_blade
                 {
                     if (enemy.IsActive && bullet.boundingBox.Intersects(enemy.boundingBox))
                     {
-                        enemy.TakeDamage(40);
+                        enemy.TakeDamage(40,_player.position);
                         bullet.IsActive = false;
                         break; // Exit the inner loop after hitting an enemy
                     }
@@ -250,7 +251,23 @@ namespace Ghost_blade
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                 }
             }
-            boss.Update(gameTime, _player);
+            boss.Update(gameTime, _player,currentRoom.Obstacles);
+            // *** เพิ่มโค้ดส่วนนี้เข้าไปเพื่อรับศัตรูที่บอสสร้างขึ้นมา ***
+            var newlySpawnedEnemies = boss.GetSpawnedEnemies();
+            if (newlySpawnedEnemies.Count > 0)
+            {
+                currentRoom.Enemies.AddRange(newlySpawnedEnemies);
+            }
+
+            // ... โค้ดสำหรับอัปเดตและเช็กการชนของศัตรูใน currentRoom.Enemies ...
+            foreach (var enemy in currentRoom.Enemies)
+            {
+                if (enemy.IsActive)
+                {
+                    enemy.Update(_player, currentRoom.Obstacles, gameTime);
+                    enemy.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -297,13 +314,24 @@ namespace Ghost_blade
 
                 // Draw hitboxes
                 //DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
-                DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
+                DrawRectangle(_spriteBatch, _player.drect, Color.Blue, 1);
                 DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {
                     if (enemy.IsActive)
                     {
+                        // Draw the enemy's main bounding box
                         DrawRectangle(_spriteBatch, enemy.boundingBox, Color.Orange, 1);
+
+                        // Check if this specific enemy is a Melee type
+                        if (enemy is Enemy_Melee meleeEnemy)
+                        {
+                            // Draw the melee attack hitbox only if it's currently active
+                            if (meleeEnemy.AttackHitbox != Rectangle.Empty)
+                            {
+                                DrawRectangle(_spriteBatch, meleeEnemy.AttackHitbox, Color.Red, 1);
+                            }
+                        }
                     }
                 }
 

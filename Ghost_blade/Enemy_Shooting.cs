@@ -12,18 +12,15 @@ namespace Ghost_blade
             Idle,
             MovingAway,
             Cooldown,
-            Shooting
+            Chasing
         }
 
         private EnemyState currentState;
         private float stateTimer;
 
-        // ระยะเวลาที่ใช้ในการเปลี่ยนสถานะ
         private const float MOVE_AWAY_DURATION = 1.0f;
         private const float COOLDOWN_DURATION = 2.0f;
-        private const float SHOOTING_DURATION = 0.5f;
 
-        // ตัวแปรสำหรับระบบยิงแบบเบิร์สต์ (burst fire)
         private const int BURST_COUNT = 3;
         private const float BURST_DELAY = 0.15f;
 
@@ -34,7 +31,6 @@ namespace Ghost_blade
         private float fireTimer;
         private const float FIRE_RATE = 1.0f;
 
-        // An event that fires when a bullet is shot.
         public Action<Bullet> OnShoot;
 
         public Enemy_Shooting(Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture)
@@ -46,74 +42,90 @@ namespace Ghost_blade
             this.bulletTexture = bulletTexture;
             this.fireTimer = FIRE_RATE;
             this.IsActive = true;
+            this.Speed = speed;
         }
 
-
-        public override void Update(Player player, List<Rectangle> obstacles)
+        public override void Update(Player player, List<Rectangle> obstacles, GameTime gameTime)
         {
-            // ใช้ gameTime.ElapsedGameTime.TotalSeconds เพื่อค่า deltaTime ที่แม่นยำขึ้น
-            float deltaTime = 1f / 60f;
-            float distance = Vector2.Distance(Position, player.position);
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            // Priority 1: Check if the enemy is being knocked back
+            if (knockbackTimer > 0)
+            {
+                Position += knockbackDirection * knockbackSpeed * deltaTime;
+                knockbackTimer -= deltaTime;
+                return; // Exit the update method to ignore other logic
+            }
+
+            // Priority 2: Normal enemy behavior (only runs if not knocked back)
+            float distance = Vector2.Distance(Position, player.position);
             Vector2 desiredMovement = Vector2.Zero;
+            Vector2 directionToPlayer = player.position - Position;
+
+            if (CanSeePlayer(player, obstacles))
+            {
+                if (distance <= detectionRadius)
+                {
+                    if (currentState != EnemyState.MovingAway && currentState != EnemyState.Cooldown)
+                    {
+                        currentState = EnemyState.MovingAway;
+                        stateTimer = MOVE_AWAY_DURATION;
+                        bulletsShotInBurst = 0;
+                        burstTimer = BURST_DELAY;
+                    }
+                }
+                else
+                {
+                    if (currentState != EnemyState.Chasing)
+                    {
+                        currentState = EnemyState.Chasing;
+                    }
+                }
+            }
+            else
+            {
+                currentState = EnemyState.Idle;
+            }
 
             switch (currentState)
             {
                 case EnemyState.Idle:
-                    if (distance <= 200f && CanSeePlayer(player, obstacles)) // ตั้งค่า 200f เป็นระยะที่ต้องการให้ถอยหลัง
-                    {
-                        currentState = EnemyState.MovingAway;
-                        stateTimer = MOVE_AWAY_DURATION;
-                    }
-                    else if (distance <= detectionRadius && CanSeePlayer(player, obstacles))
-                    {
-                        currentState = EnemyState.Shooting;
-                        stateTimer = SHOOTING_DURATION;
-                        bulletsShotInBurst = 0; // รีเซ็ตตัวนับกระสุนเมื่อเริ่มสถานะยิง
-                        burstTimer = BURST_DELAY; // เริ่มต้น timer สำหรับนัดแรก
-                    }
+                    desiredMovement = Vector2.Zero;
                     break;
 
-                case EnemyState.MovingAway:
-                    Vector2 directionToPlayer = player.position - Position;
+                case EnemyState.Chasing:
                     if (directionToPlayer != Vector2.Zero)
                     {
                         directionToPlayer.Normalize();
                     }
-                    desiredMovement = -directionToPlayer; // Move away from the player
-
-                    stateTimer -= deltaTime;
-                    if (stateTimer <= 0)
-                    {
-                        currentState = EnemyState.Shooting;
-                        stateTimer = SHOOTING_DURATION;
-                        bulletsShotInBurst = 0;
-                        burstTimer = BURST_DELAY;
-                    }
+                    desiredMovement = directionToPlayer;
                     break;
 
-                case EnemyState.Shooting:
-                    burstTimer -= deltaTime;
-                    stateTimer -= deltaTime;
+                case EnemyState.MovingAway:
+                    if (directionToPlayer != Vector2.Zero)
+                    {
+                        directionToPlayer.Normalize();
+                    }
+                    desiredMovement = -directionToPlayer;
 
-                    // ยิงกระสุนถ้านับเวลาได้และยังยิงไม่ครบ 3 นัด
+                    burstTimer -= deltaTime;
                     if (burstTimer <= 0 && bulletsShotInBurst < BURST_COUNT)
                     {
                         Shoot(player.position);
                         bulletsShotInBurst++;
-                        burstTimer = BURST_DELAY; // รีเซ็ต timer สำหรับนัดถัดไป
+                        burstTimer = BURST_DELAY;
                     }
 
-                    // ถ้าเวลาในสถานะ Shooting หมด หรือยิงครบ 3 นัดแล้ว ให้เปลี่ยนไปสถานะ Cooldown
-                    if (stateTimer <= 0 || bulletsShotInBurst >= BURST_COUNT)
+                    stateTimer -= deltaTime;
+                    if (stateTimer <= 0)
                     {
                         currentState = EnemyState.Cooldown;
                         stateTimer = COOLDOWN_DURATION;
-                        bulletsShotInBurst = 0; // รีเซ็ตตัวนับกระสุนสำหรับรอบถัดไป
                     }
                     break;
 
                 case EnemyState.Cooldown:
+                    desiredMovement = Vector2.Zero;
                     stateTimer -= deltaTime;
                     if (stateTimer <= 0)
                     {
@@ -122,9 +134,27 @@ namespace Ghost_blade
                     break;
             }
 
-            // Apply the desired movement and handle collision.
             Vector2 newPosition = Position + desiredMovement * Speed;
-            Position = HandleCollision(newPosition, obstacles);
+            Position = newPosition;
+        }
+
+        // Override the TakeDamage method to handle knockback logic
+        public override void TakeDamage(int damage, Vector2 damageSourcePosition)
+        {
+            Health -= damage;
+
+            // Calculate knockback direction and start the timer immediately
+            knockbackDirection = Position - damageSourcePosition;
+            if (knockbackDirection != Vector2.Zero)
+            {
+                knockbackDirection.Normalize();
+            }
+            knockbackTimer = KnockbackDuration;
+
+            if (Health <= 0)
+            {
+                this.IsActive = false;
+            }
         }
 
         private void Shoot(Vector2 targetPosition)
@@ -138,7 +168,6 @@ namespace Ghost_blade
             float offsetDistance = 20f;
             Vector2 startPosition = Position + direction * offsetDistance;
 
-            // สร้าง EnemyBullet
             var bullet = new EnemyBullet(bulletTexture, startPosition, direction, 8f, 0f, 2f);
 
             OnShoot?.Invoke(bullet);
@@ -149,14 +178,6 @@ namespace Ghost_blade
             if (IsActive)
             {
                 spriteBatch.Draw(Texture, Position, null, Color.Green, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
-            }
-        }
-        public override void TakeDamage(int damage)
-        {
-            Health -= damage;
-            if (Health <= 0)
-            {
-                this.IsActive = false;
             }
         }
     }

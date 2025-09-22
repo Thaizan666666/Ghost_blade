@@ -73,11 +73,11 @@ namespace Ghost_blade
             AddObstacle(32, 94, 3, 2);
             AddObstacle(32, 97, 3, 2);
 
-            AddEnemy(new Enemy(enemyTexture, new Vector2(41 * tileSize, 63 * tileSize), 1.0f, 500f));
-            AddEnemy(new Enemy(enemyTexture, new Vector2(42 * tileSize, 26 * tileSize), 1.0f, 500f));
-            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(64 * tileSize, 64 * tileSize), 1.5f, 500f, bulletTexture));
-            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(104 * tileSize, 90 * tileSize), 1.5f, 500f, bulletTexture));
-            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(96 * tileSize, 90 * tileSize), 1.5f, 500f, bulletTexture));
+            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(41 * tileSize, 63 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(42 * tileSize, 26 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(64 * tileSize, 64 * tileSize), 1.0f, 1000f, bulletTexture));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(104 * tileSize, 90 * tileSize), 1.0f, 1000f, bulletTexture));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(96 * tileSize, 90 * tileSize), 1.0f, 1000f, bulletTexture));
         }
     }
 }

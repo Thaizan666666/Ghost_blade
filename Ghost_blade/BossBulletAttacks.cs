@@ -10,7 +10,7 @@ namespace Ghost_blade
         private List<EnemyBullet> bullets;
         private bool isFiring = false;
 
-        private const int BURST_COUNT = 20; // Number of bullets to fire in one burst
+        private const int BURST_COUNT = 50; // Number of bullets to fire in one burst
         private const float BURST_DELAY = 0.15f; // Delay between each bullet shot in the burst
         private const float ATTACK_DURATION = 1.0f; // Total duration of the attack state
 
@@ -33,7 +33,7 @@ namespace Ghost_blade
             IsFinished = false;
         }
 
-        public override void Update(GameTime gameTime, Player player)
+        public override void Update(GameTime gameTime, Player player,List<Rectangle> Obstacles)
         {
             if (!isFiring)
                 return;
@@ -57,10 +57,10 @@ namespace Ghost_blade
             }
 
             // Update all active bullets and check for collision
-            List<Rectangle> emptyObstacles = new List<Rectangle>();
             for (int i = bullets.Count - 1; i >= 0; i--)
             {
-                bullets[i].Update(gameTime, emptyObstacles, player);
+                // Pass the obstacles list to the bullet's update method
+                bullets[i].Update(gameTime, Obstacles, player); 
 
                 if (!bullets[i].IsActive)
                 {

@@ -1,7 +1,8 @@
-﻿using Ghost_blade;
+﻿using System;
+using System.Collections.Generic;
+using Ghost_blade;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 public class Enemy
 {
@@ -10,12 +11,20 @@ public class Enemy
     public float Speed;
     protected Vector2 direction;
     protected float detectionRadius;
-    private Vector2 oldPosition;
     private readonly int hitboxWidth = 32;
     private readonly int hitboxHeight = 32;
     public bool IsActive { get; set; }
     public int Health { get; set; } = 200;
 
+    // Knockback variables
+    protected float knockbackTimer = 0f;
+    protected const float KnockbackDuration = 0.2f; // Change this to protected as well for consistency
+    protected float knockbackSpeed = 150f;
+    protected Vector2 knockbackDirection;
+
+    // Attack variable (only cooldown, attack logic in child class)
+    protected float attackCooldown = 1.5f;
+    protected float attackTimer;
 
     public Rectangle boundingBox
     {
@@ -36,80 +45,94 @@ public class Enemy
         this.Position = startPosition;
         this.Speed = speed;
         this.detectionRadius = detectionRadius;
-        this.IsActive = true; // Add this line
+        this.IsActive = true;
+        this.attackTimer = attackCooldown;
     }
 
-    // Main Update method for the enemy's logic.
-    public virtual void Update(Player player, List<Rectangle> obstacles)
+    public virtual void Update(Player player, List<Rectangle> obstacles, GameTime gameTime)
     {
-        oldPosition = Position;
-        Vector2 desiredMovement = Vector2.Zero;
+        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        // Check if the player is both within the detection radius AND has a clear line of sight.
-        if (Vector2.Distance(Position, player.position) <= detectionRadius && CanSeePlayer(player, obstacles))
+        if (knockbackTimer > 0)
         {
-            // If true, the enemy will actively pursue the player.
-            desiredMovement = player.position - Position;
-            if (desiredMovement != Vector2.Zero)
-            {
-                desiredMovement.Normalize();
-            }
+            Position += knockbackDirection * knockbackSpeed * deltaTime;
+            knockbackTimer -= deltaTime;
         }
         else
         {
-            // If the player is not in range or the line of sight is blocked, the enemy will stop moving
-            // or you could add logic for a patrolling behavior here.
-            desiredMovement = Vector2.Zero;
+            // Default behavior: Chase the player if they can see them.
+            Vector2 desiredMovement = Vector2.Zero;
+            if (Vector2.Distance(Position, player.position) <= detectionRadius && CanSeePlayer(player, obstacles))
+            {
+                desiredMovement = player.position - Position;
+                if (desiredMovement != Vector2.Zero)
+                {
+                    desiredMovement.Normalize();
+                }
+            }
+
+            Vector2 newPosition = Position + desiredMovement * Speed;
+            Position = newPosition;
         }
-
-        // Apply movement
-        Vector2 newPosition = Position + desiredMovement * Speed;
-
-        // Handle collision after calculating the new position.
-        Position = HandleCollision(newPosition, obstacles);
     }
 
-    protected Vector2 HandleCollision(Vector2 newPosition, List<Rectangle> obstacles)
+    public virtual void TakeDamage(int damage, Vector2 damageSourcePosition)
     {
-        Vector2 resultPosition = newPosition;
+        Health -= damage;
+        knockbackDirection = Position - damageSourcePosition;
+        if (knockbackDirection != Vector2.Zero)
+        {
+            knockbackDirection.Normalize();
+        }
+        knockbackTimer = KnockbackDuration;
 
-        // Separate collision checks for X and Y axes to allow sliding along walls.
+        if (Health <= 0)
+        {
+            this.IsActive = false;
+        }
+    }
 
-        // Check X-axis movement
-        Rectangle rectX = new Rectangle(
-            (int)(newPosition.X - hitboxWidth / 2),
-            (int)(Position.Y - hitboxHeight / 2),
-            hitboxWidth,
-            hitboxHeight
-        );
+    public void ClampPosition(Rectangle bounds, List<Rectangle> obstacles)
+    {
+        Position = Vector2.Clamp(Position,
+            new Vector2(bounds.Left + Texture.Width / 2, bounds.Top + Texture.Height / 2),
+            new Vector2(bounds.Right - Texture.Width / 2, bounds.Bottom - Texture.Height / 2));
 
         foreach (var obs in obstacles)
         {
-            if (rectX.Intersects(obs))
+            while (boundingBox.Intersects(obs))
             {
-                resultPosition.X = Position.X;
-                break; // Stop checking once a collision is found.
+                if (knockbackTimer > 0)
+                {
+                    knockbackTimer = 0;
+                }
+                Rectangle intersection = Rectangle.Intersect(boundingBox, obs);
+                Vector2 separationVector = Vector2.Zero;
+                if (intersection.Width < intersection.Height)
+                {
+                    if (boundingBox.Center.X < obs.Center.X)
+                    {
+                        separationVector.X = -intersection.Width;
+                    }
+                    else
+                    {
+                        separationVector.X = intersection.Width;
+                    }
+                }
+                else
+                {
+                    if (boundingBox.Center.Y < obs.Center.Y)
+                    {
+                        separationVector.Y = -intersection.Height;
+                    }
+                    else
+                    {
+                        separationVector.Y = intersection.Height;
+                    }
+                }
+                Position += separationVector;
             }
         }
-
-        // Check Y-axis movement
-        Rectangle rectY = new Rectangle(
-            (int)(Position.X - hitboxWidth / 2),
-            (int)(newPosition.Y - hitboxHeight / 2),
-            hitboxWidth,
-            hitboxHeight
-        );
-
-        foreach (var obs in obstacles)
-        {
-            if (rectY.Intersects(obs))
-            {
-                resultPosition.Y = Position.Y;
-                break; // Stop checking once a collision is found.
-            }
-        }
-
-        return resultPosition;
     }
 
     public virtual void Draw(SpriteBatch spriteBatch)
@@ -119,69 +142,45 @@ public class Enemy
             spriteBatch.Draw(Texture, Position, null, Color.Red, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
         }
     }
+
     public bool CanSeePlayer(Player player, List<Rectangle> obstacles)
     {
-        // First, check if the player is within the maximum detection radius.
-        // This is an optimization to avoid unnecessary calculations.
         if (Vector2.Distance(this.Position, player.position) > detectionRadius)
         {
             return false;
         }
-
-        // Create a vector representing the line between the enemy and the player.
         Vector2 lineOfSight = player.position - this.Position;
         Vector2 normalizedDirection = lineOfSight;
         if (normalizedDirection != Vector2.Zero)
         {
             normalizedDirection.Normalize();
         }
-
-        // Determine the number of steps to check along the line.
-        // The smaller the step size, the more accurate the check, but it's more computationally expensive.
         float distance = lineOfSight.Length();
-        float stepSize = 5.0f; // Adjust this value for accuracy vs. performance.
-
-        // Step from the enemy's position towards the player.
+        float stepSize = 5.0f;
         for (float i = 0; i < distance; i += stepSize)
         {
-            // Calculate the position of the current point on the line.
             Vector2 currentPoint = this.Position + normalizedDirection * i;
-
-            // Create a small rectangle for the collision check.
-            // This is to account for the fact that a single point might not register a collision.
             Rectangle pointRect = new Rectangle(
                 (int)currentPoint.X,
                 (int)currentPoint.Y,
                 1,
                 1
             );
-
-            // Check for intersection with any obstacle.
             foreach (var obs in obstacles)
             {
                 if (obs.Intersects(pointRect))
                 {
-                    // Line of sight is blocked.
                     return false;
                 }
             }
         }
-
-        // If the loop completes without an intersection, the line of sight is clear.
         return true;
     }
-    public virtual void TakeDamage(int damage)
-    {
-            Health -= damage;
-        if (Health <= 0)
-        {
-            this.IsActive = false;
-        }
-    }
+
     public void Reset()
     {
         IsActive = true;
         Health = 200;
+        knockbackTimer = 0f;
     }
-
 }

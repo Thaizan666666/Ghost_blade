@@ -116,7 +116,7 @@ namespace Ghost_blade
             HandleDash(kState, deltaTime);
             HandleWeaponSwitching(kState);
             HandleReload(kState);
-            HandleAttacks(mState, gameTime, cameraPosition); // Pass cameraPosition here
+            HandleAttacks(mState, cameraPosition); // Pass cameraPosition here
 
             // NEW: Updated state management logic
             if (isDashing)
@@ -126,7 +126,7 @@ namespace Ghost_blade
             else if (currentState == PlayerState.Attacking)
             {
                 // Update melee weapon while attacking
-                meleeWeapon.Update(gameTime, position, cameraPosition, true);
+                meleeWeapon.Update(gameTime, position, cameraPosition);
                 // Handle attack duration
                 attackTimer += deltaTime;
                 if (attackTimer >= AttackDuration)
@@ -143,13 +143,13 @@ namespace Ghost_blade
                 {
                     currentState = PlayerState.Running;
                     // Update weapon rotation while running
-                    meleeWeapon.Update(gameTime, position, cameraPosition, false);
+                    meleeWeapon.Update(gameTime, position, cameraPosition);
                 }
                 else
                 {
                     currentState = PlayerState.Idle;
                     // Update weapon rotation while idle
-                    meleeWeapon.Update(gameTime, position, cameraPosition, false);
+                    meleeWeapon.Update(gameTime, position, cameraPosition);
                 }
             }
 
@@ -181,20 +181,15 @@ namespace Ghost_blade
             previousMState = mState;
         }
 
-        private void HandleAttacks(MouseState mState, GameTime gameTime, Vector2 cameraPosition)
+        private void HandleAttacks(MouseState mState, Vector2 cameraPosition) // ต้องเพิ่ม cameraPosition เป็น parameter
         {
             if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
             {
                 if (isSwordEquipped)
                 {
-                    // If not currently attacking, start the attack
-                    if (currentState != PlayerState.Attacking)
-                    {
-                        _isSlash = true;
-                        currentState = PlayerState.Attacking;
-                        attackTimer = 0f; // Reset attack timer
-                        Debug.WriteLine("Player is Attacking!");
-                    }
+                    meleeWeapon.PerformAttack(position, cameraPosition);
+                    currentState = PlayerState.Attacking;   
+                    _isSlash = true;
                 }
             }
         }

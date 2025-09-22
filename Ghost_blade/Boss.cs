@@ -1,8 +1,9 @@
-﻿using Ghost_blade;
-using Microsoft.Xna.Framework.Graphics;
+﻿// ต้องเพิ่ม using System.Diagnostics;
+using Ghost_blade;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 public class Boss
@@ -25,27 +26,26 @@ public class Boss
     private float timeBetweenAttacks;
 
     // Constructor
-    public Boss(Texture2D pixelTexture, Texture2D bulletTexture)
+    public Boss(Texture2D texture, Vector2 position, Texture2D pixelTexture, Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture)
     {
-        Position = new Vector2(55 * 24, 98 * 24 + 50);
-        timeBetweenAttacks = 0.5f;
+        this.Position = position;
         this.pixel = pixelTexture;
         this.bulletTexture = bulletTexture;
         this.random = new Random();
+        this.timeBetweenAttacks = 0.5f;
 
         attacks = new List<BossAttack>();
 
         // Pass the pixel texture for attacks that use it
         attacks.Add(new LaserAttack(this, pixelTexture));
-
-        // **Change this line:** Pass the bulletTexture to the bullet attack
         attacks.Add(new BossBulletAttacks(this, bulletTexture));
+        attacks.Add(new SpawnAttack(this, pixelTexture, enemyTex1, enemyTex2, bulletTexture));
 
         currentState = BossState.Idle;
         attackTimer = 0.1f;
     }
 
-    public void Update(GameTime gameTime, Player player)
+    public void Update(GameTime gameTime, Player player, List<Rectangle> obstacles)
     {
         // Update logic based on the current state
         switch (currentState)
@@ -63,7 +63,8 @@ public class Boss
                 // Update the current attack
                 if (currentAttack != null)
                 {
-                    currentAttack.Update(gameTime, player);
+                    currentAttack.Update(gameTime, player, obstacles);
+
                     // Check if the attack is finished
                     if (currentAttack.IsFinished)
                     {
@@ -78,8 +79,8 @@ public class Boss
                 // Handle a brief stun or visual effect
                 break;
         }
-
-        // Other update logic (e.g., movement)
+        // NOTE: The code to get spawned enemies must be called from Game1's Update method
+        // You cannot add them to the main list from here.
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -109,5 +110,15 @@ public class Boss
         currentAttack = attacks[randomIndex];
         Debug.WriteLine($"Attack = {randomIndex}");
         currentAttack.Start(player);
+    }
+
+    // Method to get newly spawned enemies to add to the main game list
+    public List<Enemy> GetSpawnedEnemies()
+    {
+        if (currentAttack is SpawnAttack spawnAttack)
+        {
+            return spawnAttack.GetNewEnemies();
+        }
+        return new List<Enemy>(); // Return an empty list if it's not a spawn attack
     }
 }
