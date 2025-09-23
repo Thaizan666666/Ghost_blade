@@ -1,68 +1,84 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
-namespace Ghost_blade
+public class Bullet
 {
-    public class Bullet
+    private Texture2D texture;
+    private Vector2 position;
+    private Vector2 velocity;
+    private float rotation;
+    private float speed;
+    private float lifeTime;
+    private float currentLifeTime;
+    private readonly int hitboxSize = 10;
+
+    public bool IsActive { get; set; }
+
+    public Rectangle boundingBox
     {
-        private Texture2D texture;
-        private Vector2 position;
-        private Vector2 velocity;
-        private float rotation;
-        private float speed;
-        private float lifeTime;
-        private float currentLifeTime;
-
-        public bool IsActive { get; private set; }
-
-        public Bullet(Texture2D texture, Vector2 startPosition, Vector2 direction, float bulletSpeed, float bulletRotation, float lifeDuration)
+        get
         {
-            this.texture = texture;
-            this.position = startPosition;
-            this.velocity = direction;
-            this.speed = bulletSpeed;
-            this.rotation = bulletRotation;
-            this.lifeTime = lifeDuration;
-            this.currentLifeTime = 0f;
-            this.IsActive = true;
+            return new Rectangle((int)position.X, (int)position.Y, hitboxSize, hitboxSize);
         }
+    }
 
-        public void Update(GameTime gameTime)
+    public Bullet(Texture2D texture, Vector2 startPosition, Vector2 direction, float bulletSpeed, float bulletRotation, float lifeDuration)
+    {
+        this.texture = texture;
+        this.position = startPosition;
+        this.velocity = direction;
+        this.speed = bulletSpeed;
+        this.rotation = bulletRotation;
+        this.lifeTime = lifeDuration;
+        this.currentLifeTime = 0f;
+        this.IsActive = true;
+    }
+
+    // เพิ่ม List<Rectangle> obstacles เป็นพารามิเตอร์ เพื่อให้กระสุนตรวจสอบการชนกับกำแพงได้เอง
+    public void Update(GameTime gameTime, List<Rectangle> obstacles)
+    {
+        if (!IsActive) return;
+
+        // ตรวจสอบการชนกับกำแพง
+        foreach (var obstacle in obstacles)
         {
-            if (!IsActive) return;
-
-
-            position += velocity * speed;
-
-
-            currentLifeTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-
-            if (currentLifeTime >= lifeTime)
+            if (boundingBox.Intersects(obstacle))
             {
                 IsActive = false;
+                return;
             }
-
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        // อัปเดตตำแหน่งตามความเร็ว โดยใช้ delta time เพื่อการเคลื่อนที่ที่ราบรื่น
+        position += velocity * speed * (float)gameTime.ElapsedGameTime.TotalSeconds * 60f;
+
+        // อัปเดตระยะเวลา
+        currentLifeTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        // ปิดการใช้งานกระสุนเมื่อหมดอายุ
+        if (currentLifeTime >= lifeTime)
         {
-            if (!IsActive) return;
-
-            Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
-
-            spriteBatch.Draw(
-                texture,
-                position,
-                null,
-                Color.White,
-                rotation,
-                origin,
-                1.0f,
-                SpriteEffects.None,
-                0f
-            );
+            IsActive = false;
         }
+    }
+
+    public void Draw(SpriteBatch spriteBatch)
+    {
+        if (!IsActive) return;
+
+        Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
+
+        spriteBatch.Draw(
+            texture,
+            position,
+            null,
+            Color.White,
+            rotation,
+            origin,
+            1.0f,
+            SpriteEffects.None,
+            0f
+        );
     }
 }

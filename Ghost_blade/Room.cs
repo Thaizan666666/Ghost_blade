@@ -1,50 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using System.Collections.Generic;
 
 namespace Ghost_blade
 {
     public abstract class Room
     {
-        public Texture2D Background { get; protected set; }
-        public Texture2D DoorTexture { get; protected set; }
-        public Rectangle Door { get; protected set; }
-        public Vector2 StartPosition { get; protected set; }
+        protected Texture2D background;
+        public Rectangle Bounds { get; private set; }
+        public List<Rectangle> Obstacles { get; private set; }
+        public Rectangle Door { get; private set; }
+        public Vector2 StartPosition { get; private set; }
         public List<int> NextRooms { get; protected set; }
-        public Rectangle Bounds { get; protected set; }
+        public List<Enemy> Enemies { get; private set; }
+        private Texture2D doorTexture;
 
-        // เพิ่ม list สำหรับ obstacles
-        public List<Rectangle> Obstacles { get; protected set; }
-
-        public Room(Texture2D background, Texture2D doorTexture, Rectangle door, Vector2 startPosition, Rectangle bounds)
+        public Room(Texture2D bg, Texture2D door, Rectangle doorRectangle, Vector2 startPosition, Rectangle bounds)
         {
-            Background = background;
-            DoorTexture = doorTexture;
-            Door = door;
-            StartPosition = startPosition;
-            Bounds = bounds;
-            NextRooms = new List<int>();
-            Obstacles = new List<Rectangle>(); // สร้าง list ว่างสำหรับ obstacle
+            this.background = bg;
+            this.doorTexture = door;
+            this.Door = doorRectangle;
+            this.StartPosition = startPosition;
+            this.Bounds = bounds;
+            Obstacles = new List<Rectangle>();
+            Enemies = new List<Enemy>();
+        }
+
+        public void AddEnemy(Enemy enemy)
+        {
+            Enemies.Add(enemy);
+        }
+        public void ResetRoom()
+        {
+            foreach (var enemy in Enemies)
+            {
+                enemy.Reset();
+            }
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Background, new Rectangle(0, 0, 1920, 1080), Color.White);
-            if (DoorTexture != null) spriteBatch.Draw(DoorTexture, Door, Color.White);
-
-            // วาดสิ่งกีดขวางสีเทา
-            foreach (var rect in Obstacles)
-            {
-                Texture2D tex = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-                tex.SetData(new[] { Color.Gray });
-                spriteBatch.Draw(tex, rect, Color.White);
-            }
+            spriteBatch.Draw(background, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(doorTexture, Door, Color.Red);
         }
     }
-
 }

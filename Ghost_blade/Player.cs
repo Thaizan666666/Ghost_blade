@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Ghost_blade
 {
+    public enum PlayerState
+    {
+        Idle,
+        Running,
+        Attacking,
+        Dashing
+    }
     public class Player
     {
-        private Texture2D texture;
-        private Vector2 position;
-        private Vector2 velocity;
+        public Texture2D texture { get; set; }
+        public Vector2 position { get; set; }
+        public Vector2 velocity { get; private set; }
+
         private float speed;
         private float rotation;
         private SpriteEffects currentSpriteEffect;
@@ -22,33 +28,84 @@ namespace Ghost_blade
         private float timer = 0f;
         private Texture2D bulletTexture;
         public byte currentAmmo;
-        private bool switch_sword = true;
+        private bool isSwordEquipped = true;
         private KeyboardState previousKState;
+        private MouseState previousMState;
+        private Vector2 lastMovementDirection = new Vector2(1, 0);
+        public MeleeWeapon meleeWeapon { get; private set; }
+        public int Health { get; set; } = 5;
 
         private bool isDashing = false;
         private float dashTimer = 0f;
-        private float dashDuration = 0.2f;
-        private float dashSpeedMultiplier = 5.0f;
+        private const float DashDuration = 0.2f;
+        private const float DashSpeedMultiplier = 5.0f;
         private Vector2 dashDirection;
-
-        private float dashCooldown = 2f;
+        private const float DashCooldown = 2f;
         private float dashCooldownTimer = 0f;
+
+        public bool isReloading = false;
+        private float reloadTimer = 0f;
+        private const float ReloadTime = 1f;
+
+        public bool _isInvincible = false;
+        private float _invincibilityTimer = 0f;
+        private const float InvincibilityDuration = 0.5f;
+
+        public bool IsAlive { get; private set; }
+        public bool _isSlash { get; set; } = true;
+        private int currentFrame;
+        private float frameTimer;
+        private float frameRate = 0.1f;
+        private int frameWidth = 48;
+        private int frameHeight = 48;
+        public PlayerState currentState { get; private set; }
+        private readonly int[] idleFrames = { 0, 1, 2, 3 };
+        private readonly float idleFrameRate = 0.15f;
+        private readonly int[] runningFrames = { 4, 5, 6, 7 };
+        private readonly float runningFrameRate = 0.1f;
+
+
+        // NEW: Time management for attacking state
+        private float attackTimer = 0f;
+        private const float AttackDuration = 0.2f; // ระยะเวลาการโจมตี (ตามที่คุณใช้ใน MeleeWeapon)
+
+        public AnimatedTexture change_Weapon;
+        private bool isWeaponSwitching = false;
+        public int currentWeaponFrame = 0;
+        private bool isWeaponSwitchingBackwards = false;
+        private int weaponSwitchStartFrame = 0;
+        private int weaponSwitchEndFrame = 0;
+        private float weaponFrameTimer = 0f;
+        private float weaponFrameRate = 0.1f;
 
         public Rectangle drect
         {
             get
             {
+                {
+                    return new Rectangle(
+                        (int)(position.X - texture.Width / 4 + 24),
+                        (int)(position.Y - texture.Height / 2 + 24),
+                        24,
+                        texture.Height - 24
+                    );
+                }
+            }
+        }
+        public Rectangle HitboxgetDamage
+        {
+            get
+            {
                 return new Rectangle(
-                    (int)(position.X - texture.Width / 2),
-                    (int)(position.Y - texture.Height / 2),
-                    texture.Width,
-                    texture.Height
-                );
+                            (int)(position.X - texture.Width / 4 + 24),
+                            (int)(position.Y - 24),
+                            24,
+                            texture.Height
+                            );
             }
         }
 
-
-        public Player(Texture2D playerTexture, Texture2D bulletTexture, Vector2 initialPosition)
+        public Player(Texture2D playerTexture, Texture2D bulletTexture, Texture2D meleeWeaponTexture, Vector2 initialPosition)
         {
             this.texture = playerTexture;
             this.bulletTexture = bulletTexture;
@@ -59,112 +116,247 @@ namespace Ghost_blade
             this.timer = 0f;
             this.currentAmmo = 10;
             this.previousKState = Keyboard.GetState();
+            this.previousMState = Mouse.GetState();
+            this.IsAlive = true;
+            this.meleeWeapon = new MeleeWeapon(meleeWeaponTexture);
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
         {
             KeyboardState kState = Keyboard.GetState();
+            MouseState mState = Mouse.GetState();
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            HandleDash(kState, deltaTime);
+            HandleWeaponSwitching(kState);
+            HandleReload(kState,mState, deltaTime);
+            HandleAttacks(mState, cameraPosition); // Pass cameraPosition here
+
+            // NEW: Updated state management logic
+            if (isDashing)
+            {
+                currentState = PlayerState.Dashing;
+            }
+            else if (currentState == PlayerState.Attacking)
+            {
+                // Update melee weapon while attacking
+                meleeWeapon.Update(gameTime, position, cameraPosition);
+                // Handle attack duration
+                attackTimer += deltaTime;
+                if (attackTimer >= AttackDuration)
+                {
+                    currentState = PlayerState.Idle; // End attacking state
+                    attackTimer = 0f;
+                    // Reset _isSlash or any other state-specific flags
+                }
+            }
+            else // Not Dashing or Attacking
+            {
+                HandleMovement(kState);
+                if (velocity != Vector2.Zero)
+                {
+                    currentState = PlayerState.Running;
+                    // Update weapon rotation while running
+                    meleeWeapon.Update(gameTime, position, cameraPosition);
+                }
+                else
+                {
+                    currentState = PlayerState.Idle;
+                    // Update weapon rotation while idle
+                    meleeWeapon.Update(gameTime, position, cameraPosition);
+                }
+            }
+
+            switch (currentState)
+            {
+                case PlayerState.Idle:
+                    UpdateAnimation(gameTime, idleFrames, idleFrameRate);
+                    break;
+                case PlayerState.Running:
+                    UpdateAnimation(gameTime, runningFrames, runningFrameRate);
+                    break;
+                // Add more cases for Attacking and Dashing animation if you have them
+                case PlayerState.Attacking:
+                    // Use a specific animation for attacking
+                    break;
+            }
+
+            if (_isInvincible)
+            {
+                _invincibilityTimer -= deltaTime;
+                if (_invincibilityTimer <= 0)
+                {
+                    _isInvincible = false;
+                }
+            }
+
+            timer += deltaTime;
+            previousKState = kState;
+            previousMState = mState;
+
+            if (isWeaponSwitching)
+            {
+                weaponFrameTimer += deltaTime;
+
+                if (weaponFrameTimer >= weaponFrameRate)
+                {
+                    weaponFrameTimer = 0f;
+
+                    if (!isWeaponSwitchingBackwards)
+                    {
+                        if (currentWeaponFrame < weaponSwitchEndFrame)
+                            currentWeaponFrame++;
+                        else
+                            isWeaponSwitching = false;
+                    }
+                    else
+                    {
+                        if (currentWeaponFrame > weaponSwitchEndFrame)
+                            currentWeaponFrame--;
+                        else
+                            isWeaponSwitching = false;
+                    }
+                }
+            }
+        }
+
+        private void HandleAttacks(MouseState mState, Vector2 cameraPosition) // ต้องเพิ่ม cameraPosition เป็น parameter
+        {
+            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
+            {
+                if (isSwordEquipped)
+                {
+                    meleeWeapon.PerformAttack(position, cameraPosition);
+                    currentState = PlayerState.Attacking;   
+                    _isSlash = true;
+                }
+            }
+        }
+
+        // ** (ส่วนอื่นๆ ของคลาสที่ไม่ได้เปลี่ยนแปลง) **
+        private void HandleDash(KeyboardState kState, float deltaTime)
+        {
             if (dashCooldownTimer > 0)
             {
-                Debug.WriteLine($"before = {dashCooldownTimer}");
-                dashCooldownTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                Debug.WriteLine($"After = {dashCooldownTimer}");
+                dashCooldownTimer -= deltaTime;
             }
 
             if (kState.IsKeyDown(Keys.Space) && !previousKState.IsKeyDown(Keys.Space) && !isDashing && dashCooldownTimer <= 0)
             {
-                {
-                    isDashing = true;
-                    dashTimer = dashDuration;
-                    dashCooldownTimer = dashCooldown;
+                isDashing = true;
+                dashTimer = DashDuration;
+                dashCooldownTimer = DashCooldown;
 
-                    if (velocity != Vector2.Zero)
-                    {
-                        dashDirection = velocity;
-                    }
-                    else
-                    {
-                        if (currentSpriteEffect == SpriteEffects.FlipHorizontally)
-                        {
-                            dashDirection = new Vector2(-1, 0);
-                        }
-                        else
-                        {
-                            dashDirection = new Vector2(1, 0);
-                        }
-                    }
-                    if (dashDirection != Vector2.Zero)
-                    {
-                        dashDirection.Normalize();
-                    }
-
-                    Debug.WriteLine("Dash Activated!");
-                }
-            }
-
-            if (!isDashing)
-            {
-                velocity = Vector2.Zero;
-
-                if (kState.IsKeyDown(Keys.W)) { velocity.Y -= 1; }
-                else if (kState.IsKeyDown(Keys.S)) { velocity.Y += 1; }
-                if (kState.IsKeyDown(Keys.D)) { velocity.X += 1; }
-                else if (kState.IsKeyDown(Keys.A)) { velocity.X -= 1; }
+                _isInvincible = true;
+                _invincibilityTimer = DashDuration;
 
                 if (velocity != Vector2.Zero)
                 {
-                    velocity.Normalize();
+                    dashDirection = velocity;
                 }
+                else
+                {
+                    dashDirection = lastMovementDirection;
+                }
+
+                if (dashDirection != Vector2.Zero)
+                {
+                    dashDirection.Normalize();
+                }
+                Debug.WriteLine("Dash Activated!");
             }
 
             if (isDashing)
             {
-                position += dashDirection * speed * dashSpeedMultiplier;
-                // Corrected dash timer update: remove the multiplier to ensure a consistent dash duration
-                dashTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Vector2 newPosition = position + dashDirection * speed * DashSpeedMultiplier;
+                position = newPosition;
 
+                dashTimer -= deltaTime;
                 if (dashTimer <= 0)
                 {
-                    isDashing = false; // End Dash
+                    isDashing = false;
                     Debug.WriteLine("Dash Ended.");
                 }
             }
+        }
+
+        private void HandleMovement(KeyboardState kState)
+        {
+            if (!isDashing && currentState != PlayerState.Attacking)
+            {
+                Vector2 newVelocity = Vector2.Zero;
+
+                if (kState.IsKeyDown(Keys.W)) { newVelocity.Y -= 1; }
+                else if (kState.IsKeyDown(Keys.S)) { newVelocity.Y += 1; }
+                if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; currentSpriteEffect = SpriteEffects.None; }
+                else if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1; currentSpriteEffect = SpriteEffects.FlipHorizontally; }
+
+                velocity = newVelocity;
+
+                if (velocity != Vector2.Zero)
+                {
+                    velocity.Normalize();
+                    lastMovementDirection = velocity;
+                }
+
+                Vector2 newPosition = position + velocity * speed;
+                position = newPosition;
+            }
             else
             {
-                position += velocity * speed;
+                velocity = Vector2.Zero; // Stop movement when attacking or dashing
             }
+        }
 
-            if (kState.IsKeyDown(Keys.R))
-            {
-                this.currentAmmo = 10;
-                Debug.WriteLine("Ammo = 10");
-            }
+        private void HandleWeaponSwitching(KeyboardState kState)
+        {
             if (kState.IsKeyDown(Keys.E) && !previousKState.IsKeyDown(Keys.E))
             {
-                switch_sword = !switch_sword;
-                if (switch_sword)
+                isSwordEquipped = !isSwordEquipped;
+                isWeaponSwitching = true;
+
+                if (isSwordEquipped)
                 {
+                    isWeaponSwitchingBackwards = true;
+                    weaponSwitchStartFrame = 3;
+                    weaponSwitchEndFrame = 0;
+                    currentWeaponFrame = weaponSwitchStartFrame;
                     Debug.WriteLine("Weapon: Sword");
                 }
                 else
                 {
+                    isWeaponSwitchingBackwards = false;
+                    weaponSwitchStartFrame = 0;
+                    weaponSwitchEndFrame = 3;
+                    currentWeaponFrame = weaponSwitchStartFrame;
                     Debug.WriteLine("Weapon: Gun");
                 }
             }
+        }
 
-            // หมุนตามเมาส์ 8 ทิศ
-            MouseState mouseState = Mouse.GetState();
-            Vector2 mousePosWorld = new Vector2(mouseState.X, mouseState.Y) - cameraPosition;
-            Vector2 dirToMouse = mousePosWorld - position;
+        private void HandleReload(KeyboardState kState,MouseState mState, float deltaTime)
+        {
+            if (!isSwordEquipped)
+            {
+                if ((!isReloading && kState.IsKeyDown(Keys.R)) || currentAmmo == 0 && mState.LeftButton == ButtonState.Pressed && !isReloading)
+                {
+                    isReloading = true;
+                    reloadTimer = ReloadTime;
+                    Debug.WriteLine("Reloading...");
+                }
 
-            float angle = MathF.Atan2(dirToMouse.Y, dirToMouse.X); // มุมจริง
-            float snapAngle = MathF.PI / 4f; // 45° per direction
-            angle = MathF.Round(angle / snapAngle) * snapAngle;
-            rotation = angle;
-
-            timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            previousKState = kState;
+                if (isReloading)
+                {
+                    currentAmmo = 0;
+                    reloadTimer -= deltaTime;
+                    if (reloadTimer <= 0f)
+                    {
+                        isReloading = false;
+                        currentAmmo = 10;
+                        Debug.WriteLine("Reload complete. Ammo = 10");
+                    }
+                }
+            }
         }
 
         public void SetPosition(Vector2 newPosition)
@@ -174,29 +366,70 @@ namespace Ghost_blade
 
         public void ClampPosition(Rectangle bounds, List<Rectangle> obstacles)
         {
-            position.X = MathHelper.Clamp(position.X, bounds.Left + texture.Width / 2, bounds.Right - texture.Width / 2);
-            position.Y = MathHelper.Clamp(position.Y, bounds.Top + texture.Height / 2, bounds.Bottom - texture.Height / 2);
-
-            foreach (var obs in obstacles)
+            // 1. Apply normal movement if not dashing
+            if (!isDashing)
             {
-                if (drect.Intersects(obs))
-                {
-                    position -= velocity * speed; // simple fix
+                position += velocity; // Apply normal movement here
+            }
+            // 2. Clamp to world bounds first
+            position = Vector2.Clamp(position,
+                  new Vector2(bounds.Left + texture.Width / 2, bounds.Top + texture.Height / 2),
+                  new Vector2(bounds.Right - texture.Width / 2, bounds.Bottom - texture.Height / 2));
+            // 3. Handle obstacle collisions
+            foreach (var obs in obstacles)
+            {
+                // If the player's bounding box intersects an obstacle
+                while (drect.Intersects(obs)) // Use a while loop to ensure player is fully out
+                {
+                    if (isDashing)
+                    {
+                        isDashing = false; // Stop dashing immediately upon collision
+                        Debug.WriteLine("Dash interrupted by obstacle.");
+                    }
+                    // Determine the direction to push the player out
+                    Vector2 separationVector = Vector2.Zero;
+                    Rectangle intersection = Rectangle.Intersect(drect, obs);
+                    // Find the smallest axis of overlap to push along
+                    if (intersection.Width < intersection.Height)
+                    {
+                        // Push horizontally
+                        if (drect.Center.X < obs.Center.X) // Player is to the left of obstacle
+                        {
+                            separationVector.X = -intersection.Width;
+                        }
+                        else // Player is to the right of obstacle
+                        {
+                            separationVector.X = intersection.Width;
+                        }
+                    }
+                    else
+                    {
+                        // Push vertically
+                        if (drect.Center.Y < obs.Center.Y) // Player is above obstacle
+                        {
+                            separationVector.Y = -intersection.Height;
+                        }
+                        else // Player is below obstacle
+                        {
+                            separationVector.Y = intersection.Height;
+                        }
+                    }
+                    position += separationVector;
+                    Debug.WriteLine($"Collision! Pushing player by {separationVector}");
                 }
             }
         }
 
         public Bullet Shoot(Vector2 mousePosition)
         {
-            if (currentAmmo <= 0 || switch_sword == true)
+            if (currentAmmo <= 0 || isSwordEquipped)
             {
-                Debug.WriteLine("Ammo = 0");
+                Debug.WriteLine("Ammo = 0 or Sword is Equipped");
                 return null;
             }
             if (timer >= fireDelay)
             {
                 timer = 0f;
-
                 Vector2 direction = mousePosition - position;
                 if (direction != Vector2.Zero)
                 {
@@ -206,22 +439,77 @@ namespace Ghost_blade
                 {
                     direction = Vector2.UnitX;
                 }
-
                 float bulletRotation = MathF.Atan2(direction.Y, direction.X);
-
                 Vector2 bulletStartPosition = position;
                 currentAmmo--;
-
                 return new Bullet(bulletTexture, bulletStartPosition, direction, 10f, bulletRotation, 2f);
             }
             return null;
         }
 
+        public void Die()
+        {
+            IsAlive = false;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            if (_isInvincible)
+            {
+                return; // Do nothing if invincible
+            }
+
+            Health -= damage;
+            Debug.WriteLine($"Player took {damage} damage. Health is now {Health}");
+
+            _isInvincible = true;
+            _invincibilityTimer = InvincibilityDuration;
+
+            if (Health <= 0)
+            {
+                Die();
+            }
+        }
+
+        private void UpdateAnimation(GameTime gameTime, int[] frames, float rate)
+        {
+            frameRate = rate;
+            frameTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (frameTimer >= frameRate)
+            {
+                frameTimer = 0f;
+                currentFrame++;
+                if (currentFrame >= frames.Length)
+                {
+                    currentFrame = 0;
+                }
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
-            spriteBatch.Draw(texture, position, null, Color.White, rotation, origin, 1f, SpriteEffects.None, 0f);
+            if (IsAlive)
+            {
+                Rectangle sourceRect = new Rectangle(currentFrame * frameWidth, 0, frameWidth, frameHeight);
+                Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
+                if (currentSpriteEffect == SpriteEffects.None)
+                {
+                    spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 2f, currentSpriteEffect, 0f);
+                }
+                else
+                {
+                    spriteBatch.Draw(texture, position - new Vector2(24, 0), sourceRect, Color.White, rotation, origin, 2f, currentSpriteEffect, 0f);
+                }
+            }
+        }
+        public void Reset()
+        {
+            IsAlive = true;
+            Health = 5;
+            currentAmmo = 10;
+            isSwordEquipped = true;
+            currentWeaponFrame = 0;
         }
     }
-
 }
