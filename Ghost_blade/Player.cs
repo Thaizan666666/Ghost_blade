@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -32,7 +33,7 @@ namespace Ghost_blade
         private MouseState previousMState;
         private Vector2 lastMovementDirection = new Vector2(1, 0);
         public MeleeWeapon meleeWeapon { get; private set; }
-        public int Health { get; set; } = 10;
+        public int Health { get; set; } = 5;
 
         private bool isDashing = false;
         private float dashTimer = 0f;
@@ -41,6 +42,10 @@ namespace Ghost_blade
         private Vector2 dashDirection;
         private const float DashCooldown = 2f;
         private float dashCooldownTimer = 0f;
+
+        public bool isReloading = false;
+        private float reloadTimer = 0f;
+        private const float ReloadTime = 1f;
 
         public bool _isInvincible = false;
         private float _invincibilityTimer = 0f;
@@ -63,6 +68,15 @@ namespace Ghost_blade
         // NEW: Time management for attacking state
         private float attackTimer = 0f;
         private const float AttackDuration = 0.2f; // ระยะเวลาการโจมตี (ตามที่คุณใช้ใน MeleeWeapon)
+
+        public AnimatedTexture change_Weapon;
+        private bool isWeaponSwitching = false;
+        public int currentWeaponFrame = 0;
+        private bool isWeaponSwitchingBackwards = false;
+        private int weaponSwitchStartFrame = 0;
+        private int weaponSwitchEndFrame = 0;
+        private float weaponFrameTimer = 0f;
+        private float weaponFrameRate = 0.1f;
 
         public Rectangle drect
         {
@@ -115,7 +129,7 @@ namespace Ghost_blade
 
             HandleDash(kState, deltaTime);
             HandleWeaponSwitching(kState);
-            HandleReload(kState);
+            HandleReload(kState,mState, deltaTime);
             HandleAttacks(mState, cameraPosition); // Pass cameraPosition here
 
             // NEW: Updated state management logic
@@ -179,6 +193,31 @@ namespace Ghost_blade
             timer += deltaTime;
             previousKState = kState;
             previousMState = mState;
+
+            if (isWeaponSwitching)
+            {
+                weaponFrameTimer += deltaTime;
+
+                if (weaponFrameTimer >= weaponFrameRate)
+                {
+                    weaponFrameTimer = 0f;
+
+                    if (!isWeaponSwitchingBackwards)
+                    {
+                        if (currentWeaponFrame < weaponSwitchEndFrame)
+                            currentWeaponFrame++;
+                        else
+                            isWeaponSwitching = false;
+                    }
+                    else
+                    {
+                        if (currentWeaponFrame > weaponSwitchEndFrame)
+                            currentWeaponFrame--;
+                        else
+                            isWeaponSwitching = false;
+                    }
+                }
+            }
         }
 
         private void HandleAttacks(MouseState mState, Vector2 cameraPosition) // ต้องเพิ่ม cameraPosition เป็น parameter
@@ -274,23 +313,49 @@ namespace Ghost_blade
             if (kState.IsKeyDown(Keys.E) && !previousKState.IsKeyDown(Keys.E))
             {
                 isSwordEquipped = !isSwordEquipped;
+                isWeaponSwitching = true;
+
                 if (isSwordEquipped)
                 {
+                    isWeaponSwitchingBackwards = true;
+                    weaponSwitchStartFrame = 3;
+                    weaponSwitchEndFrame = 0;
+                    currentWeaponFrame = weaponSwitchStartFrame;
                     Debug.WriteLine("Weapon: Sword");
                 }
                 else
                 {
+                    isWeaponSwitchingBackwards = false;
+                    weaponSwitchStartFrame = 0;
+                    weaponSwitchEndFrame = 3;
+                    currentWeaponFrame = weaponSwitchStartFrame;
                     Debug.WriteLine("Weapon: Gun");
                 }
             }
         }
 
-        private void HandleReload(KeyboardState kState)
+        private void HandleReload(KeyboardState kState,MouseState mState, float deltaTime)
         {
-            if (kState.IsKeyDown(Keys.R))
+            if (!isSwordEquipped)
             {
-                this.currentAmmo = 10;
-                Debug.WriteLine("Ammo = 10");
+                if ((!isReloading && kState.IsKeyDown(Keys.R)) || currentAmmo == 0 && mState.LeftButton == ButtonState.Pressed && !isReloading)
+                {
+                    isReloading = true;
+                    reloadTimer = ReloadTime;
+                    Debug.WriteLine("Reloading...");
+                }
+
+                if (isReloading)
+                {
+                    currentAmmo = 0;
+                    reloadTimer -= deltaTime;
+                    if (reloadTimer <= 0f)
+                    {
+                        isReloading = false;
+                        currentAmmo = 10;
+                        Debug.WriteLine("Reload complete. Ammo = 10");
+                    }
+                }
             }
         }
 
@@ -301,119 +366,58 @@ namespace Ghost_blade
 
         public void ClampPosition(Rectangle bounds, List<Rectangle> obstacles)
         {
-
             // 1. Apply normal movement if not dashing
-
             if (!isDashing)
-
             {
-
                 position += velocity; // Apply normal movement here
-
             }
-
-
-
             // 2. Clamp to world bounds first
-
             position = Vector2.Clamp(position,
-
                   new Vector2(bounds.Left + texture.Width / 2, bounds.Top + texture.Height / 2),
-
                   new Vector2(bounds.Right - texture.Width / 2, bounds.Bottom - texture.Height / 2));
-
-
-
             // 3. Handle obstacle collisions
-
             foreach (var obs in obstacles)
-
             {
-
                 // If the player's bounding box intersects an obstacle
-
                 while (drect.Intersects(obs)) // Use a while loop to ensure player is fully out
-
                 {
-
                     if (isDashing)
-
                     {
-
                         isDashing = false; // Stop dashing immediately upon collision
-
                         Debug.WriteLine("Dash interrupted by obstacle.");
-
                     }
-
-
-
                     // Determine the direction to push the player out
-
                     Vector2 separationVector = Vector2.Zero;
-
                     Rectangle intersection = Rectangle.Intersect(drect, obs);
-
-
-
                     // Find the smallest axis of overlap to push along
-
                     if (intersection.Width < intersection.Height)
-
                     {
-
                         // Push horizontally
-
                         if (drect.Center.X < obs.Center.X) // Player is to the left of obstacle
-
                         {
-
                             separationVector.X = -intersection.Width;
-
                         }
-
                         else // Player is to the right of obstacle
-
                         {
-
                             separationVector.X = intersection.Width;
-
                         }
-
                     }
-
                     else
-
                     {
-
                         // Push vertically
-
                         if (drect.Center.Y < obs.Center.Y) // Player is above obstacle
-
                         {
-
                             separationVector.Y = -intersection.Height;
-
                         }
-
                         else // Player is below obstacle
-
                         {
-
                             separationVector.Y = intersection.Height;
-
                         }
-
                     }
-
                     position += separationVector;
-
                     Debug.WriteLine($"Collision! Pushing player by {separationVector}");
-
                 }
-
             }
-
         }
 
         public Bullet Shoot(Vector2 mousePosition)
@@ -491,18 +495,21 @@ namespace Ghost_blade
                 Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
                 if (currentSpriteEffect == SpriteEffects.None)
                 {
-                    spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
+                    spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 2f, currentSpriteEffect, 0f);
                 }
                 else
                 {
-                    spriteBatch.Draw(texture, position - new Vector2(24,0), sourceRect, Color.White, rotation, origin, 1f, currentSpriteEffect, 0f);
+                    spriteBatch.Draw(texture, position - new Vector2(24, 0), sourceRect, Color.White, rotation, origin, 2f, currentSpriteEffect, 0f);
                 }
             }
         }
         public void Reset()
         {
             IsAlive = true;
-            Health = 10;
+            Health = 5;
+            currentAmmo = 10;
+            isSwordEquipped = true;
+            currentWeaponFrame = 0;
         }
     }
 }

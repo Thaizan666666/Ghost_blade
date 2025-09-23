@@ -11,10 +11,10 @@ namespace Ghost_blade
     public class Room1 : Room
     {
         public Room1(Texture2D bg, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
-            : base(bg, door, new Rectangle(109 * 24, 47 * 24, 4 * 24, 3 * 24), new Vector2(55 * 24, 98 * 24), new Rectangle(0, 0, 3285, 2970))
+            : base(bg, door, new Rectangle(109 * 48, 47 * 48, 4 * 48, 3 * 48), new Vector2(55 * 48, 98 * 48), new Rectangle(0, 0, 3285*2, 2970*2))
         {
             NextRooms = new List<int> { 1, 2 };
-            int tileSize = 24;
+            int tileSize = 48;
 
             void AddObstacle(int xTile, int yTile, int widthTile, int heightTile)
             {

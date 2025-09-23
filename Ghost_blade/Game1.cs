@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -31,11 +32,20 @@ namespace Ghost_blade
 
         private GameState gameState = GameState.MainMenu;
         private MainMenuScreen mainMenu;
+        private GameOverScreen gameOver;
+
+        private AnimatedTexture Hp_bar;
+        private AnimatedTexture cursorTexture;
+        private AnimatedTexture cursorReloadTexture;
+        private AnimatedTexture change_Weapon;
+
+        public const float SCALE = 2f;
 
         public enum GameState
         {
             MainMenu,
-            Playing
+            Playing,
+            GameOver
         }
 
         public Game1()
@@ -49,6 +59,9 @@ namespace Ghost_blade
             _graphics.ApplyChanges();
 
             camera = new FollowsCamera(Vector2.Zero);
+            Hp_bar = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
+            cursorTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            cursorReloadTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
 
         protected override void Initialize()
@@ -75,14 +88,14 @@ namespace Ghost_blade
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
 
-            _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960, 540));
+            _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960*2, 540*2));
             // Removed direct Enemy and Enemy_Shooting creation.
 
             _bossTexture = new Texture2D(GraphicsDevice, 1, 1);
             _bossTexture.SetData(new[] { Color.White });
 
             // Pass the pixel texture to the Beholster constructor
-            boss = new Boss(_bossTexture,new Vector2(55 * 24, 98 * 24), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
+            boss = new Boss(_bossTexture,new Vector2(55 * 48, 98 * 48), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
 
 
             // Door texture
@@ -119,6 +132,14 @@ namespace Ghost_blade
 
             _player.SetPosition(rooms[currentRoomIndex].StartPosition);
             mainMenu = new MainMenuScreen(GraphicsDevice, Content);
+
+            gameOver = new GameOverScreen(GraphicsDevice, Content);
+
+            Hp_bar.Load(Content, "HP-Sheet", 6, 1, 8);
+            cursorTexture.Load(Content, "crosshairs-Sheet", 4, 1, 8);
+            cursorReloadTexture.Load(Content, "crosshairs_reload-Sheet", 4, 1, 8);
+            _player.change_Weapon = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
+            _player.change_Weapon.Load(Content, "UI_weapon-Sheet", 4, 1, 1);
         }
 
         protected override void Update(GameTime gameTime)
@@ -133,10 +154,8 @@ namespace Ghost_blade
                     // เริ่มเกมตั้งค่า player position, reset enemies
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     _player.Reset();
-                    foreach (var enemy in currentRoom.Enemies)
-                    {
-                        enemy.Reset();
-                    }
+                    currentRoomIndex = 0;
+                    currentRoom.ResetRoom();
                     _enemyBullets.Clear();
                     _playerBullets.Clear();
                     mainMenu.StartGame = false;
@@ -144,6 +163,7 @@ namespace Ghost_blade
                 }
                 return;
             }
+
 
             if (gameState == GameState.MainMenu)
             {
@@ -153,13 +173,50 @@ namespace Ghost_blade
                 {
                     gameState = GameState.Playing;
                     // เริ่มเกมตั้งค่า player position, reset enemies
+                    mainMenu.StartGame = false;
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                 }
                 if (mainMenu.ExitGame)
                 {
                     Exit();
                 }
+                return;
+            }
+            if (gameState == GameState.Playing)
+            {
+                if (_player.Health <= 0)
+                {
+                    gameState = GameState.GameOver;
 
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                    _player.Reset();
+                    currentRoomIndex = 0;
+                    currentRoom.ResetRoom();
+                    _enemyBullets.Clear();
+                    _playerBullets.Clear();
+                    gameOver.StartGame = false;
+                    gameOver.Menu = false;
+                    return;
+                }
+            }
+
+            if (gameState == GameState.GameOver)
+            {
+                gameOver.Update(gameTime);
+
+                if (gameOver.StartGame)
+                {
+                    gameState = GameState.Playing;
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                    gameOver.StartGame = false;
+                    gameOver.Menu = false;
+                }
+                if (gameOver.Menu)
+                {
+                    gameState = GameState.MainMenu;
+                    gameOver.Menu = false;
+                    gameOver.StartGame = false;
+                }
                 return;
             }
 
@@ -248,6 +305,9 @@ namespace Ghost_blade
                 {
                     int next = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
                     currentRoomIndex = next;
+                    rooms[currentRoomIndex].ResetRoom();
+                    _playerBullets.Clear();
+                    _enemyBullets.Clear();
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                 }
             }
@@ -280,6 +340,12 @@ namespace Ghost_blade
                 // สำหรับเมนู ไม่ต้องใช้ camera
                 _spriteBatch.Begin();
                 mainMenu.Draw(_spriteBatch);
+                _spriteBatch.End();
+            }
+            else if (gameState == GameState.GameOver)
+            {
+                _spriteBatch.Begin();
+                gameOver.Draw(_spriteBatch);
                 _spriteBatch.End();
             }
             else if (gameState == GameState.Playing)
@@ -334,9 +400,62 @@ namespace Ghost_blade
                         }
                     }
                 }
+                _spriteBatch.End();
+
+                _spriteBatch.Begin();
+                switch (_player.Health)
+                {
+                    case 5:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 0, new Vector2(0, 0));
+                            break;
+                        }
+                    case 4:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 1, new Vector2(0, 0));
+                            break;
+                        }
+                    case 3:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 2, new Vector2(0, 0));
+                            break;
+                        }
+                    case 2:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 3, new Vector2(0, 0));
+                            break;
+                        }
+                    case 1:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 4, new Vector2(0, 0));
+                            break;
+                        }
+                    case 0:
+                        {
+                            Hp_bar.DrawFrame(_spriteBatch, 5, new Vector2(0, 0));
+                            break;
+                        }
+                        _spriteBatch.End();
+                }
+
+                _player.change_Weapon.DrawFrame(_spriteBatch, _player.currentWeaponFrame, new Vector2(50, 100));
 
                 _spriteBatch.End();
             }
+            MouseState mouseState = Mouse.GetState();
+            Vector2 cursorPosition = new Vector2(mouseState.X, mouseState.Y);
+            _spriteBatch.Begin();
+            if (_player.isReloading)
+            {
+                cursorReloadTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                cursorReloadTexture.DrawFrame(_spriteBatch, cursorPosition);
+            }
+            else
+            {
+                cursorTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                cursorTexture.DrawFrame(_spriteBatch, cursorPosition);
+            }
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
 
