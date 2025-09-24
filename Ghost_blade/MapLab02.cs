@@ -9,12 +9,12 @@ using Microsoft.Xna.Framework;
 
 namespace Ghost_blade
 {
-    public class Room2 : Room
+    public class MapLab02 : Room
     {
-        public Room2(Texture2D bg, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
-            : base(bg, door, new Rectangle(39 * 48, 15 * 48, 3 * 48, 3 * 48), new Vector2(40 * 48, 96 * 48), new Rectangle(0, 0, 3285*2, 2970*2)) //
+        public MapLab02(Texture2D bg, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
+            : base(bg, door, new Rectangle(39 * 48, 15 * 48, 3 * 48, 3 * 48), new Vector2(95 * 48, 95 * 48), new Rectangle(0, 0, 3285*2, 2970*2)) //
         {
-            NextRooms = new List<int> { 0, 2 };
+            NextRooms = new List<int> { 4,6 };
             int tileSize = 48;
 
             void AddObstacle(int xTile, int yTile, int widthTile, int heightTile)

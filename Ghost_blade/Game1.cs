@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,6 +22,7 @@ namespace Ghost_blade
 
         private List<Room> rooms;
         private int currentRoomIndex;
+        private int stageStep;
         private Random random;
 
         private Texture2D _swordTexture;
@@ -52,7 +54,7 @@ namespace Ghost_blade
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
 
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
@@ -63,7 +65,7 @@ namespace Ghost_blade
             cursorTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             cursorReloadTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
-
+        
         protected override void Initialize()
         {
             _playerBullets = new List<Bullet>();
@@ -71,7 +73,7 @@ namespace Ghost_blade
             rooms = new List<Room>();
             random = new Random();
             currentRoomIndex = 0;
-
+            stageStep = 0;
             base.Initialize();
         }
 
@@ -103,16 +105,26 @@ namespace Ghost_blade
             doorTexture.SetData(new[] { Color.Red });
 
             // Backgrounds
-            Texture2D room1BG = Content.Load<Texture2D>("Map_lab_01");
-            Texture2D room2BG = Content.Load<Texture2D>("Map_lab_02");
-            Texture2D room3BG = Content.Load<Texture2D>("Map_lab_03");
+            Texture2D Map_tutorial_01 = Content.Load<Texture2D>("Map_tutorial_01");
+            Texture2D Map_city_01 = Content.Load<Texture2D>("Map_city_01");
+            Texture2D Map_city_02 = Content.Load<Texture2D>("Map_city_02");
+            Texture2D Map_city_03 = Content.Load<Texture2D>("Map_city_03");
+            Texture2D Map_lab_01 = Content.Load<Texture2D>("Map_lab_01");
+            Texture2D Map_lab_02 = Content.Load<Texture2D>("Map_lab_02");
+            Texture2D Map_lab_03 = Content.Load<Texture2D>("Map_lab_03");
+            Texture2D Map_Boss_01 = Content.Load<Texture2D>("Map_Boss_01");
 
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
             {
-                new Room1(room1BG, doorTexture, EnemyTexture, _bulletTexture),
-                new Room2(room2BG, doorTexture, EnemyTexture, _bulletTexture),
-                new Room3(room3BG, doorTexture, EnemyTexture, _bulletTexture)
+                new MapTutorial01(Map_tutorial_01, doorTexture, EnemyTexture, _bulletTexture),
+                new MapCity01(Map_city_01, doorTexture, EnemyTexture, _bulletTexture),
+                new MapCity02(Map_city_02, doorTexture, EnemyTexture, _bulletTexture),
+                new MapCity03(Map_city_03, doorTexture, EnemyTexture, _bulletTexture),
+                new MapLab01(Map_lab_01, doorTexture, EnemyTexture, _bulletTexture),
+                new MapLab02(Map_lab_02, doorTexture, EnemyTexture, _bulletTexture),
+                new MapLab03(Map_lab_03, doorTexture, EnemyTexture, _bulletTexture),
+                new MapBoss01(Map_Boss_01, doorTexture, EnemyTexture, _bulletTexture),
             };
 
             // Set up a reference to the shooting enemy's OnShoot event.
@@ -144,7 +156,7 @@ namespace Ghost_blade
 
         protected override void Update(GameTime gameTime)
         {
-            //Debug.WriteLine($"Player Position: X={_player.position.X/24}, Y={_player.position.Y/24}");
+            Debug.WriteLine($"Player Position: X={_player.position.X/24}, Y={_player.position.Y/24}");
             Room currentRoom = rooms[currentRoomIndex];
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
@@ -155,6 +167,7 @@ namespace Ghost_blade
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     _player.Reset();
                     currentRoomIndex = 0;
+                    stageStep = 0;
                     currentRoom.ResetRoom();
                     _enemyBullets.Clear();
                     _playerBullets.Clear();
@@ -191,6 +204,7 @@ namespace Ghost_blade
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     _player.Reset();
                     currentRoomIndex = 0;
+                    stageStep = 0;
                     currentRoom.ResetRoom();
                     _enemyBullets.Clear();
                     _playerBullets.Clear();
@@ -303,8 +317,31 @@ namespace Ghost_blade
                 _player.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
                 if (_player.drect.Intersects(currentRoom.Door) && currentRoom.NextRooms.Count > 0)
                 {
-                    int next = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
-                    currentRoomIndex = next;
+                    stageStep++;
+                    switch (stageStep)
+                    {
+                        case 1:
+                            currentRoomIndex = random.Next(1, 4); // 1,2,3
+                            break;
+                        case 2:
+                            currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
+                            break;
+                        case 3:
+                            currentRoomIndex = random.Next(4, 7); // 4,5,6
+                            break;
+                        case 4:
+                            currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
+                            break;
+                        case 5:
+                            currentRoomIndex = 7; // index boss room
+                            break;
+                        default:
+                            gameState = GameState.MainMenu;
+                            currentRoomIndex = 0;
+                            stageStep = 0;
+                            _player.Reset();
+                            break;
+                    }
                     rooms[currentRoomIndex].ResetRoom();
                     _playerBullets.Clear();
                     _enemyBullets.Clear();
@@ -334,7 +371,7 @@ namespace Ghost_blade
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             if (gameState == GameState.MainMenu)
             {
                 // สำหรับเมนู ไม่ต้องใช้ camera
@@ -435,10 +472,9 @@ namespace Ghost_blade
                             Hp_bar.DrawFrame(_spriteBatch, 5, new Vector2(0, 0));
                             break;
                         }
-                        _spriteBatch.End();
                 }
 
-                _player.change_Weapon.DrawFrame(_spriteBatch, _player.currentWeaponFrame, new Vector2(50, 100));
+                _player.change_Weapon.DrawFrame(_spriteBatch, _player.currentWeaponFrame, new Vector2(30, 150));
 
                 _spriteBatch.End();
             }
