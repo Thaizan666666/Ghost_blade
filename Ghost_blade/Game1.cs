@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+
 namespace Ghost_blade
 {
     public class Game1 : Game
@@ -39,7 +40,7 @@ namespace Ghost_blade
         private AnimatedTexture Hp_bar;
         private AnimatedTexture cursorTexture;
         private AnimatedTexture cursorReloadTexture;
-        private AnimatedTexture change_Weapon;
+        SpriteFont uiFont;
 
         public const float SCALE = 2f;
 
@@ -152,6 +153,15 @@ namespace Ghost_blade
             cursorReloadTexture.Load(Content, "crosshairs_reload-Sheet", 4, 1, 8);
             _player.change_Weapon = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
             _player.change_Weapon.Load(Content, "UI_weapon-Sheet", 4, 1, 1);
+            _player.GunDashingTexture.Load(Content, "GB_Dash-Sheet", 4, 1, 20);
+            _player.BladeDashingTexture.Load(Content, "GB_Dash-Blade_Sheet", 4, 1, 20);
+            _player.IdleTexture.Load(Content, "GB_Idle-Sheet", 4, 1, 8);
+            _player.RunningTexture.Load(Content, "GB_Run_Blade-Sheet", 8, 1, 8);
+            _player.AttackingTexture.Load(Content, "GB_Slash2-Sheet", 4, 1, 20);
+
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            uiFont = Content.Load<SpriteFont>("UI_Font");
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -213,7 +223,7 @@ namespace Ghost_blade
                     return;
                 }
             }
-
+            
             if (gameState == GameState.GameOver)
             {
                 gameOver.Update(gameTime);
@@ -473,9 +483,9 @@ namespace Ghost_blade
                             break;
                         }
                 }
-
-                _player.change_Weapon.DrawFrame(_spriteBatch, _player.currentWeaponFrame, new Vector2(30, 150));
-
+                string ammoText = $"{_player.currentAmmo}/10";
+                _player.change_Weapon.DrawFrame(_spriteBatch, _player.currentWeaponFrame, new Vector2(1562, 885));
+                _spriteBatch.DrawString(uiFont, ammoText, new Vector2(1770, 840), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
                 _spriteBatch.End();
             }
             MouseState mouseState = Mouse.GetState();

@@ -23,7 +23,7 @@ namespace Ghost_blade
 
         private float speed;
         private float rotation;
-        private SpriteEffects currentSpriteEffect;
+
         private float fireDelay = 0.2f;
         private float timer = 0f;
         private Texture2D bulletTexture;
@@ -78,6 +78,13 @@ namespace Ghost_blade
         private float weaponFrameTimer = 0f;
         private float weaponFrameRate = 0.1f;
 
+        private bool flip = false;
+        public AnimatedTexture IdleTexture;
+        public AnimatedTexture RunningTexture;
+        public AnimatedTexture AttackingTexture;
+        public AnimatedTexture GunDashingTexture;
+        public AnimatedTexture BladeDashingTexture;
+
         public Rectangle drect
         {
             get
@@ -112,13 +119,18 @@ namespace Ghost_blade
             this.position = initialPosition;
             this.speed = 4f;
             this.velocity = Vector2.Zero;
-            this.currentSpriteEffect = SpriteEffects.None;
             this.timer = 0f;
             this.currentAmmo = 10;
             this.previousKState = Keyboard.GetState();
             this.previousMState = Mouse.GetState();
             this.IsAlive = true;
             this.meleeWeapon = new MeleeWeapon(meleeWeaponTexture);
+
+            IdleTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            RunningTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            GunDashingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            BladeDashingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            AttackingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
@@ -126,11 +138,20 @@ namespace Ghost_blade
             KeyboardState kState = Keyboard.GetState();
             MouseState mState = Mouse.GetState();
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            IdleTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            RunningTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            GunDashingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            BladeDashingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            AttackingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             HandleDash(kState, deltaTime);
             HandleWeaponSwitching(kState);
             HandleReload(kState,mState, deltaTime);
             HandleAttacks(mState, cameraPosition); // Pass cameraPosition here
+
+            MouseState mouse = Mouse.GetState();
+            if (mouse.X < 1920/2) { flip = true;}
+            else if (mouse.X >= 1920/2) {  flip = false;}
 
             // NEW: Updated state management logic
             if (isDashing)
@@ -287,9 +308,9 @@ namespace Ghost_blade
                 Vector2 newVelocity = Vector2.Zero;
 
                 if (kState.IsKeyDown(Keys.W)) { newVelocity.Y -= 1; }
-                else if (kState.IsKeyDown(Keys.S)) { newVelocity.Y += 1; }
-                if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; currentSpriteEffect = SpriteEffects.None; }
-                else if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1; currentSpriteEffect = SpriteEffects.FlipHorizontally; }
+                else if (kState.IsKeyDown(Keys.S)) { newVelocity.Y += 1;}
+                if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; }
+                else if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1;}
 
                 velocity = newVelocity;
 
@@ -298,7 +319,7 @@ namespace Ghost_blade
                     velocity.Normalize();
                     lastMovementDirection = velocity;
                 }
-
+                
                 Vector2 newPosition = position + velocity * speed;
                 position = newPosition;
             }
@@ -493,13 +514,25 @@ namespace Ghost_blade
             {
                 Rectangle sourceRect = new Rectangle(currentFrame * frameWidth, 0, frameWidth, frameHeight);
                 Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
-                if (currentSpriteEffect == SpriteEffects.None)
+                
+                
+                if (currentState == PlayerState.Idle) 
                 {
-                    spriteBatch.Draw(texture, position, sourceRect, Color.White, rotation, origin, 2f, currentSpriteEffect, 0f);
+                    IdleTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip);
                 }
-                else
+                else if (currentState == PlayerState.Running)
                 {
-                    spriteBatch.Draw(texture, position - new Vector2(24, 0), sourceRect, Color.White, rotation, origin, 2f, currentSpriteEffect, 0f);
+                    RunningTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip);
+                }
+                else if (currentState == PlayerState.Dashing)
+                {
+                    if (isSwordEquipped) { BladeDashingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                    else { GunDashingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                }
+                else if (currentState == PlayerState.Attacking) 
+                {
+                    if (isSwordEquipped) { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                    else { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
                 }
             }
         }
