@@ -13,6 +13,30 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../../../../GB_Dash-Blade_Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../GB_Dash-Blade_Sheet.png;GB_Dash-Blade_Sheet.png
+
+#begin ../../../../GB_Dash-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../GB_Dash-Sheet.png;GB_Dash-Sheet.png
+
 #begin A_job.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -300,6 +324,13 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Map_tutorial_01.png
+
+#begin UI_Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:UI_Font.spritefont
 
 #begin UI_weapon-Sheet.png
 /importer:TextureImporter
