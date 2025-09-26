@@ -74,7 +74,7 @@ namespace Ghost_blade
             _enemyBullets = new List<EnemyBullet>();
             rooms = new List<Room>();
             random = new Random();
-            currentRoomIndex = 0;
+            currentRoomIndex = 4;
             stageStep = 0;
             base.Initialize();
         }
@@ -154,8 +154,8 @@ namespace Ghost_blade
             cursorReloadTexture.Load(Content, "crosshairs_reload-Sheet", 4, 1, 8);
             _player.change_Weapon = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
             _player.change_Weapon.Load(Content, "UI_weapon-Sheet", 4, 1, 1);
-            _player.GunDashingTexture.Load(Content, "GB_Dash-Sheet", 4, 1, 20);
-            _player.BladeDashingTexture.Load(Content, "GB_Dash-Blade_Sheet", 4, 1, 20);
+            _player.GunDashingTexture.Load(Content, "GB_Dash-Sheet", 4, 1, 8);
+            _player.BladeDashingTexture.Load(Content, "GB_Dash-Blade_Sheet", 4, 1, 8);
             _player.IdleTexture.Load(Content, "GB_Idle-Sheet", 4, 1, 8);
             _player.RunningTexture.Load(Content, "GB_Run_Blade-Sheet", 8, 1, 8);
             _player.AttackingTexture.Load(Content, "GB_Slash2-Sheet", 4, 1, 20);
@@ -371,12 +371,23 @@ namespace Ghost_blade
             if (IsbossAticve)
             {
                 boss.Update(gameTime, _player, currentRoom.Obstacles);
-            }
-            // *** เพิ่มโค้ดส่วนนี้เข้าไปเพื่อรับศัตรูที่บอสสร้างขึ้นมา ***
-            var newlySpawnedEnemies = boss.GetSpawnedEnemies();
-            if (newlySpawnedEnemies.Count > 0)
-            {
-                currentRoom.Enemies.AddRange(newlySpawnedEnemies);
+                var newlySpawnedEnemies = boss.GetSpawnedEnemies();
+
+                // *** เพิ่มโค้ดส่วนนี้เข้าไป ***
+                if (newlySpawnedEnemies.Count > 0)
+                {
+                    foreach (var enemy in newlySpawnedEnemies)
+                    {
+                        // ตรวจสอบว่าเป็น Enemy_Shooting หรือไม่
+                        if (enemy is Enemy_Shooting shootingEnemy)
+                        {
+                            // สมัครรับเหตุการณ์ OnShoot ที่นี่
+                            shootingEnemy.OnShoot += bullet => _enemyBullets.Add((EnemyBullet)bullet);
+                        }
+                        // เพิ่มศัตรูใหม่ลงในรายการหลัก
+                        currentRoom.Enemies.Add(enemy);
+                    }
+                }
             }
             // ... โค้ดสำหรับอัปเดตและเช็กการชนของศัตรูใน currentRoom.Enemies ...
             foreach (var enemy in currentRoom.Enemies)
@@ -414,8 +425,7 @@ namespace Ghost_blade
                 _spriteBatch.Begin(transformMatrix: transform);
 
                 // Draw the current room
-                rooms[currentRoomIndex].Draw(_spriteBatch);
-
+                    rooms[currentRoomIndex].Draw(_spriteBatch);
                 // Draw the player
                 _player.Draw(_spriteBatch);
 
@@ -441,9 +451,9 @@ namespace Ghost_blade
                 }
 
                 // Draw hitboxes
-                DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
-                DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
-                DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
+                //DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
+                //DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
+                //DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {
                     if (enemy.IsActive)

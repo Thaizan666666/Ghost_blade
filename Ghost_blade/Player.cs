@@ -38,10 +38,10 @@ namespace Ghost_blade
 
         private bool isDashing = false;
         private float dashTimer = 0f;
-        private const float DashDuration = 0.2f;
-        private const float DashSpeedMultiplier = 5.0f;
+        private const float DashDuration = 0.5f;
+        private const float DashSpeedMultiplier = 3.0f;
         private Vector2 dashDirection;
-        private const float DashCooldown = 2f;
+        private const float DashCooldown = 0.75f;
         private float dashCooldownTimer = 0f;
 
         public bool isReloading = false;
@@ -81,6 +81,7 @@ namespace Ghost_blade
         private int framefinish;
 
         private bool flip = false;
+        private bool attackf = false;
         public AnimatedTexture IdleTexture;
         public AnimatedTexture RunningTexture;
         public AnimatedTexture AttackingTexture;
@@ -542,9 +543,22 @@ namespace Ghost_blade
                 {
                     if (isSwordEquipped)
                     {
-                        if (flip == true)
-                        { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(96, 48), flip);}
-                        else { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                        if (attackf == false)
+                        {
+                            if (flip == true)
+                            { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(96, 48), flip); }
+                            else { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                            if (attackTimer >= AttackDuration) 
+                            { attackf = true; }
+                        }
+                        else if(attackf == true) 
+                        {
+                            if (flip == true)
+                            { AttackingTexture2.DrawFrame(spriteBatch, position - new Vector2(96, 48), flip); }
+                            else { AttackingTexture2.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                            if (attackTimer >= AttackDuration) 
+                            { attackf = false; }
+                        }
                     }
                 }
             }

@@ -106,13 +106,16 @@ namespace Ghost_blade
             AddObstacle(110, 62, 4, 8);
 
             // Add enemies specific to this room
-            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(43 * tileSize, 60 * tileSize), 1.5f, 1000f));
-            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(44 * tileSize, 70 * tileSize), 1.5f, 1000f));
-            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(70 * tileSize, 56 * tileSize), 1.0f, 1000f, bulletTexture));
-            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(68 * tileSize, 70 * tileSize), 1.0f, 1000f, bulletTexture));
-            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(78 * tileSize, 10 * tileSize), 1.0f, 1000f, bulletTexture));
-            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(12 * tileSize, 15 * tileSize), 1.0f, 1000f, bulletTexture));
-            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(120 * tileSize, 62 * tileSize), 1.0f, 1000f, bulletTexture));
+            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(60 * tileSize, 10 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(60 * tileSize, 23 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(80 * tileSize, 17 * tileSize), 1.0f, 1000f, bulletTexture));
+            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(44 * tileSize, 60 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(70 * tileSize, 60 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(55 * tileSize, 70 * tileSize), 1.0f, 1000f, bulletTexture));
+            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(105* tileSize, 55 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(105 * tileSize, 75 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(120 * tileSize, 75 * tileSize), 1.0f, 1000f, bulletTexture));
+            AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(120 * tileSize, 55 * tileSize), 1.0f, 1000f, bulletTexture));
         }
     }
 }
