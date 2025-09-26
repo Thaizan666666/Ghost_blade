@@ -32,6 +32,7 @@ namespace Ghost_blade
         private Boss boss;
         private Texture2D _pixel;
         private Texture2D EnemyTexture;
+        private bool IsbossAticve;
 
         private GameState gameState = GameState.MainMenu;
         private MainMenuScreen mainMenu;
@@ -90,15 +91,12 @@ namespace Ghost_blade
             _swordTexture.SetData(data); // Apply the color data
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
+            IsbossAticve = false;
 
             _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960*2, 540*2));
             // Removed direct Enemy and Enemy_Shooting creation.
-
             _bossTexture = new Texture2D(GraphicsDevice, 1, 1);
             _bossTexture.SetData(new[] { Color.White });
-
-            // Pass the pixel texture to the Beholster constructor
-            boss = new Boss(_bossTexture,new Vector2(55 * 48, 98 * 48), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
 
 
             // Door texture
@@ -114,6 +112,9 @@ namespace Ghost_blade
             Texture2D Map_lab_02 = Content.Load<Texture2D>("Map_lab_02");
             Texture2D Map_lab_03 = Content.Load<Texture2D>("Map_lab_03");
             Texture2D Map_Boss_01 = Content.Load<Texture2D>("Map_Boss_01");
+
+            // Pass the pixel texture to the Beholster constructor
+            boss = new Boss(_bossTexture, new Vector2(Map_Boss_01.Width, Map_Boss_01.Height), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
 
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
@@ -158,6 +159,7 @@ namespace Ghost_blade
             _player.IdleTexture.Load(Content, "GB_Idle-Sheet", 4, 1, 8);
             _player.RunningTexture.Load(Content, "GB_Run_Blade-Sheet", 8, 1, 8);
             _player.AttackingTexture.Load(Content, "GB_Slash2-Sheet", 4, 1, 20);
+            _player.AttackingTexture2.Load(Content, "GB_Slash4-Sheet", 4, 1, 20);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             uiFont = Content.Load<SpriteFont>("UI_Font");
@@ -186,9 +188,13 @@ namespace Ghost_blade
                 }
                 return;
             }
+            if (Keyboard.GetState().IsKeyDown(Keys.I))
+            {
+                currentRoomIndex = 7;
+            }
 
 
-            if (gameState == GameState.MainMenu)
+                if (gameState == GameState.MainMenu)
             {
                 mainMenu.Update(gameTime);
 
@@ -358,14 +364,20 @@ namespace Ghost_blade
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                 }
             }
-            boss.Update(gameTime, _player,currentRoom.Obstacles);
+            if(currentRoomIndex == 7)
+            {
+                IsbossAticve = true;
+            }
+            if (IsbossAticve)
+            {
+                boss.Update(gameTime, _player, currentRoom.Obstacles);
+            }
             // *** เพิ่มโค้ดส่วนนี้เข้าไปเพื่อรับศัตรูที่บอสสร้างขึ้นมา ***
             var newlySpawnedEnemies = boss.GetSpawnedEnemies();
             if (newlySpawnedEnemies.Count > 0)
             {
                 currentRoom.Enemies.AddRange(newlySpawnedEnemies);
             }
-
             // ... โค้ดสำหรับอัปเดตและเช็กการชนของศัตรูใน currentRoom.Enemies ...
             foreach (var enemy in currentRoom.Enemies)
             {
@@ -423,11 +435,14 @@ namespace Ghost_blade
                 {
                     bullet.Draw(_spriteBatch);
                 }
-                boss.Draw(_spriteBatch);
+                if (IsbossAticve)
+                {
+                    boss.Draw(_spriteBatch);
+                }
 
                 // Draw hitboxes
-                //DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
-                DrawRectangle(_spriteBatch, _player.drect, Color.Blue, 1);
+                DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
+                DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
                 DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {

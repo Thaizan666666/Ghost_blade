@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -77,11 +78,13 @@ namespace Ghost_blade
         private int weaponSwitchEndFrame = 0;
         private float weaponFrameTimer = 0f;
         private float weaponFrameRate = 0.1f;
+        private int framefinish;
 
         private bool flip = false;
         public AnimatedTexture IdleTexture;
         public AnimatedTexture RunningTexture;
         public AnimatedTexture AttackingTexture;
+        public AnimatedTexture AttackingTexture2;
         public AnimatedTexture GunDashingTexture;
         public AnimatedTexture BladeDashingTexture;
 
@@ -91,10 +94,10 @@ namespace Ghost_blade
             {
                 {
                     return new Rectangle(
-                        (int)(position.X - texture.Width / 4 + 24),
-                        (int)(position.Y - texture.Height / 2 + 24),
-                        24,
-                        texture.Height - 24
+                        (int)(position.X - texture.Width / 2 + 48),
+                        (int)(position.Y - texture.Height + 48),
+                        48,
+                        (texture.Height - 24)*2
                     );
                 }
             }
@@ -104,10 +107,10 @@ namespace Ghost_blade
             get
             {
                 return new Rectangle(
-                            (int)(position.X - texture.Width / 4 + 24),
-                            (int)(position.Y - 24),
-                            24,
-                            texture.Height
+                            (int)(position.X - texture.Width / 2 + 48),
+                            (int)(position.Y - texture.Height),
+                            48,
+                            texture.Height * 2
                             );
             }
         }
@@ -131,6 +134,7 @@ namespace Ghost_blade
             GunDashingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             BladeDashingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            AttackingTexture2 = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
@@ -143,6 +147,7 @@ namespace Ghost_blade
             GunDashingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             BladeDashingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            AttackingTexture2.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             HandleDash(kState, deltaTime);
             HandleWeaponSwitching(kState);
@@ -451,7 +456,7 @@ namespace Ghost_blade
             if (timer >= fireDelay)
             {
                 timer = 0f;
-                Vector2 direction = mousePosition - position;
+                Vector2 direction = mousePosition - position + new Vector2(24, 24);
                 if (direction != Vector2.Zero)
                 {
                     direction.Normalize();
@@ -463,7 +468,7 @@ namespace Ghost_blade
                 float bulletRotation = MathF.Atan2(direction.Y, direction.X);
                 Vector2 bulletStartPosition = position;
                 currentAmmo--;
-                return new Bullet(bulletTexture, bulletStartPosition, direction, 10f, bulletRotation, 2f);
+                return new Bullet(bulletTexture, bulletStartPosition - new Vector2(24,24), direction, 20f, bulletRotation, 2f);
             }
             return null;
         }
@@ -516,7 +521,11 @@ namespace Ghost_blade
                 Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
                 
                 
-                if (currentState == PlayerState.Idle) 
+                if (currentState == PlayerState.Idle && flip == true)
+                {
+                    IdleTexture.DrawFrame(spriteBatch, position - new Vector2(96, 48), flip);
+                }
+                else if (currentState == PlayerState.Idle && flip == false)
                 {
                     IdleTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip);
                 }
@@ -531,8 +540,12 @@ namespace Ghost_blade
                 }
                 else if (currentState == PlayerState.Attacking) 
                 {
-                    if (isSwordEquipped) { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
-                    else { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                    if (isSwordEquipped)
+                    {
+                        if (flip == true)
+                        { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(96, 48), flip);}
+                        else { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                    }
                 }
             }
         }

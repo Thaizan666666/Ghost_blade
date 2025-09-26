@@ -118,3 +118,9 @@ D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_city_02.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_city_03.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_tutorial_01.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\UI_Font.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_Boss_01.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_city_01.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_city_02.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_city_03.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_tutorial_01.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\UI_Font.xnb

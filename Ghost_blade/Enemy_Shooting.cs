@@ -168,7 +168,7 @@ namespace Ghost_blade
             float offsetDistance = 20f;
             Vector2 startPosition = Position + direction * offsetDistance;
 
-            var bullet = new EnemyBullet(bulletTexture, startPosition, direction, 8f, 0f, 2f);
+            var bullet = new EnemyBullet(bulletTexture, startPosition, direction, 15f, 0f, 2f);
 
             OnShoot?.Invoke(bullet);
         }
