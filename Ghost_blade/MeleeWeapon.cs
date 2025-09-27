@@ -18,6 +18,7 @@ public class MeleeWeapon
     private float _attackDuration = 0.2f; // ระยะเวลาการโจมตี
 
     public Rectangle AttackHitbox { get; private set; }
+    public int Attack {  get; private set; }
 
     public MeleeWeapon(Texture2D weaponTexture)
     {
@@ -76,25 +77,29 @@ public class MeleeWeapon
                 angle += MathF.PI * 2;
             }
 
-            int hitboxSize1 = 96;
-            int hitboxSize2 = 36;
-            int distance = 24;
+            int hitboxSize1 = 132;
+            int hitboxSize2 = 48;
+            int distance = 48;
 
             if (angle >= MathF.PI * 0.25f && angle < MathF.PI * 0.75f) // (ล่าง)
             {
-                AttackHitbox = new Rectangle((int)playerPosition.X - 60, (int)playerPosition.Y + 24, 96, hitboxSize2);
+                AttackHitbox = new Rectangle((int)playerPosition.X - distance+5, (int)playerPosition.Y + distance, 132, hitboxSize2);
+                Attack = 1;
             }
             else if (angle >= MathF.PI * 0.75f && angle < MathF.PI * 1.25f) // (ซ้าย)
             {
-                AttackHitbox = new Rectangle((int)playerPosition.X - distance - hitboxSize2, (int)playerPosition.Y - hitboxSize1 / 2, hitboxSize2, hitboxSize1);
+                AttackHitbox = new Rectangle((int)playerPosition.X - distance, (int)playerPosition.Y - hitboxSize1 / 2, hitboxSize2, hitboxSize1);
+                Attack = 2;
             }
             else if (angle >= MathF.PI * 1.25f && angle < MathF.PI * 1.75f) //(บน)
             {
-                AttackHitbox = new Rectangle((int)playerPosition.X - 60, (int)playerPosition.Y - distance - hitboxSize2, 96, hitboxSize2);
+                AttackHitbox = new Rectangle((int)playerPosition.X - distance+5, (int)playerPosition.Y - distance*2 , 132, hitboxSize2);
+                Attack = 3;
             }
             else //(ขวา)
             {
-                AttackHitbox = new Rectangle((int)playerPosition.X, (int)playerPosition.Y - hitboxSize1 / 2, hitboxSize2, hitboxSize1);
+                AttackHitbox = new Rectangle((int)playerPosition.X + distance, (int)playerPosition.Y - hitboxSize1 / 2, hitboxSize2, hitboxSize1);
+                Attack = 4;
             }
         }
     }

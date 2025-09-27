@@ -37,6 +37,18 @@
 /processorParam:TextureFormat=Color
 /build:../../../../GB_Dash-Sheet.png;GB_Dash-Sheet.png
 
+#begin ../../../../GB_Idle-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../GB_Idle-Sheet.png;GB_Idle-Sheet.png
+
 #begin A_job.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -157,18 +169,6 @@
 /processorParam:TextureFormat=Color
 /build:GB_Idle-Blade_Sheet.png
 
-#begin GB_Idle-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:GB_Idle-Sheet.png
-
 #begin GB_Run_Blade-Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -180,6 +180,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:GB_Run_Blade-Sheet.png
+
+#begin GB_Run-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GB_Run-Sheet.png
 
 #begin GB_Slash2-Sheet.png
 /importer:TextureImporter
@@ -228,6 +240,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Main_title_Sheet.png
+
+#begin Main_title-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Main_title-Sheet.png
 
 #begin Map_Boss_01.png
 /importer:TextureImporter

@@ -38,6 +38,18 @@ public class Enemy
             );
         }
     }
+    public Rectangle bulletammo
+    {
+        get
+        {
+            return new Rectangle(
+                (int)(Position.X - hitboxWidth / 2),
+                (int)(Position.Y - hitboxHeight / 2),
+                hitboxWidth,
+                hitboxHeight
+            );
+        }
+    }
 
     public Enemy(Texture2D texture, Vector2 startPosition, float speed, float detectionRadius)
     {
@@ -88,7 +100,7 @@ public class Enemy
 
         if (Health <= 0)
         {
-            this.IsActive = false;
+            this.Die();
         }
     }
 
@@ -182,5 +194,10 @@ public class Enemy
         IsActive = true;
         Health = 200;
         knockbackTimer = 0f;
+    }
+    public Rectangle Die()
+    {
+        IsActive = false;
+        return bulletammo;
     }
 }

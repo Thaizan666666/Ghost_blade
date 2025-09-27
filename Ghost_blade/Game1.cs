@@ -32,6 +32,7 @@ namespace Ghost_blade
         private Boss boss;
         private Texture2D _pixel;
         private Texture2D EnemyTexture;
+        private bool IsbossAticve;
 
         private GameState gameState = GameState.MainMenu;
         private MainMenuScreen mainMenu;
@@ -63,8 +64,8 @@ namespace Ghost_blade
 
             camera = new FollowsCamera(Vector2.Zero);
             Hp_bar = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
-            cursorTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
-            cursorReloadTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            cursorTexture = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            cursorReloadTexture = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
         }
         
         protected override void Initialize()
@@ -73,7 +74,7 @@ namespace Ghost_blade
             _enemyBullets = new List<EnemyBullet>();
             rooms = new List<Room>();
             random = new Random();
-            currentRoomIndex = 0;
+            currentRoomIndex = 4;// random.Next(1,4);
             stageStep = 0;
             base.Initialize();
         }
@@ -90,15 +91,12 @@ namespace Ghost_blade
             _swordTexture.SetData(data); // Apply the color data
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
+            IsbossAticve = false;
 
             _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960*2, 540*2));
             // Removed direct Enemy and Enemy_Shooting creation.
-
             _bossTexture = new Texture2D(GraphicsDevice, 1, 1);
             _bossTexture.SetData(new[] { Color.White });
-
-            // Pass the pixel texture to the Beholster constructor
-            boss = new Boss(_bossTexture,new Vector2(55 * 48, 98 * 48), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
 
 
             // Door texture
@@ -115,6 +113,9 @@ namespace Ghost_blade
             Texture2D Map_lab_03 = Content.Load<Texture2D>("Map_lab_03");
             Texture2D Map_Boss_01 = Content.Load<Texture2D>("Map_Boss_01");
 
+            // Pass the pixel texture to the Beholster constructor
+            boss = new Boss(_bossTexture, new Vector2(Map_Boss_01.Width, Map_Boss_01.Height), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
+
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
             {
@@ -126,7 +127,12 @@ namespace Ghost_blade
                 new MapLab02(Map_lab_02, doorTexture, EnemyTexture, _bulletTexture),
                 new MapLab03(Map_lab_03, doorTexture, EnemyTexture, _bulletTexture),
                 new MapBoss01(Map_Boss_01, doorTexture, EnemyTexture, _bulletTexture),
-            };
+            }; 
+            foreach (var room in rooms)
+            {
+                room.LoadContent(Content); // ให้แต่ละ Map โหลด asset ของตัวเอง
+            }
+
 
             // Set up a reference to the shooting enemy's OnShoot event.
             // This is still a bit clunky, but necessary for now.
@@ -149,15 +155,19 @@ namespace Ghost_blade
             gameOver = new GameOverScreen(GraphicsDevice, Content);
 
             Hp_bar.Load(Content, "HP-Sheet", 6, 1, 8);
-            cursorTexture.Load(Content, "crosshairs-Sheet", 4, 1, 8);
-            cursorReloadTexture.Load(Content, "crosshairs_reload-Sheet", 4, 1, 8);
+            cursorTexture.Load(Content, "crosshairs-Sheet", 4, 1, 20);
+            cursorReloadTexture.Load(Content, "crosshairs_reload-Sheet", 4, 1, 20);
             _player.change_Weapon = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
             _player.change_Weapon.Load(Content, "UI_weapon-Sheet", 4, 1, 1);
             _player.GunDashingTexture.Load(Content, "GB_Dash-Sheet", 4, 1, 20);
             _player.BladeDashingTexture.Load(Content, "GB_Dash-Blade_Sheet", 4, 1, 20);
-            _player.IdleTexture.Load(Content, "GB_Idle-Sheet", 4, 1, 8);
-            _player.RunningTexture.Load(Content, "GB_Run_Blade-Sheet", 8, 1, 8);
+            _player.IdleBladeTexture.Load(Content, "GB_Idle-Blade_Sheet", 4, 1, 8);
+            _player.IdleGunTexture.Load(Content, "GB_Idle-Sheet", 4, 1, 8);
+            _player.RunningBladeTexture.Load(Content, "GB_Run_Blade-Sheet", 8, 1, 8);
+            _player.RunningGunTexture.Load(Content, "GB_Run-Sheet", 8, 1, 8);
             _player.AttackingTexture.Load(Content, "GB_Slash2-Sheet", 4, 1, 20);
+            _player.AttackingTexture2.Load(Content, "GB_Slash4-Sheet", 4, 1, 20);
+            _player.Hand.Load(Content, "A_job", 1, 1, 1);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             uiFont = Content.Load<SpriteFont>("UI_Font");
@@ -166,17 +176,16 @@ namespace Ghost_blade
 
         protected override void Update(GameTime gameTime)
         {
-            Debug.WriteLine($"Player Position: X={_player.position.X/24}, Y={_player.position.Y/24}");
+            Debug.WriteLine($"Player Position: X={_player.position.X/48}, Y={_player.position.Y/48}");
             Room currentRoom = rooms[currentRoomIndex];
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 if (gameState == GameState.Playing)
                 {
                     gameState = GameState.MainMenu;
-                    // เริ่มเกมตั้งค่า player position, reset enemies
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     _player.Reset();
-                    currentRoomIndex = 0;
+                    currentRoomIndex = random.Next(1, 4); ;
                     stageStep = 0;
                     currentRoom.ResetRoom();
                     _enemyBullets.Clear();
@@ -186,7 +195,10 @@ namespace Ghost_blade
                 }
                 return;
             }
-
+            if (Keyboard.GetState().IsKeyDown(Keys.I))
+            {
+                currentRoomIndex = 7;
+            }
 
             if (gameState == GameState.MainMenu)
             {
@@ -195,8 +207,14 @@ namespace Ghost_blade
                 if (mainMenu.StartGame)
                 {
                     gameState = GameState.Playing;
-                    // เริ่มเกมตั้งค่า player position, reset enemies
                     mainMenu.StartGame = false;
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                }
+                if (mainMenu.tutorial)
+                {
+                    currentRoomIndex = 0;
+                    gameState = GameState.Playing;
+                    mainMenu.tutorial = false;
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                 }
                 if (mainMenu.ExitGame)
@@ -205,6 +223,7 @@ namespace Ghost_blade
                 }
                 return;
             }
+
             if (gameState == GameState.Playing)
             {
                 if (_player.Health <= 0)
@@ -213,7 +232,7 @@ namespace Ghost_blade
 
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     _player.Reset();
-                    currentRoomIndex = 0;
+                    currentRoomIndex = random.Next(1, 4); ;
                     stageStep = 0;
                     currentRoom.ResetRoom();
                     _enemyBullets.Clear();
@@ -325,25 +344,22 @@ namespace Ghost_blade
             if (_player.IsAlive)
             {
                 _player.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
-                if (_player.drect.Intersects(currentRoom.Door) && currentRoom.NextRooms.Count > 0)
+                if (_player.drect.Intersects(currentRoom.Door) && currentRoom.NextRooms.Count > 0 && currentRoomIndex != 0)
                 {
                     stageStep++;
                     switch (stageStep)
                     {
                         case 1:
-                            currentRoomIndex = random.Next(1, 4); // 1,2,3
+                            currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
                             break;
                         case 2:
-                            currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
+                            currentRoomIndex = random.Next(4, 7);
                             break;
                         case 3:
-                            currentRoomIndex = random.Next(4, 7); // 4,5,6
+                            currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)]; // 4,5,6
                             break;
                         case 4:
-                            currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
-                            break;
-                        case 5:
-                            currentRoomIndex = 7; // index boss room
+                            currentRoomIndex = 7;
                             break;
                         default:
                             gameState = GameState.MainMenu;
@@ -357,15 +373,46 @@ namespace Ghost_blade
                     _enemyBullets.Clear();
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                 }
+                else if (_player.drect.Intersects(currentRoom.Door) && currentRoomIndex == 0)
+                {
+                    gameState = GameState.MainMenu;
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                    _player.Reset();
+                    currentRoomIndex = random.Next(1, 4); ;
+                    stageStep = 0;
+                    currentRoom.ResetRoom();
+                    _enemyBullets.Clear();
+                    _playerBullets.Clear();
+                    mainMenu.StartGame = false;
+                    mainMenu.ExitGame = false;
+                    mainMenu.tutorial = false;
+                }
             }
-            boss.Update(gameTime, _player,currentRoom.Obstacles);
-            // *** เพิ่มโค้ดส่วนนี้เข้าไปเพื่อรับศัตรูที่บอสสร้างขึ้นมา ***
-            var newlySpawnedEnemies = boss.GetSpawnedEnemies();
-            if (newlySpawnedEnemies.Count > 0)
+            if(currentRoomIndex == 7)
             {
-                currentRoom.Enemies.AddRange(newlySpawnedEnemies);
+                IsbossAticve = true;
             }
+            if (IsbossAticve)
+            {
+                boss.Update(gameTime, _player, currentRoom.Obstacles);
+                var newlySpawnedEnemies = boss.GetSpawnedEnemies();
 
+                // *** เพิ่มโค้ดส่วนนี้เข้าไป ***
+                if (newlySpawnedEnemies.Count > 0)
+                {
+                    foreach (var enemy in newlySpawnedEnemies)
+                    {
+                        // ตรวจสอบว่าเป็น Enemy_Shooting หรือไม่
+                        if (enemy is Enemy_Shooting shootingEnemy)
+                        {
+                            // สมัครรับเหตุการณ์ OnShoot ที่นี่
+                            shootingEnemy.OnShoot += bullet => _enemyBullets.Add((EnemyBullet)bullet);
+                        }
+                        // เพิ่มศัตรูใหม่ลงในรายการหลัก
+                        currentRoom.Enemies.Add(enemy);
+                    }
+                }
+            }
             // ... โค้ดสำหรับอัปเดตและเช็กการชนของศัตรูใน currentRoom.Enemies ...
             foreach (var enemy in currentRoom.Enemies)
             {
@@ -402,10 +449,9 @@ namespace Ghost_blade
                 _spriteBatch.Begin(transformMatrix: transform);
 
                 // Draw the current room
-                rooms[currentRoomIndex].Draw(_spriteBatch);
-
+                    rooms[currentRoomIndex].Draw(_spriteBatch);
                 // Draw the player
-                _player.Draw(_spriteBatch);
+                _player.Draw(_spriteBatch,camera.position);
 
                 // Draw all active enemies in the current room
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
@@ -423,12 +469,15 @@ namespace Ghost_blade
                 {
                     bullet.Draw(_spriteBatch);
                 }
-                boss.Draw(_spriteBatch);
+                if (IsbossAticve)
+                {
+                    boss.Draw(_spriteBatch);
+                }
 
                 // Draw hitboxes
-                //DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
-                DrawRectangle(_spriteBatch, _player.drect, Color.Blue, 1);
-                DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
+                //(_spriteBatch, _player.drect, Color.Red, 1);
+                //DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
+                //DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {
                     if (enemy.IsActive)
@@ -494,12 +543,33 @@ namespace Ghost_blade
             if (_player.isReloading)
             {
                 cursorReloadTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-                cursorReloadTexture.DrawFrame(_spriteBatch, cursorPosition);
+                cursorReloadTexture.DrawFrame(_spriteBatch, cursorPosition - new Vector2(15,15));
             }
             else
             {
-                cursorTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-                cursorTexture.DrawFrame(_spriteBatch, cursorPosition);
+                if (_player.currentState == PlayerState.Attacking) 
+                {
+                    cursorTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                    cursorTexture.DrawFrame(_spriteBatch, cursorPosition - new Vector2(25, 25));
+                }
+                else if (_player.isSwordEquipped)
+                {
+                    if (_player.currentState != PlayerState.Attacking)
+                    {
+                        cursorTexture.DrawFrame(_spriteBatch, 2, cursorPosition - new Vector2(25, 25));
+                    }
+                }
+                else if (!_player.isSwordEquipped)
+                {
+                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        cursorTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                        cursorTexture.DrawFrame(_spriteBatch, cursorPosition - new Vector2(25, 25));
+                    }else
+                    {
+                        cursorTexture.DrawFrame(_spriteBatch, 2, cursorPosition - new Vector2(25, 25));
+                    }
+                }
             }
             _spriteBatch.End();
             base.Draw(gameTime);

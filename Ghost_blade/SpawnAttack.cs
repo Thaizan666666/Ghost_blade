@@ -49,7 +49,6 @@ public class SpawnAttack : BossAttack
             spawnTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (spawnTimer >= spawnInterval && enemiesSpawnedCount < maxEnemiesToSpawn)
             {
-                // Choose a random position around the boss to spawn
                 Vector2 spawnPosition = boss.Position + new Vector2(random.Next(-100, 100), random.Next(-100, 100));
 
                 Enemy newEnemy;
@@ -59,10 +58,10 @@ public class SpawnAttack : BossAttack
                 }
                 else
                 {
+                    // โค้ดนี้ถูกต้องอยู่แล้ว
                     newEnemy = new Enemy_Shooting(enemyTexture2, spawnPosition, 1.0f, 1000f, bulletTexture);
                 }
 
-                // Add to our temporary list for the Boss to retrieve
                 newlySpawnedEnemies.Add(newEnemy);
                 spawnedEnemies.Add(newEnemy);
 

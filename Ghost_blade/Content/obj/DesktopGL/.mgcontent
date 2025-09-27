@@ -6,6 +6,7 @@
   <SourceFiles>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/../../../../GB_Dash-Blade_Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/../../../../GB_Dash-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/../../../../GB_Idle-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/A_job.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs_reload-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
@@ -16,12 +17,13 @@
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Dash-Blade_Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Dash-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Idle-Blade_Sheet.png</File>
-    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Idle-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Run_Blade-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Run-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Slash2-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Slash4-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/HP-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Main_title-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_Boss_01.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_city_01.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_city_02.png</File>
@@ -36,6 +38,8 @@
   <DestFiles>
     <File>GB_Dash-Blade_Sheet.png</File>
     <File>GB_Dash-Sheet.png</File>
+    <File>GB_Idle-Sheet.png</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
