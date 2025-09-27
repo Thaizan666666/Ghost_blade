@@ -24,12 +24,13 @@ namespace Ghost_blade
 
         private float speed;
         private float rotation;
-
+        
         private float fireDelay = 0.2f;
         private float timer = 0f;
         private Texture2D bulletTexture;
         public byte currentAmmo;
-        private bool isSwordEquipped = true;
+        public bool isSwordEquipped = true;
+
         private KeyboardState previousKState;
         private MouseState previousMState;
         private Vector2 lastMovementDirection = new Vector2(1, 0);
@@ -82,12 +83,15 @@ namespace Ghost_blade
 
         private bool flip = false;
         private bool attackf = false;
-        public AnimatedTexture IdleTexture;
-        public AnimatedTexture RunningTexture;
+        public AnimatedTexture IdleBladeTexture;
+        public AnimatedTexture IdleGunTexture;
+        public AnimatedTexture RunningBladeTexture;
+        public AnimatedTexture RunningGunTexture;
         public AnimatedTexture AttackingTexture;
         public AnimatedTexture AttackingTexture2;
         public AnimatedTexture GunDashingTexture;
         public AnimatedTexture BladeDashingTexture;
+        public AnimatedTexture Hand;
 
         public Rectangle drect
         {
@@ -130,12 +134,15 @@ namespace Ghost_blade
             this.IsAlive = true;
             this.meleeWeapon = new MeleeWeapon(meleeWeaponTexture);
 
-            IdleTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
-            RunningTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            IdleBladeTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            IdleGunTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            RunningGunTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            RunningBladeTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             GunDashingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             BladeDashingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTexture2 = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            Hand = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
@@ -143,12 +150,15 @@ namespace Ghost_blade
             KeyboardState kState = Keyboard.GetState();
             MouseState mState = Mouse.GetState();
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            IdleTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-            RunningTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            IdleBladeTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            IdleGunTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            RunningBladeTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            RunningGunTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             GunDashingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             BladeDashingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTexture2.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            Hand.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             HandleDash(kState, deltaTime);
             HandleWeaponSwitching(kState);
@@ -256,6 +266,7 @@ namespace Ghost_blade
                     meleeWeapon.PerformAttack(position, cameraPosition);
                     currentState = PlayerState.Attacking;   
                     _isSlash = true;
+                    attackf = !attackf;
                 }
             }
         }
@@ -514,50 +525,72 @@ namespace Ghost_blade
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Vector2 cameraPosition)
         {
             if (IsAlive)
             {
                 Rectangle sourceRect = new Rectangle(currentFrame * frameWidth, 0, frameWidth, frameHeight);
                 Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
                 
-                
-                if (currentState == PlayerState.Idle && flip == true)
+                if(!isSwordEquipped)
                 {
-                    IdleTexture.DrawFrame(spriteBatch, position - new Vector2(96, 48), flip);
+                    MouseState mouseState = Mouse.GetState();
+                    Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
+                    Vector2 screenCenter = new Vector2(1920 / 2f, 1080 / 2f);
+                    float Handrotation = (float)Math.Atan2(mousePos.Y - screenCenter.Y, mousePos.X - screenCenter.X);
+                    Hand.DrawFrame(spriteBatch, 1, position, Handrotation, flip);
                 }
-                else if (currentState == PlayerState.Idle && flip == false)
+                if (currentState == PlayerState.Idle)
                 {
-                    IdleTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip);
+                    if (isSwordEquipped) { IdleBladeTexture.DrawFrame(spriteBatch, position - new Vector2(0,48), flip); }
+                    else if (!isSwordEquipped) { IdleGunTexture.DrawFrame(spriteBatch, position - new Vector2(0, 48), flip); }
                 }
                 else if (currentState == PlayerState.Running)
                 {
-                    RunningTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip);
+                    if (isSwordEquipped) { RunningBladeTexture.DrawFrame(spriteBatch, position - new Vector2(0, 48), flip); }
+                    else if (!isSwordEquipped) { RunningGunTexture.DrawFrame(spriteBatch, position - new Vector2(0, 48), flip); }
                 }
                 else if (currentState == PlayerState.Dashing)
                 {
-                    if (isSwordEquipped) { BladeDashingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
-                    else { GunDashingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                    if (isSwordEquipped) { BladeDashingTexture.DrawFrame(spriteBatch, position - new Vector2(0, 48), flip); }
+                    else { GunDashingTexture.DrawFrame(spriteBatch, position - new Vector2(0, 48), flip); }
                 }
                 else if (currentState == PlayerState.Attacking) 
                 {
+                    int AttackDiraction = meleeWeapon.Attack;
                     if (isSwordEquipped)
                     {
-                        if (attackf == false)
+                        if (AttackDiraction == 1) // ล่าง
                         {
-                            if (flip == true)
-                            { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(96, 48), flip); }
-                            else { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
-                            if (attackTimer >= AttackDuration) 
-                            { attackf = true; }
+
                         }
-                        else if(attackf == true) 
+                        else if (AttackDiraction == 2) // ซ้าย
                         {
-                            if (flip == true)
-                            { AttackingTexture2.DrawFrame(spriteBatch, position - new Vector2(96, 48), flip); }
-                            else { AttackingTexture2.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
-                            if (attackTimer >= AttackDuration) 
-                            { attackf = false; }
+                            flip = true;
+                            if (attackf == false)
+                            {
+                                { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                            }
+                            else if (attackf == true)
+                            {
+                                { AttackingTexture2.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                            }
+                        }
+                        else if (AttackDiraction == 3) // บน
+                        {
+
+                        }
+                        else if (AttackDiraction == 4) // ขวา
+                        {
+                            flip = false;
+                            if (attackf == false)
+                            {
+                                { AttackingTexture.DrawFrame(spriteBatch, position - new Vector2(0, 48), flip); }
+                            }
+                            else if (attackf == true)
+                            {
+                                { AttackingTexture2.DrawFrame(spriteBatch, position - new Vector2(0, 48) , flip); }
+                            }
                         }
                     }
                 }

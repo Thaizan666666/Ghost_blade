@@ -178,6 +178,35 @@ namespace _321_Lab05_3
                     Rotation, Origin, Scale, SpriteEffects.FlipHorizontally, Depth);
             }
         }
+        public void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos, float rotation, bool flip = false)
+        {
+            int FrameWidth = myTexture.Width / framecount;
+            int FrameHeight = myTexture.Height / framerow;
+
+            Rectangle sourcerect;
+            if (Overload == 1)
+            {
+                sourcerect = new Rectangle(FrameWidth * frame, FrameHeight * frame_r,
+                    FrameWidth, FrameHeight);
+            }
+            else // Overload == 2
+            {
+                sourcerect = new Rectangle(FrameWidth * frame, FrameHeight * (startrow - 1),
+                    FrameWidth, FrameHeight);
+            }
+
+            // origin อยู่ตรงกลางเฟรม
+            //Vector2 origin = new Vector2(FrameWidth / 2f, FrameHeight / 2f);
+            Vector2 origin = new Vector2(0, FrameHeight / 2); // โคนซ้าย
+            //Vector2 origin = new Vector2(FrameWidth, FrameHeight / 2); // ปลายขวา
+            //Vector2 origin = new Vector2(FrameWidth / 2, 0); // ด้านบน
+            //Vector2 origin = new Vector2(FrameWidth / 2, FrameHeight); // ด้านล่าง
+
+
+            batch.Draw(myTexture, screenPos, sourcerect, Color.White,
+                rotation, origin, Scale, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None,Depth);
+        }
+
         public bool IsPaused
         {
             get { return Paused; }

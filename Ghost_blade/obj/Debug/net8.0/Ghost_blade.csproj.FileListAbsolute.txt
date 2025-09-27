@@ -124,3 +124,5 @@ C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_city_03.xnb
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_tutorial_01.xnb
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\UI_Font.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Main_title-Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\GB_Run-Sheet.xnb

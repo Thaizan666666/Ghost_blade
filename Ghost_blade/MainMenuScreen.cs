@@ -16,20 +16,23 @@ namespace Ghost_blade
         private AnimatedTexture background;
         private Rectangle playButton;
         private Rectangle exitButton;
+        private Rectangle tutorialButton;
         private Texture2D buttonTexture;
 
         public bool StartGame { get;  set; }
         public bool ExitGame { get;  set; }
+        public bool tutorial { get; set; }
         public MainMenuScreen(GraphicsDevice graphicsDevice, Microsoft.Xna.Framework.Content.ContentManager content)
         {
 
             background = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
-            background.Load(content, "Main_title_Sheet", 6, 1, 8);
+            background.Load(content, "Main_title-Sheet", 6, 1, 8);
 
             buttonTexture = new Texture2D(graphicsDevice, 1, 1);
             buttonTexture.SetData(new[] { Color.White });
             playButton = new Rectangle(185, 295, 330, 150);
             exitButton = new Rectangle(185, 695, 330, 150);
+            tutorialButton = new Rectangle(185, 495, 330, 150);
         }
         public void Update(GameTime gameTime)
         {
@@ -46,6 +49,10 @@ namespace Ghost_blade
                 {
                     ExitGame = true;
                 }
+                if (tutorialButton.Contains(mouse.Position))
+                {
+                    tutorial = true;
+                }
             }
         }
         public void Draw(SpriteBatch spriteBatch)
@@ -54,6 +61,7 @@ namespace Ghost_blade
             background.DrawFrame(spriteBatch, Vector2.Zero);
             //spriteBatch.Draw(buttonTexture, playButton, Color.Green);
             //spriteBatch.Draw(buttonTexture, exitButton, Color.Green);
+            //spriteBatch.Draw(buttonTexture, tutorialButton, Color.Green);
         }
 
     }

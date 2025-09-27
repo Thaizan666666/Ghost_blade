@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
@@ -48,8 +49,10 @@ namespace Ghost_blade
 
             foreach (var rect in Obstacles)
             {
-                //spriteBatch.Draw(pixel, rect, Color.Gray * 0.6f); // สีเทาเพื่อให้เห็นชัด
+                spriteBatch.Draw(pixel, rect, Color.Gray * 0.6f); // สีเทาเพื่อให้เห็นชัด
             }
         }
+        public virtual void LoadContent(ContentManager content) { }
+
     }
 }
