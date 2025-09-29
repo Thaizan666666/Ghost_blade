@@ -7,6 +7,7 @@
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/../../../../GB_Dash-Blade_Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/../../../../GB_Dash-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/../../../../GB_Idle-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/../../../../Map_lab_03_void.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/A_job.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs_reload-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
@@ -25,13 +26,20 @@
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Main_title-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_Boss_01.png</File>
-    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_city_01.png</File>
-    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_city_02.png</File>
-    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_city_03.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_01_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_01.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_02_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_02.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_03_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_03.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_01_void.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_01.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_02_void.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_02.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_03_void.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_03.png</File>
-    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_tutorial_01.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_tutorial_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_tutorial.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/UI_Font.spritefont</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/UI_weapon-Sheet.png</File>
   </SourceFiles>
@@ -39,6 +47,14 @@
     <File>GB_Dash-Blade_Sheet.png</File>
     <File>GB_Dash-Sheet.png</File>
     <File>GB_Idle-Sheet.png</File>
+    <File>Map_lab_03_void.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

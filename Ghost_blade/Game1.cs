@@ -74,7 +74,7 @@ namespace Ghost_blade
             _enemyBullets = new List<EnemyBullet>();
             rooms = new List<Room>();
             random = new Random();
-            currentRoomIndex = 4;// random.Next(1,4);
+            currentRoomIndex = 5;//random.Next(1,4);
             stageStep = 0;
             base.Initialize();
         }
@@ -104,14 +104,21 @@ namespace Ghost_blade
             doorTexture.SetData(new[] { Color.Red });
 
             // Backgrounds
-            Texture2D Map_tutorial_01 = Content.Load<Texture2D>("Map_tutorial_01");
-            Texture2D Map_city_01 = Content.Load<Texture2D>("Map_city_01");
-            Texture2D Map_city_02 = Content.Load<Texture2D>("Map_city_02");
-            Texture2D Map_city_03 = Content.Load<Texture2D>("Map_city_03");
+            Texture2D Map_tutorial_01 = Content.Load<Texture2D>("Map_tutorial");
+            Texture2D Map_city_01 = Content.Load<Texture2D>("Map_City_01");
+            Texture2D Map_city_02 = Content.Load<Texture2D>("Map_City_02");
+            Texture2D Map_city_03 = Content.Load<Texture2D>("Map_City_03");
             Texture2D Map_lab_01 = Content.Load<Texture2D>("Map_lab_01");
             Texture2D Map_lab_02 = Content.Load<Texture2D>("Map_lab_02");
             Texture2D Map_lab_03 = Content.Load<Texture2D>("Map_lab_03");
             Texture2D Map_Boss_01 = Content.Load<Texture2D>("Map_Boss_01");
+            Texture2D Map_tutorial_01_void = Content.Load<Texture2D>("Map_tutorial_void");
+            Texture2D Map_city_01_void = Content.Load<Texture2D>("Map_City_01_void");
+            Texture2D Map_city_02_void = Content.Load<Texture2D>("Map_City_02_void");
+            Texture2D Map_city_03_void = Content.Load<Texture2D>("Map_City_03_void");
+            Texture2D Map_lab_01_void = Content.Load<Texture2D>("Map_lab_01_void");
+            Texture2D Map_lab_02_void = Content.Load<Texture2D>("Map_lab_02_void");
+            Texture2D Map_lab_03_void = Content.Load<Texture2D>("Map_lab_03_void");
 
             // Pass the pixel texture to the Beholster constructor
             boss = new Boss(_bossTexture, new Vector2(Map_Boss_01.Width, Map_Boss_01.Height), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
@@ -119,19 +126,15 @@ namespace Ghost_blade
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
             {
-                new MapTutorial01(Map_tutorial_01, doorTexture, EnemyTexture, _bulletTexture),
-                new MapCity01(Map_city_01, doorTexture, EnemyTexture, _bulletTexture),
-                new MapCity02(Map_city_02, doorTexture, EnemyTexture, _bulletTexture),
-                new MapCity03(Map_city_03, doorTexture, EnemyTexture, _bulletTexture),
-                new MapLab01(Map_lab_01, doorTexture, EnemyTexture, _bulletTexture),
-                new MapLab02(Map_lab_02, doorTexture, EnemyTexture, _bulletTexture),
-                new MapLab03(Map_lab_03, doorTexture, EnemyTexture, _bulletTexture),
-                new MapBoss01(Map_Boss_01, doorTexture, EnemyTexture, _bulletTexture),
+                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, doorTexture, EnemyTexture, _bulletTexture),
+                new MapCity01(Map_city_01, Map_city_01_void, doorTexture, EnemyTexture, _bulletTexture),
+                new MapCity02(Map_city_02, Map_city_02_void, doorTexture, EnemyTexture, _bulletTexture),
+                new MapCity03(Map_city_03, Map_city_03_void, doorTexture, EnemyTexture, _bulletTexture),
+                new MapLab01(Map_lab_01, Map_lab_01_void, doorTexture, EnemyTexture, _bulletTexture),
+                new MapLab02(Map_lab_02, Map_lab_02_void, doorTexture, EnemyTexture, _bulletTexture),
+                new MapLab03(Map_lab_03, Map_lab_03_void, doorTexture, EnemyTexture, _bulletTexture),
+                new MapBoss01(Map_Boss_01, Map_lab_03_void, doorTexture, EnemyTexture, _bulletTexture),
             }; 
-            foreach (var room in rooms)
-            {
-                room.LoadContent(Content); // ให้แต่ละ Map โหลด asset ของตัวเอง
-            }
 
 
             // Set up a reference to the shooting enemy's OnShoot event.
@@ -449,10 +452,11 @@ namespace Ghost_blade
                 _spriteBatch.Begin(transformMatrix: transform);
 
                 // Draw the current room
-                    rooms[currentRoomIndex].Draw(_spriteBatch);
+                rooms[currentRoomIndex].Draw(_spriteBatch);
                 // Draw the player
                 _player.Draw(_spriteBatch,camera.position);
 
+                rooms[currentRoomIndex].DrawLayer2(_spriteBatch);
                 // Draw all active enemies in the current room
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {

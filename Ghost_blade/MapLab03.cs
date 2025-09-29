@@ -5,61 +5,77 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using System.Reflection.Metadata;
 
 
 namespace Ghost_blade
 {
     public class MapLab03 : Room
     {
-        public MapLab03(Texture2D bg, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
-            : base(bg, door, new Rectangle(89 * 48, 37 * 48, 4 * 48, 3 * 48), new Vector2(23 * 48, 96 * 48), new Rectangle(0, 0, 3285 * 2, 2970*2)) //
+        int tileSize = 48;
+        public MapLab03(Texture2D bg, Texture2D layer2, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
+            : base(bg, layer2, door, new Rectangle(89 * 48, 39 * 48, 4 * 48, 1 * 48), new Vector2(23 * 48, 96 * 48), new Rectangle(0, 0, 3285 * 2, 2970*2)) //
         {
             NextRooms = new List<int> { 4, 5};
-            int tileSize = 48;
 
-            void AddObstacle(int xTile, int yTile, int widthTile, int heightTile)
+            void AddObstacle(float xTile, float yTile, float widthTile, float heightTile)
             {
-                Obstacles.Add(new Rectangle(xTile * tileSize, yTile * tileSize, widthTile * tileSize, heightTile * tileSize));
+                float x = xTile * tileSize;
+                float y = (yTile) * tileSize;
+                float w = widthTile * tileSize;
+                float h = (heightTile) * tileSize;
+
+                Obstacles.Add(new Rectangle((int)MathF.Round(x),(int)MathF.Round(y),(int)MathF.Round(w),(int)MathF.Round(h)));
             }
 
-            AddObstacle(40, 26, 28, 33);
-            AddObstacle(26, 36, 14, 16);
-            AddObstacle(74, 16, 30, 21);
-            AddObstacle(74, 37, 15, 3);
-            AddObstacle(93, 37, 15, 3);
-            AddObstacle(74, 40, 12, 2);
-            AddObstacle(77, 42, 3, 12);
-            AddObstacle(80, 52, 22, 2);
-            AddObstacle(103, 40, 6, 2);
-            AddObstacle(108, 39, 1, 30);
-            AddObstacle(42, 59, 26, 1);
-            AddObstacle(42, 60, 70, 13);
-            AddObstacle(26, 72, 30, 16);
-            AddObstacle(40, 4, 34, 16);
-            AddObstacle(11, 4, 9, 21);
-            AddObstacle(20, 7, 8, 2);
-            AddObstacle(20, 7, 20, 1);
-            AddObstacle(29, 8, 2, 1);
-            AddObstacle(34, 8, 2, 1);
-            AddObstacle(28, 12, 6, 7);
-            AddObstacle(11, 25, 1, 11);
-            AddObstacle(11, 36, 9, 16);
-            AddObstacle(22, 28, 8, 2);
+            AddObstacle(15, 107, 18, 1);
+            AddObstacle(11, 73, 9, 15);
+            AddObstacle(15, 88, 1, 19);
+            AddObstacle(16, 99.5f, 1.5f, 1.5f);
+            AddObstacle(16, 97, 1.5f, 1);
+            AddObstacle(16, 95, 1.5f, 1);
+            AddObstacle(16, 93, 1.5f, 1);
+            AddObstacle(30.5f, 99.5f, 1.5f, 1.5f);
+            AddObstacle(30.5f, 97, 1.5f, 1);
+            AddObstacle(30.5f, 95, 1.5f, 1);
+            AddObstacle(30.5f, 93, 1.5f, 1);
+            AddObstacle(32, 84, 1, 23);
+            AddObstacle(26, 73, 24, 15);
+            AddObstacle(22, 66.5f, 10, 1.5f);
+            AddObstacle(30, 61, 2, 7);
+            AddObstacle(18, 56.5f, 8, 1.5f);
+            AddObstacle(18, 58, 2, 2);
+            AddObstacle(11, 58, 1, 16);
+            AddObstacle(12, 50, 2, 9);
+            AddObstacle(11, 37, 9, 15);
+            AddObstacle(26, 37, 14, 15);
+            AddObstacle(40, 51, 2, 8);
+            AddObstacle(42, 56, 1, 17);
+            AddObstacle(39, 52, 1, 1);
+            AddObstacle(12, 2, 8, 22);
+            AddObstacle(11, 23, 1, 14);
             AddObstacle(22, 30, 4, 2);
-            AddObstacle(11, 52, 1, 50);
-            AddObstacle(12, 52, 2, 7);
-            AddObstacle(12, 72, 8, 17);
-            AddObstacle(12, 89, 4, 20);
-            AddObstacle(30, 88, 3, 1);
-            AddObstacle(32, 89, 1, 20);
-            AddObstacle(16, 106, 20, 1);
-            AddObstacle(16, 92, 2, 9);
-            AddObstacle(30, 92, 2, 9);
-            AddObstacle(18, 56, 8, 2);
-            AddObstacle(18, 56, 2, 4);
-            AddObstacle(22, 66, 10, 2);
-            AddObstacle(30, 60, 2, 8);
-            
+            AddObstacle(22, 29, 8, 1);
+            AddObstacle(28, 13.5f, 6, 3.5f);
+            AddObstacle(20, 3, 20, 5);
+            AddObstacle(20, 8, 8, 1);
+            AddObstacle(40, 6, 35, 14);
+            AddObstacle(40, 27, 28, 21);
+            AddObstacle(67, 48, 1, 12);
+            AddObstacle(74, 20, 15, 20);
+            AddObstacle(93, 20, 15, 20);
+            AddObstacle(74, 40, 3, 2);
+            AddObstacle(77, 40, 3, 14);
+            AddObstacle(80, 52.9f, 22, 1.1f);
+            AddObstacle(67, 60, 1, 1);
+            AddObstacle(67, 61, 41, 1);
+            AddObstacle(108, 37, 1, 25);
+            AddObstacle(80, 40, 5, 2);
+            AddObstacle(85, 40, 1, 1);
+            AddObstacle(104, 40, 5, 2);
+            AddObstacle(89, 38, 4, 1);
+
             AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(15 * tileSize, 70 * tileSize), 1.5f, 1000f));
             AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(16 * tileSize, 30 * tileSize), 1.5f, 1000f));
             AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(37 * tileSize, 70 * tileSize), 1.0f, 1000f, bulletTexture));
