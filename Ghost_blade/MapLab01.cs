@@ -12,16 +12,20 @@ namespace Ghost_blade
     public class MapLab01 : Room
     {
         int tileSize = 48;
-        private Texture2D overlayTexture;
 
-        public MapLab01(Texture2D bg, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
-            : base(bg, door, new Rectangle(109 * 48, 47 * 48, 4 * 48, 3 * 48), new Vector2(15 * 48, 15 * 48), new Rectangle(0, 0, 3285*2, 2970*2))
+        public MapLab01(Texture2D bg, Texture2D layer2, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
+            : base(bg, layer2, door, new Rectangle(109 * 48, 49 * 48, 4 * 48, 1 * 48), new Vector2(15 * 48, 15 * 48), new Rectangle(0, 0, 3285 * 3, 2970 * 3))
         {
             NextRooms = new List<int> { 5,6 };
 
-            void AddObstacle(int xTile, int yTile, int widthTile, int heightTile)
+            void AddObstacle(float xTile, float yTile, float widthTile, float heightTile)
             {
-                Obstacles.Add(new Rectangle(xTile * tileSize, yTile * tileSize, widthTile * tileSize, heightTile * tileSize));
+                float x = xTile * tileSize;
+                float y = (yTile) * tileSize;
+                float w = widthTile * tileSize;
+                float h = (heightTile) * tileSize;
+
+                Obstacles.Add(new Rectangle((int)MathF.Round(x), (int)MathF.Round(y), (int)MathF.Round(w), (int)MathF.Round(h)));
             }
 
             // ... (Your obstacle code remains the same) ...
@@ -38,16 +42,15 @@ namespace Ghost_blade
             AddObstacle(5, 19, 2, 1);
             AddObstacle(44, 4, 44, 2);
             AddObstacle(86, 5, 2, 28);
-            
             AddObstacle(74, 55, 24, 9);
             AddObstacle(98, 46, 4, 8);
             AddObstacle(98, 54, 2, 1);
             AddObstacle(44, 6, 1, 3);
             AddObstacle(74, 6, 1, 1);
-            AddObstacle(50, 12, 4, 2);
-            AddObstacle(70, 11, 4, 1);
+            AddObstacle(50, 11.8f, 4, 2.2f);
+            AddObstacle(70, 10.7f, 4, 1.3f);
             AddObstacle(71, 12, 2, 1);
-            AddObstacle(70, 24, 4, 2);
+            AddObstacle(70, 23.8f, 4, 2.2f);
             AddObstacle(53, 22, 1, 1);
             AddObstacle(50, 23, 4, 1);
             AddObstacle(51, 24, 2, 1);
@@ -55,12 +58,39 @@ namespace Ghost_blade
             AddObstacle(82, 16, 3, 1);
             AddObstacle(82, 20, 3, 1);
             AddObstacle(74, 54, 3, 1);
-            
             AddObstacle(35, 45, 10, 10);
             AddObstacle(48, 61, 16, 3);
-            AddObstacle(42, 72, 4, 2);
+            AddObstacle(42, 71.8f, 4, 2.2f);
             AddObstacle(35, 55, 1, 30);
-
+            AddObstacle(3, 27, 20, 2);
+            AddObstacle(20, 21, 24, 10);
+            AddObstacle(43, 31, 11, 23);
+            AddObstacle(60, 31, 27, 23);
+            AddObstacle(35, 79, 17, 13);
+            AddObstacle(45, 92, 1, 19);
+            AddObstacle(46, 109, 20, 2);
+            AddObstacle(74, 71, 24, 10);
+            AddObstacle(74, 70, 2, 1);
+            AddObstacle(58, 79, 17, 13);
+            AddObstacle(64, 92, 2, 20);
+            AddObstacle(48, 104.8f, 2, 1.2f);
+            AddObstacle(48, 104.8f, 2, 1.2f);
+            AddObstacle(54, 104.8f, 2, 1.2f);
+            AddObstacle(60, 104.8f, 2, 1.2f);
+            AddObstacle(64, 70, 4, 4);
+            AddObstacle(97, 54, 1, 1);
+            AddObstacle(97, 81, 5, 5);
+            AddObstacle(120, 81, 5, 5);
+            AddObstacle(124, 77, 5, 5);
+            AddObstacle(100, 85, 20, 2);
+            AddObstacle(102, 48, 7, 2);
+            AddObstacle(113, 48, 7, 2);
+            AddObstacle(120, 49, 4, 5);
+            AddObstacle(109, 48, 4, 1);
+            AddObstacle(124, 53, 4, 5);
+            AddObstacle(128, 57, 1, 20);
+            AddObstacle(111, 62, 2, 8);
+            AddObstacle(113, 63.5f, 1, 3);
 
             // Add enemies specific to this room
             AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(60 * tileSize, 10 * tileSize), 1.5f, 1000f));
@@ -73,20 +103,6 @@ namespace Ghost_blade
             AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(105 * tileSize, 75 * tileSize), 1.5f, 1000f));
             AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(120 * tileSize, 75 * tileSize), 1.0f, 1000f, bulletTexture));
             AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(120 * tileSize, 55 * tileSize), 1.0f, 1000f, bulletTexture));
-        }
-        public override void LoadContent(ContentManager content)
-        {
-            // โหลด asset พิเศษเฉพาะ MapLab01
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            base.Draw(spriteBatch);
-
-            if (overlayTexture != null)
-            {
-                spriteBatch.Draw(overlayTexture, new Vector2(20 * tileSize, 7 * tileSize), new Rectangle(0, 0, 100, 100), Color.White);
-            }
         }
 
     }
