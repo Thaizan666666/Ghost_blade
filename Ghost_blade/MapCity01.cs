@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,8 +11,9 @@ namespace Ghost_blade
 {
     public class MapCity01 : Room
     {
-        public MapCity01(Texture2D bg, Texture2D layer2, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
-            : base(bg, layer2, door, new Rectangle(72 * 48, 17 * 48, 6 * 48, 1 * 48), new Vector2(113 * 48, 17 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2))
+        public MapCity01(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture, Texture2D enemyTexture, Texture2D bulletTexture)
+            : base(bg, layer2, DoorOpenTexture, new Rectangle(72 * 48, 17 * 48, 6 * 48, 1 * 48),new Vector2(72 * 48, 14 * 48), 
+                  new Vector2(113 * 48, 17 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2))
         {
             NextRooms = new List<int> { 2, 3 };
             int tileSize = 48;
@@ -71,6 +73,8 @@ namespace Ghost_blade
             AddObstacle(57.5f, 83, 6, 2);
             AddObstacle(39, 94.5f, 6, 3);
             AddObstacle(57.5f, 95, 6, 2);
+
+            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(75 * tileSize, 24 * tileSize), 1.5f, 1000f));
         }
     }
 }

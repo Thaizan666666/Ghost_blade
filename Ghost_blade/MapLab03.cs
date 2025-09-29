@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System.Reflection.Metadata;
+using _321_Lab05_3;
 
 
 namespace Ghost_blade
@@ -14,8 +15,9 @@ namespace Ghost_blade
     public class MapLab03 : Room
     {
         int tileSize = 48;
-        public MapLab03(Texture2D bg, Texture2D layer2, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
-            : base(bg, layer2, door, new Rectangle(89 * 48, 39 * 48, 4 * 48, 1 * 48), new Vector2(23 * 48, 96 * 48), new Rectangle(0, 0, 3285 * 2, 2970*2)) //
+        public MapLab03(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture, Texture2D enemyTexture, Texture2D bulletTexture)
+            : base(bg, layer2, DoorOpenTexture, new Rectangle(89 * 48, 39 * 48, 4 * 48, 1 * 48), new Vector2(89 * 48, 36 * 48), 
+                  new Vector2(23 * 48, 96 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2)) //
         {
             NextRooms = new List<int> { 4, 5};
 

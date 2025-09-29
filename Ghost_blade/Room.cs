@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using _321_Lab05_3;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -15,14 +16,16 @@ namespace Ghost_blade
         public Vector2 StartPosition { get; private set; }
         public List<int> NextRooms { get; protected set; }
         public List<Enemy> Enemies { get; private set; }
-        private Texture2D doorTexture;
+        private AnimatedTexture DoorOpenTexture;
+        public Vector2 DoorPosition;
 
-        public Room(Texture2D bg, Texture2D layer2, Texture2D door, Rectangle doorRectangle, Vector2 startPosition, Rectangle bounds)
+        public Room(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture, Rectangle doorRectangle,Vector2 DoorPosition, Vector2 startPosition, Rectangle bounds)
         {
             this.background = bg;
             this.layer2 = layer2;
-            this.doorTexture = door;
+            this.DoorOpenTexture = DoorOpenTexture;
             this.Door = doorRectangle;
+            this.DoorPosition = DoorPosition;
             this.StartPosition = startPosition;
             this.Bounds = bounds;
             Obstacles = new List<Rectangle>();
@@ -44,7 +47,8 @@ namespace Ghost_blade
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(background, Vector2.Zero, null, Color.White, 0f, Vector2.Zero,2f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(doorTexture, Door, Color.Red);
+
+            DoorOpenTexture.DrawFrame(spriteBatch, DoorPosition);
 
             Texture2D pixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });

@@ -219,6 +219,7 @@ namespace _321_Lab05_3
         {
             Frame = 0;
             TotalElapsed = 0f;
+            Ended = false;
         }
         public void Stop()
         {
