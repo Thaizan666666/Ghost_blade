@@ -199,7 +199,6 @@ namespace Ghost_blade
             {
                 parryCooldownTimer -= deltaTime;
             }
-
             switch (currentState)
             {
                 case PlayerState.Idle:
@@ -281,12 +280,13 @@ namespace Ghost_blade
         // ** (ส่วนอื่นๆ ของคลาสที่ไม่ได้เปลี่ยนแปลง) **
         private void HandleDash(KeyboardState kState, float deltaTime)
         {
+            bool isActionActive = currentState == PlayerState.Attacking || meleeWeapon._parryTimer > 0;
             if (dashCooldownTimer > 0)
             {
                 dashCooldownTimer -= deltaTime;
             }
 
-            if (kState.IsKeyDown(Keys.Space) && !previousKState.IsKeyDown(Keys.Space) && !isDashing && dashCooldownTimer <= 0)
+            if (kState.IsKeyDown(Keys.Space) && !previousKState.IsKeyDown(Keys.Space) && !isDashing && dashCooldownTimer <= 0 && !isActionActive)
             {
                 isDashing = true;
                 dashTimer = DashDuration;
@@ -415,8 +415,7 @@ namespace Ghost_blade
 
         public void ClampPosition(Rectangle bounds, List<Rectangle> obstacles)
         {
-            // 1. Apply normal movement if not dashing
-            if (!isDashing)
+            if (!isDashing)
             {
                 position += velocity; // Apply normal movement here
             }
