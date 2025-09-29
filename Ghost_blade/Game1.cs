@@ -14,6 +14,7 @@ namespace Ghost_blade
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private bool _isOpenhitbox;
 
         private Player _player;
         private List<Bullet> _playerBullets;
@@ -32,7 +33,6 @@ namespace Ghost_blade
         private Boss boss;
         private Texture2D _pixel;
         private Texture2D EnemyTexture;
-        private bool IsbossAticve;
 
         private GameState gameState = GameState.MainMenu;
         private MainMenuScreen mainMenu;
@@ -42,6 +42,7 @@ namespace Ghost_blade
         private AnimatedTexture cursorTexture;
         private AnimatedTexture cursorReloadTexture;
         SpriteFont uiFont;
+        
 
         public const float SCALE = 2f;
 
@@ -91,7 +92,6 @@ namespace Ghost_blade
             _swordTexture.SetData(data); // Apply the color data
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
-            IsbossAticve = false;
 
             _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960*2, 540*2));
             // Removed direct Enemy and Enemy_Shooting creation.
@@ -179,6 +179,14 @@ namespace Ghost_blade
 
         protected override void Update(GameTime gameTime)
         {
+            if (Keyboard.GetState().IsKeyDown(Keys.O))
+            {
+                _isOpenhitbox = true;
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Y))
+            {
+                _isOpenhitbox = false;
+            }
             Debug.WriteLine($"Player Position: X={_player.position.X/48}, Y={_player.position.Y/48}");
             Room currentRoom = rooms[currentRoomIndex];
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -307,6 +315,14 @@ namespace Ghost_blade
                         }
                     }
                 }
+                if (boss.IsbossAticve && _player.meleeWeapon.AttackHitbox.Intersects(boss.HitboxgetDamage))
+                {
+                    if (_player._isSlash)
+                    {
+                        boss.TakeDamage(70);
+                        _player._isSlash = false;
+                    }
+                }
             }
 
             // Update and check for player bullet collisions with all enemies
@@ -323,6 +339,11 @@ namespace Ghost_blade
                         bullet.IsActive = false;
                         break; // Exit the inner loop after hitting an enemy
                     }
+                }
+                if(boss.IsbossAticve && bullet.boundingBox.Intersects(boss.HitboxgetDamage))
+                {
+                    boss.TakeDamage(40);
+                    bullet.IsActive = false;
                 }
 
                 // Remove inactive bullets
@@ -391,11 +412,15 @@ namespace Ghost_blade
                     mainMenu.tutorial = false;
                 }
             }
-            if(currentRoomIndex == 7)
+            if (currentRoomIndex == 7 && boss.Health > 0)
             {
-                IsbossAticve = true;
+                boss.IsbossAticve = true;
             }
-            if (IsbossAticve)
+            else
+            {
+                boss.IsbossAticve = false;
+            }
+            if (boss.IsbossAticve)
             {
                 boss.Update(gameTime, _player, currentRoom.Obstacles);
                 var newlySpawnedEnemies = boss.GetSpawnedEnemies();
@@ -454,7 +479,7 @@ namespace Ghost_blade
                 // Draw the current room
                 rooms[currentRoomIndex].Draw(_spriteBatch);
                 // Draw the player
-                _player.Draw(_spriteBatch,camera.position);
+                _player.Draw(_spriteBatch, camera.position);
 
                 rooms[currentRoomIndex].DrawLayer2(_spriteBatch);
                 // Draw all active enemies in the current room
@@ -473,15 +498,19 @@ namespace Ghost_blade
                 {
                     bullet.Draw(_spriteBatch);
                 }
-                if (IsbossAticve)
+                if (boss.IsbossAticve)
                 {
                     boss.Draw(_spriteBatch);
                 }
 
                 // Draw hitboxes
-                //(_spriteBatch, _player.drect, Color.Red, 1);
-                //DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
-                //DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
+                if (_isOpenhitbox)
+                {
+                    //(_spriteBatch, _player.drect, Color.Red, 1);
+                    DrawRectangle(_spriteBatch, boss.HitboxgetDamage, Color.Yellow, 1);
+                    DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
+                    DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
+                }
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {
                     if (enemy.IsActive)

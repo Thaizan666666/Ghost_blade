@@ -13,6 +13,7 @@ public class Boss
     public Vector2 Position;
     public Texture2D pixel;
     public Texture2D bulletTexture;
+    public bool IsbossAticve { get; set; }
 
     // Boss State
     private enum BossState { Idle, Attacking, Damaged };
@@ -24,6 +25,18 @@ public class Boss
     private BossAttack currentAttack;
     private Random random;
     private float timeBetweenAttacks;
+    public Rectangle HitboxgetDamage
+    {
+        get
+        {
+            return new Rectangle(
+                        (int)(Position.X),
+                        (int)(Position.Y),
+                        1632,
+                        1055
+                        );
+        }
+    }
 
     // Constructor
     public Boss(Texture2D texture, Vector2 position, Texture2D pixelTexture, Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture)
@@ -47,68 +60,101 @@ public class Boss
 
     public void Update(GameTime gameTime, Player player, List<Rectangle> obstacles)
     {
-        // Update logic based on the current state
-        switch (currentState)
-        {
-            case BossState.Idle:
-                // Count down to the next attack
-                attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (attackTimer >= timeBetweenAttacks)
-                {
-                    SelectNewAttack(player);
-                }
-                break;
-
-            case BossState.Attacking:
-                // Update the current attack
-                if (currentAttack != null)
-                {
-                    currentAttack.Update(gameTime, player, obstacles);
-
-                    // Check if the attack is finished
-                    if (currentAttack.IsFinished)
+            // Update logic based on the current state
+            switch (currentState)
+            {
+                case BossState.Idle:
+                    // Count down to the next attack
+                    attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (attackTimer >= timeBetweenAttacks)
                     {
-                        currentAttack = null; // Clear the current attack
-                        currentState = BossState.Idle; // Return to Idle state
-                        attackTimer = 0f; // Reset the timer for the next attack
+                        SelectNewAttack(player);
                     }
-                }
-                break;
+                    break;
 
-            case BossState.Damaged:
-                // Handle a brief stun or visual effect
-                break;
-        }
-        // NOTE: The code to get spawned enemies must be called from Game1's Update method
-        // You cannot add them to the main list from here.
+                case BossState.Attacking:
+                    // Update the current attack
+                    if (currentAttack != null)
+                    {
+                        currentAttack.Update(gameTime, player, obstacles);
+
+                        // Check if the attack is finished
+                        if (currentAttack.IsFinished)
+                        {
+                            currentAttack = null; // Clear the current attack
+                            currentState = BossState.Idle; // Return to Idle state
+                            attackTimer = 0f; // Reset the timer for the next attack
+                        }
+                    }
+                    break;
+
+                case BossState.Damaged:
+                    // Handle a brief stun or visual effect
+                    break;
+            }
+            // NOTE: The code to get spawned enemies must be called from Game1's Update method
+            // You cannot add them to the main list from here.
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        // Define the boss's drawing rectangle
-        Rectangle bossRect = new Rectangle(
-            (int)(Position.X - 25),
-            (int)(Position.Y - 25),
-            50, // width
-            50  // height
+            // Define the boss's drawing rectangle
+            Rectangle bossRect = new Rectangle(
+            (int)(Position.X),
+            (int)(Position.Y),
+            1632, // width
+            1055  // height
         );
 
-        // Draw the red square using the 1x1 pixel texture
-        spriteBatch.Draw(pixel, bossRect, Color.Brown);
+            // Draw the red square using the 1x1 pixel texture
+            spriteBatch.Draw(pixel, bossRect, Color.Brown);
 
-        // THIS IS THE MISSING PART: Draw the current attack's visuals
-        if (currentAttack != null)
-        {
-            currentAttack.Draw(spriteBatch);
-        }
+            // THIS IS THE MISSING PART: Draw the current attack's visuals
+            if (currentAttack != null)
+            {
+                currentAttack.Draw(spriteBatch);
+            }
     }
 
     private void SelectNewAttack(Player player)
     {
+        // เก็บดัชนีของการโจมตีที่ถูกเลือกไว้
+        int randomIndex;
+        BossAttack selectedAttack;
+        bool isValidAttack = false;
+
+        // วนลูปเพื่อสุ่มการโจมตีจนกว่าจะได้การโจมตีที่ถูกต้องตามเงื่อนไข
+        while (!isValidAttack)
+        {
+            randomIndex = random.Next(attacks.Count);
+            selectedAttack = attacks[randomIndex];
+
+            // 1. ตรวจสอบเงื่อนไขพิเศษสำหรับ SpawnAttack
+            if (selectedAttack is SpawnAttack spawnAttack)
+            {
+                // ตรวจสอบว่ายังมีศัตรูที่ถูกเสกมาก่อนหน้าเหลืออยู่หรือไม่
+                if (spawnAttack.GetActiveSpawnedEnemyCount() > 0)
+                {
+                    isValidAttack = false;
+                }
+                else
+                {
+                    // ถ้าศัตรูหมดแล้ว หรือเป็นการโจมตีใหม่ที่พร้อมจะเริ่ม
+                    isValidAttack = true;
+                    currentAttack = selectedAttack;
+                }
+            }
+            else
+            {
+                // 2. การโจมตีอื่น ๆ (เช่น Laser, Bullet) ถือว่า 'ถูกต้อง' เสมอ
+                isValidAttack = true;
+                currentAttack = selectedAttack;
+            }
+        }
+
+        // เมื่อได้ currentAttack ที่ถูกต้องแล้ว
         currentState = BossState.Attacking;
-        int randomIndex = random.Next(attacks.Count);
-        currentAttack = attacks[randomIndex];
-        Debug.WriteLine($"Attack = {randomIndex}");
+        Debug.WriteLine($"Attack = {currentAttack.GetType().Name}");
         currentAttack.Start(player);
     }
 
@@ -120,5 +166,14 @@ public class Boss
             return spawnAttack.GetNewEnemies();
         }
         return new List<Enemy>(); // Return an empty list if it's not a spawn attack
+    }
+    public void TakeDamage(int damage)
+    {
+        this.Health -= damage;
+        Debug.WriteLine($"Health Boss = {Health}");
+        if (this.Health <= 0)
+        {
+            this.IsbossAticve = false;
+        }
     }
 }

@@ -17,7 +17,14 @@ public class MeleeWeapon
     private float _attackTimer = 0f;
     private float _attackDuration = 0.2f; // ระยะเวลาการโจมตี
 
+    // ** New variables for Parry State **
+    private bool _isParryActive = false;
+    public float _parryTimer { get; private set; } = 0f;
+    // Set a very short window for parry at the start of the swing
+    private float _parryDuration = 1f;
+
     public Rectangle AttackHitbox { get; private set; }
+    public Rectangle ParryHitbox { get; private set; }
     public int Attack {  get; private set; }
 
     public MeleeWeapon(Texture2D weaponTexture)
@@ -52,6 +59,21 @@ public class MeleeWeapon
             rotation = MathF.Round(angle / snapAngle) * snapAngle;
             AttackHitbox = Rectangle.Empty;
         }
+        if (_isParryActive)
+        {
+            _parryTimer -= deltaTime;
+            if (_parryTimer <= 0)
+            {
+                _isParryActive = false;
+                ParryHitbox = Rectangle.Empty; // Parry Hitbox is cleared here
+            }
+        }
+        else if (!_isAttackingActive)
+        {
+            // Only clear the ParryHitbox if neither attack nor parry is active
+            ParryHitbox = Rectangle.Empty;
+        }
+        // --- END NEW PARRY LOGIC ---
     }
 
     // เมธอดใหม่สำหรับเริ่มการโจมตี ซึ่งจะถูกเรียกเมื่อกดปุ่มโจมตี
@@ -77,30 +99,57 @@ public class MeleeWeapon
                 angle += MathF.PI * 2;
             }
 
-            int hitboxSize1 = 132;
-            int hitboxSize2 = 48;
-            int distance = 48;
+            int hitboxSize1 = 156;
+            int hitboxSize2 = 72;
+            int distance = 24;
 
             if (angle >= MathF.PI * 0.25f && angle < MathF.PI * 0.75f) // (ล่าง)
             {
-                AttackHitbox = new Rectangle((int)playerPosition.X - distance+5, (int)playerPosition.Y + distance, 132, hitboxSize2);
+                AttackHitbox = new Rectangle((int)playerPosition.X - 100, (int)playerPosition.Y + distance * 2, 156, hitboxSize2);
                 Attack = 1;
             }
             else if (angle >= MathF.PI * 0.75f && angle < MathF.PI * 1.25f) // (ซ้าย)
             {
-                AttackHitbox = new Rectangle((int)playerPosition.X - distance, (int)playerPosition.Y - hitboxSize1 / 2, hitboxSize2, hitboxSize1);
+                AttackHitbox = new Rectangle((int)playerPosition.X - distance - 96, (int)playerPosition.Y - hitboxSize1 / 2, hitboxSize2, hitboxSize1);
                 Attack = 2;
             }
             else if (angle >= MathF.PI * 1.25f && angle < MathF.PI * 1.75f) //(บน)
             {
-                AttackHitbox = new Rectangle((int)playerPosition.X - distance+5, (int)playerPosition.Y - distance*2 , 132, hitboxSize2);
+                AttackHitbox = new Rectangle((int)playerPosition.X - 100, (int)playerPosition.Y - distance * 2 - hitboxSize2, 156, hitboxSize2);
                 Attack = 3;
             }
             else //(ขวา)
             {
-                AttackHitbox = new Rectangle((int)playerPosition.X + distance, (int)playerPosition.Y - hitboxSize1 / 2, hitboxSize2, hitboxSize1);
+                AttackHitbox = new Rectangle((int)playerPosition.X, (int)playerPosition.Y - hitboxSize1 / 2, hitboxSize2, hitboxSize1);
                 Attack = 4;
             }
+        }
+    }
+    public void PerformParry(Vector2 playerPosition, Vector2 cameraPosition)
+    {
+        // Only allow parry if not already parrying and not in the middle of a full attack swing
+        if (!_isParryActive && !_isAttackingActive)
+        {
+            _isParryActive = true;
+            _parryTimer = _parryDuration;
+
+            // Recalculate the angle based on the current mouse position 
+            MouseState mouseState = Mouse.GetState();
+            Vector2 mousePosWorld = new Vector2(mouseState.X, mouseState.Y) - cameraPosition;
+            Vector2 dirToMouse = mousePosWorld - playerPosition;
+            float angle = MathF.Atan2(dirToMouse.Y, dirToMouse.X);
+
+            // Snap the rotation for the sprite, even if the parry hitbox is simple
+            rotation = MathF.Round(angle / snapAngle) * snapAngle;
+
+            // Define the Parry Hitbox: A small, centered, precise area for deflection
+            int parrySize = 72;
+            ParryHitbox = new Rectangle(
+                (int)playerPosition.X - 60,
+                (int)playerPosition.Y - 60,
+                parrySize,
+                parrySize * 2
+            );
         }
     }
 }

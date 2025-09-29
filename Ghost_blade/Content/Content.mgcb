@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../GB_Dash-Blade_Sheet.png
+#begin ../../../../../../Downloads/GB_Dash-Blade_Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,9 +23,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../../../GB_Dash-Blade_Sheet.png;GB_Dash-Blade_Sheet.png
+/build:../../../../../../Downloads/GB_Dash-Blade_Sheet.png;GB_Dash-Blade_Sheet.png
 
-#begin ../../../../GB_Dash-Sheet.png
+#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_01_void.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -35,9 +35,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../../../GB_Dash-Sheet.png;GB_Dash-Sheet.png
+/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_01_void.png;Map_City_01_void.png
 
-#begin ../../../../GB_Idle-Sheet.png
+#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_02_void.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -47,9 +47,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../../../GB_Idle-Sheet.png;GB_Idle-Sheet.png
+/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_02_void.png;Map_City_02_void.png
 
-#begin ../../../../Map_lab_03_void.png
+#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_03_void.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -59,7 +59,55 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../../../Map_lab_03_void.png;Map_lab_03_void.png
+/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_03_void.png;Map_City_03_void.png
+
+#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_01_void.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_01_void.png;Map_lab_01_void.png
+
+#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_02_void.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_02_void.png;Map_lab_02_void.png
+
+#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_03_void.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_03_void.png;Map_lab_03_void.png
+
+#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_tutorial_void.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_tutorial_void.png;Map_tutorial_void.png
 
 #begin A_job.png
 /importer:TextureImporter
@@ -180,6 +228,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:GB_Idle-Blade_Sheet.png
+
+#begin GB_Idle-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GB_Idle-Sheet.png
 
 #begin GB_Run_Blade-Sheet.png
 /importer:TextureImporter
