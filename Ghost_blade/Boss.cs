@@ -87,10 +87,10 @@ public class Boss
     {
         // Define the boss's drawing rectangle
         Rectangle bossRect = new Rectangle(
-            (int)(Position.X - 25),
-            (int)(Position.Y - 25),
-            50, // width
-            50  // height
+            (int)(Position.X),
+            (int)(Position.Y),
+            1632, // width
+            1055  // height
         );
 
         // Draw the red square using the 1x1 pixel texture
@@ -105,10 +105,43 @@ public class Boss
 
     private void SelectNewAttack(Player player)
     {
+        // เก็บดัชนีของการโจมตีที่ถูกเลือกไว้
+        int randomIndex;
+        BossAttack selectedAttack;
+        bool isValidAttack = false;
+
+        // วนลูปเพื่อสุ่มการโจมตีจนกว่าจะได้การโจมตีที่ถูกต้องตามเงื่อนไข
+        while (!isValidAttack)
+        {
+            randomIndex = random.Next(attacks.Count);
+            selectedAttack = attacks[randomIndex];
+
+            // 1. ตรวจสอบเงื่อนไขพิเศษสำหรับ SpawnAttack
+            if (selectedAttack is SpawnAttack spawnAttack)
+            {
+                // ตรวจสอบว่ายังมีศัตรูที่ถูกเสกมาก่อนหน้าเหลืออยู่หรือไม่
+                if (spawnAttack.GetActiveSpawnedEnemyCount() > 0)
+                {
+                    isValidAttack = false;
+                }
+                else
+                {
+                    // ถ้าศัตรูหมดแล้ว หรือเป็นการโจมตีใหม่ที่พร้อมจะเริ่ม
+                    isValidAttack = true;
+                    currentAttack = selectedAttack;
+                }
+            }
+            else
+            {
+                // 2. การโจมตีอื่น ๆ (เช่น Laser, Bullet) ถือว่า 'ถูกต้อง' เสมอ
+                isValidAttack = true;
+                currentAttack = selectedAttack;
+            }
+        }
+
+        // เมื่อได้ currentAttack ที่ถูกต้องแล้ว
         currentState = BossState.Attacking;
-        int randomIndex = random.Next(attacks.Count);
-        currentAttack = attacks[randomIndex];
-        Debug.WriteLine($"Attack = {randomIndex}");
+        Debug.WriteLine($"Attack = {currentAttack.GetType().Name}");
         currentAttack.Start(player);
     }
 

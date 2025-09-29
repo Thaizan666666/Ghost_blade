@@ -13,6 +13,7 @@ namespace Ghost_blade
         private const int BURST_COUNT = 50; // Number of bullets to fire in one burst
         private const float BURST_DELAY = 0.15f; // Delay between each bullet shot in the burst
         private const float ATTACK_DURATION = 1.0f; // Total duration of the attack state
+        private Vector2 position;
 
         private int bulletsShotInBurst;
         private float burstTimer;
@@ -31,6 +32,7 @@ namespace Ghost_blade
             burstTimer = BURST_DELAY;
             attackTimer = ATTACK_DURATION;
             IsFinished = false;
+            position = boss.Position+ new Vector2 (0,+1055);
         }
 
         public override void Update(GameTime gameTime, Player player,List<Rectangle> Obstacles)
@@ -46,11 +48,11 @@ namespace Ghost_blade
             if (burstTimer <= 0 && bulletsShotInBurst < BURST_COUNT)
             {
                 // Calculate bullet direction towards the player
-                Vector2 directionToPlayer = player.position - boss.Position;
+                Vector2 directionToPlayer = player.position - position;
                 directionToPlayer.Normalize();
 
                 // Create and add the new bullet
-                bullets.Add(new EnemyBullet(pixelTexture, boss.Position, directionToPlayer, 8f, 0f, 3f));
+                bullets.Add(new EnemyBullet(pixelTexture, position, directionToPlayer, 8f, 0f, 3f));
 
                 bulletsShotInBurst++;
                 burstTimer = BURST_DELAY; // Reset the timer for the next shot

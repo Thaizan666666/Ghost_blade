@@ -13,6 +13,9 @@ namespace Ghost_blade
         private enum LaserState { Charging, Firing, CoolingDown };
         private LaserState currentState;
 
+        // Hitbox ถูกเก็บไว้เพื่อวัตถุประสงค์ในการประกาศ แต่เราจะใช้การคำนวณ Line/Point Collision แทน
+        public Rectangle Hitbox { get; private set; }
+
         private float chargeTimer;
         private float fireTimer;
         private float coolDownTimer;
@@ -43,7 +46,7 @@ namespace Ghost_blade
             coolDowmRealTimer = 0f;
 
             // Set the laser to always start at 0 degrees (pointing right)
-            laserAngle = 0f;
+            laserAngle = (float)Math.Atan2(player.position.Y - (boss.Position.Y + 1055), player.position.X - (boss.Position.X + 1632));
 
             // Set a fixed rotation direction (e.g., clockwise)
             rotationDirection = 1f;
@@ -56,11 +59,17 @@ namespace Ghost_blade
         {
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            // ตรวจสอบความปลอดภัยของพารามิเตอร์ 'player'
+            if (player == null)
+            {
+                IsFinished = true;
+                return;
+            }
+
             switch (currentState)
             {
                 case LaserState.Charging:
                     chargeTimer += delta;
-                    // Note: Boss movement logic is now handled in the Boss class.
                     if (chargeTimer >= CHARGE_DURATION)
                     {
                         currentState = LaserState.Firing;
@@ -76,29 +85,74 @@ namespace Ghost_blade
                     // Gradually increase the rotation speed over the firing duration
                     currentRotationSpeed = MathHelper.Lerp(0, MAX_ROTATION_SPEED, fireTimer / FIRE_DURATION);
 
-                    // Calculate the angle to the player
-                    float desiredAngle = (float)Math.Atan2(player.position.Y - boss.Position.Y, player.position.X - boss.Position.X);
+                    // Calculate the angle to the player (ใช้ 'player' parameter โดยตรง)
+                    float desiredAngle = (float)Math.Atan2(player.position.Y - (boss.Position.Y + 1055), player.position.X - (boss.Position.X + 1632));
 
                     // Use a slightly modified version of the previous logic to handle the overshoot
                     float angleDifference = MathHelper.WrapAngle(desiredAngle - laserAngle);
 
-                    // Check if the laser has passed the player's position AND the overshoot tolerance
-                    // This logic is now more robust against angle wrapping issues.
                     if (rotationDirection == 1 && angleDifference < -OVERSHOOT_TOLERANCE)
                     {
-                        rotationDirection = -1; // Passed while moving clockwise, now reverse
-                        // Reset the timer to restart the acceleration
+                        rotationDirection = -1;
                         fireTimer = 0f;
                     }
                     else if (rotationDirection == -1 && angleDifference > OVERSHOOT_TOLERANCE)
                     {
-                        rotationDirection = 1; // Passed while moving counter-clockwise, now reverse
-                        // Reset the timer to restart the acceleration
+                        rotationDirection = 1;
                         fireTimer = 0f;
                     }
 
                     // Update the laser angle based on the determined rotation direction and the accelerating speed
                     laserAngle += currentRotationSpeed * rotationDirection * delta;
+
+                    // *** การตรวจสอบการชนที่ถูกต้องสำหรับเลเซอร์ที่หมุนได้ ***
+
+                    float laserLength = 2000f;
+                    float thickness = 10f; // ความหนาของเลเซอร์ในสถานะ Firing
+                    Vector2 laserStart = boss.Position + new Vector2(1632, 1055);
+
+                    // 1. กำหนดจุดปลายของเส้นเลเซอร์
+                    Vector2 direction = new Vector2((float)Math.Cos(laserAngle), (float)Math.Sin(laserAngle));
+                    Vector2 laserEnd = laserStart + direction * laserLength;
+
+                    // 2. กำหนดจุดศูนย์กลางของผู้เล่นและรัศมี (แบบประมาณ)
+                    Rectangle playerBox = player.HitboxgetDamage;
+                    Vector2 playerCenter = playerBox.Center.ToVector2();
+                    // รัศมีผู้เล่น (ใช้ขนาดที่ใหญ่ที่สุดของความกว้าง/สูง)
+                    float playerRadius = Math.Max(playerBox.Width, playerBox.Height) / 2f;
+
+                    // 3. ตรวจสอบว่าจุดใดบนเส้นเลเซอร์ (L1-L2) อยู่ใกล้ผู้เล่นที่สุด
+                    Vector2 closestPoint = Vector2.Zero;
+                    float dx = laserEnd.X - laserStart.X;
+                    float dy = laserEnd.Y - laserStart.Y;
+                    float lineLengthSquared = dx * dx + dy * dy;
+
+                    if (lineLengthSquared == 0) // เลเซอร์เป็นแค่จุด
+                    {
+                        closestPoint = laserStart;
+                    }
+                    else
+                    {
+                        // คำนวณ t (ตัวประกอบการฉายภาพ)
+                        float t = ((playerCenter.X - laserStart.X) * dx + (playerCenter.Y - laserStart.Y) * dy) / lineLengthSquared;
+
+                        // จำกัดค่า t ให้อยู่ระหว่าง 0 ถึง 1 (เพื่อให้จุดใกล้สุดอยู่บนส่วนของเส้นตรง)
+                        t = MathHelper.Clamp(t, 0, 1);
+
+                        // คำนวณจุดที่ใกล้ที่สุดบนส่วนของเส้นตรง
+                        closestPoint = new Vector2(laserStart.X + t * dx, laserStart.Y + t * dy);
+                    }
+
+                    // 4. ตรวจสอบระยะห่างการชน
+                    float distanceSquared = Vector2.DistanceSquared(playerCenter, closestPoint);
+                    float hitDistance = thickness / 2f + playerRadius; // รวมรัศมีการชนของเลเซอร์และผู้เล่น
+
+                    if (distanceSquared <= hitDistance * hitDistance)
+                    {
+                        // Collision detected!
+                        player.TakeDamage(2);
+                    }
+                    // **********************************
 
                     if (coolDowmRealTimer >= FIRE_DURATION)
                     {
@@ -124,24 +178,28 @@ namespace Ghost_blade
                 // Make the laser blink during the charging phase
                 if ((int)(chargeTimer * 5) % 2 == 0)
                 {
-                    DrawLaser(spriteBatch, 2f, Color.Red * 0.5f);
+                    DrawLaser(spriteBatch, 5f, Color.Red * 1f);
                 }
             }
             else if (currentState == LaserState.Firing)
             {
                 // Draw the full-strength laser while firing
-                DrawLaser(spriteBatch, 4f, Color.Red);
+                DrawLaser(spriteBatch, 10f, Color.Red);
             }
         }
 
         // Helper method to draw the laser
         private void DrawLaser(SpriteBatch spriteBatch, float thickness, Color color)
         {
-            float laserLength = 800f;
+            float laserLength = 2000f;
             Vector2 origin = new Vector2(0, thickness / 2);
+            Vector2 laserStart = boss.Position + new Vector2(1632, 1055);
+
+            // Hitbox calculation is now in Update()
+
             spriteBatch.Draw(
                 pixelTexture,
-                boss.Position,
+                laserStart,
                 null,
                 color,
                 laserAngle,

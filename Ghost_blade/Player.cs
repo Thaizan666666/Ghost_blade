@@ -69,6 +69,8 @@ namespace Ghost_blade
         // NEW: Time management for attacking state
         private float attackTimer = 0f;
         private const float AttackDuration = 0.2f; // ระยะเวลาการโจมตี (ตามที่คุณใช้ใน MeleeWeapon)
+        private const float ParryCooldown = 3f; // Set a cooldown duration, e.g., 1.0 second
+        private float parryCooldownTimer = 0f;
 
         public AnimatedTexture change_Weapon;
         private bool isWeaponSwitching = false;
@@ -193,6 +195,10 @@ namespace Ghost_blade
                     meleeWeapon.Update(gameTime, position, cameraPosition);
                 }
             }
+            if (parryCooldownTimer > 0)
+            {
+                parryCooldownTimer -= deltaTime;
+            }
 
             switch (currentState)
             {
@@ -249,13 +255,25 @@ namespace Ghost_blade
 
         private void HandleAttacks(MouseState mState, Vector2 cameraPosition) // ต้องเพิ่ม cameraPosition เป็น parameter
         {
-            if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released)
+            bool _iscanattack = isDashing;
+            if (!_iscanattack)
             {
-                if (isSwordEquipped)
+                if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released && meleeWeapon._parryTimer <= 0)
                 {
-                    meleeWeapon.PerformAttack(position, cameraPosition);
-                    currentState = PlayerState.Attacking;   
-                    _isSlash = true;
+                    if (isSwordEquipped)
+                    {
+                        meleeWeapon.PerformAttack(position, cameraPosition);
+                        currentState = PlayerState.Attacking;
+                        _isSlash = true;
+                    }
+                }
+                if (mState.RightButton == ButtonState.Pressed && previousMState.RightButton == ButtonState.Released)
+                {
+                    if (isSwordEquipped && currentState != PlayerState.Attacking && !isDashing && parryCooldownTimer <= 0)
+                    {
+                        meleeWeapon.PerformParry(position, cameraPosition);
+                        parryCooldownTimer = ParryCooldown;
+                    }
                 }
             }
         }
@@ -309,14 +327,18 @@ namespace Ghost_blade
 
         private void HandleMovement(KeyboardState kState)
         {
-            if (!isDashing && currentState != PlayerState.Attacking)
+            // Check if the player is currently Dashing, Attacking, or PARRPING
+            bool isActionActive = isDashing || currentState == PlayerState.Attacking || meleeWeapon._parryTimer > 0;
+
+            // Only allow movement if no action is active and _ismove is true
+            if (!isActionActive)
             {
                 Vector2 newVelocity = Vector2.Zero;
 
                 if (kState.IsKeyDown(Keys.W)) { newVelocity.Y -= 1; }
-                else if (kState.IsKeyDown(Keys.S)) { newVelocity.Y += 1;}
+                else if (kState.IsKeyDown(Keys.S)) { newVelocity.Y += 1; }
                 if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; }
-                else if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1;}
+                else if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1; }
 
                 velocity = newVelocity;
 
@@ -325,13 +347,13 @@ namespace Ghost_blade
                     velocity.Normalize();
                     lastMovementDirection = velocity;
                 }
-                
+
                 Vector2 newPosition = position + velocity * speed;
                 position = newPosition;
             }
             else
             {
-                velocity = Vector2.Zero; // Stop movement when attacking or dashing
+                velocity = Vector2.Zero; // Stop movement when attacking, dashing, or parrying
             }
         }
 
@@ -449,29 +471,33 @@ namespace Ghost_blade
 
         public Bullet Shoot(Vector2 mousePosition)
         {
-            if (currentAmmo <= 0 || isSwordEquipped)
+            bool _iscanShoot = isDashing;
+            if (!_iscanShoot)
             {
-                Debug.WriteLine("Ammo = 0 or Sword is Equipped");
+                if (currentAmmo <= 0 || isSwordEquipped)
+                {
+                    Debug.WriteLine("Ammo = 0 or Sword is Equipped");
+                    return null;
+                }
+                if (timer >= fireDelay)
+                {
+                    timer = 0f;
+                    Vector2 direction = mousePosition - position + new Vector2(24, 24);
+                    if (direction != Vector2.Zero)
+                    {
+                        direction.Normalize();
+                    }
+                    else
+                    {
+                        direction = Vector2.UnitX;
+                    }
+                    float bulletRotation = MathF.Atan2(direction.Y, direction.X);
+                    Vector2 bulletStartPosition = position;
+                    currentAmmo--;
+                    return new Bullet(bulletTexture, bulletStartPosition - new Vector2(24, 24), direction, 20f, bulletRotation, 2f);
+                }
+            }
                 return null;
-            }
-            if (timer >= fireDelay)
-            {
-                timer = 0f;
-                Vector2 direction = mousePosition - position + new Vector2(24, 24);
-                if (direction != Vector2.Zero)
-                {
-                    direction.Normalize();
-                }
-                else
-                {
-                    direction = Vector2.UnitX;
-                }
-                float bulletRotation = MathF.Atan2(direction.Y, direction.X);
-                Vector2 bulletStartPosition = position;
-                currentAmmo--;
-                return new Bullet(bulletTexture, bulletStartPosition - new Vector2(24,24), direction, 20f, bulletRotation, 2f);
-            }
-            return null;
         }
 
         public void Die()
@@ -487,7 +513,6 @@ namespace Ghost_blade
             }
 
             Health -= damage;
-            Debug.WriteLine($"Player took {damage} damage. Health is now {Health}");
 
             _isInvincible = true;
             _invincibilityTimer = InvincibilityDuration;

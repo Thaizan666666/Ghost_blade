@@ -114,7 +114,7 @@ namespace Ghost_blade
             Texture2D Map_Boss_01 = Content.Load<Texture2D>("Map_Boss_01");
 
             // Pass the pixel texture to the Beholster constructor
-            boss = new Boss(_bossTexture, new Vector2(Map_Boss_01.Width, Map_Boss_01.Height), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
+            boss = new Boss(_bossTexture, new Vector2(1056, 96), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
 
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
@@ -293,8 +293,18 @@ namespace Ghost_blade
                 }
             }
 
-            // Update and check for player bullet collisions with all enemies
-            for (int i = _playerBullets.Count - 1; i >= 0; i--)
+            for (int i = _enemyBullets.Count - 1; i >= 0; i--)
+            {
+                EnemyBullet bullet = _enemyBullets[i];
+                bullet.Update(gameTime, currentRoom.Obstacles, _player);
+                if (_player.meleeWeapon.ParryHitbox != Rectangle.Empty && _player.meleeWeapon.ParryHitbox.Intersects(bullet.boundingBox))
+                {
+                    continue;
+                }
+            }
+
+                // Update and check for player bullet collisions with all enemies
+                for (int i = _playerBullets.Count - 1; i >= 0; i--)
             {
                 Bullet bullet = _playerBullets[i];
                 bullet.Update(gameTime, currentRoom.Obstacles);
@@ -367,6 +377,10 @@ namespace Ghost_blade
             if(currentRoomIndex == 7)
             {
                 IsbossAticve = true;
+            }
+            else
+            {
+                IsbossAticve = false;
             }
             if (IsbossAticve)
             {
@@ -453,7 +467,8 @@ namespace Ghost_blade
                 // Draw hitboxes
                 //DrawRectangle(_spriteBatch, _player.drect, Color.Red, 1);
                 //DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
-                //DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
+                DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
+                DrawRectangle(_spriteBatch, _player.meleeWeapon.ParryHitbox, Color.Blue, 1);
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {
                     if (enemy.IsActive)
