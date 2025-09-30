@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.NetworkInformation;
 using _321_Lab05_3;
 using Microsoft.Xna.Framework;
@@ -37,10 +38,13 @@ namespace Ghost_blade
         private GameState gameState = GameState.MainMenu;
         private MainMenuScreen mainMenu;
         private GameOverScreen gameOver;
+        private bool Door_Open = false;
 
         private AnimatedTexture Hp_bar;
         private AnimatedTexture cursorTexture;
         private AnimatedTexture cursorReloadTexture;
+        private AnimatedTexture DoorOpenTexture;
+        private int Enemy_Count;
         SpriteFont uiFont;
         
 
@@ -67,6 +71,7 @@ namespace Ghost_blade
             Hp_bar = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
             cursorTexture = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             cursorReloadTexture = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            DoorOpenTexture = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
         }
         
         protected override void Initialize()
@@ -75,7 +80,7 @@ namespace Ghost_blade
             _enemyBullets = new List<EnemyBullet>();
             rooms = new List<Room>();
             random = new Random();
-            currentRoomIndex = 5;//random.Next(1,4);
+            currentRoomIndex = 1;//random.Next(1,4);
             stageStep = 0;
             base.Initialize();
         }
@@ -93,15 +98,15 @@ namespace Ghost_blade
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
 
-            _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960*2, 540*2));
+            _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960 * 2, 540 * 2));
             // Removed direct Enemy and Enemy_Shooting creation.
             _bossTexture = new Texture2D(GraphicsDevice, 1, 1);
             _bossTexture.SetData(new[] { Color.White });
 
 
             // Door texture
-            Texture2D doorTexture = new Texture2D(GraphicsDevice, 1, 1);
-            doorTexture.SetData(new[] { Color.Red });
+            Texture2D doorRectangle = new Texture2D(GraphicsDevice, 1, 1);
+            doorRectangle.SetData(new[] { Color.Red });
 
             // Backgrounds
             Texture2D Map_tutorial_01 = Content.Load<Texture2D>("Map_tutorial");
@@ -126,15 +131,15 @@ namespace Ghost_blade
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
             {
-                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, doorTexture, EnemyTexture, _bulletTexture),
-                new MapCity01(Map_city_01, Map_city_01_void, doorTexture, EnemyTexture, _bulletTexture),
-                new MapCity02(Map_city_02, Map_city_02_void, doorTexture, EnemyTexture, _bulletTexture),
-                new MapCity03(Map_city_03, Map_city_03_void, doorTexture, EnemyTexture, _bulletTexture),
-                new MapLab01(Map_lab_01, Map_lab_01_void, doorTexture, EnemyTexture, _bulletTexture),
-                new MapLab02(Map_lab_02, Map_lab_02_void, doorTexture, EnemyTexture, _bulletTexture),
-                new MapLab03(Map_lab_03, Map_lab_03_void, doorTexture, EnemyTexture, _bulletTexture),
-                new MapBoss01(Map_Boss_01, Map_lab_03_void, doorTexture, EnemyTexture, _bulletTexture),
-            }; 
+                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
+                new MapCity01(Map_city_01, Map_city_01_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
+                new MapCity02(Map_city_02, Map_city_02_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
+                new MapCity03(Map_city_03, Map_city_03_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
+                new MapLab01(Map_lab_01, Map_lab_01_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
+                new MapLab02(Map_lab_02, Map_lab_02_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
+                new MapLab03(Map_lab_03, Map_lab_03_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
+                new MapBoss01(Map_Boss_01, Map_lab_03_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
+            };
 
 
             // Set up a reference to the shooting enemy's OnShoot event.
@@ -171,6 +176,7 @@ namespace Ghost_blade
             _player.AttackingTexture.Load(Content, "GB_Slash2-Sheet", 4, 1, 20);
             _player.AttackingTexture2.Load(Content, "GB_Slash4-Sheet", 4, 1, 20);
             _player.Hand.Load(Content, "A_job", 1, 1, 1);
+            DoorOpenTexture.Load(Content, "HP-Sheet", 6, 1, 8);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             uiFont = Content.Load<SpriteFont>("UI_Font");
@@ -367,49 +373,62 @@ namespace Ghost_blade
 
             if (_player.IsAlive)
             {
-                _player.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
-                if (_player.drect.Intersects(currentRoom.Door) && currentRoom.NextRooms.Count > 0 && currentRoomIndex != 0)
+                if (currentRoom.Enemies.All(e => !e.IsActive))
                 {
-                    stageStep++;
-                    switch (stageStep)
-                    {
-                        case 1:
-                            currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
-                            break;
-                        case 2:
-                            currentRoomIndex = random.Next(4, 7);
-                            break;
-                        case 3:
-                            currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)]; // 4,5,6
-                            break;
-                        case 4:
-                            currentRoomIndex = 7;
-                            break;
-                        default:
-                            gameState = GameState.MainMenu;
-                            currentRoomIndex = 0;
-                            stageStep = 0;
-                            _player.Reset();
-                            break;
-                    }
-                    rooms[currentRoomIndex].ResetRoom();
-                    _playerBullets.Clear();
-                    _enemyBullets.Clear();
-                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                    Door_Open = true;
                 }
-                else if (_player.drect.Intersects(currentRoom.Door) && currentRoomIndex == 0)
+
+                _player.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
+
+                if (Door_Open)
                 {
-                    gameState = GameState.MainMenu;
-                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
-                    _player.Reset();
-                    currentRoomIndex = random.Next(1, 4); ;
-                    stageStep = 0;
-                    currentRoom.ResetRoom();
-                    _enemyBullets.Clear();
-                    _playerBullets.Clear();
-                    mainMenu.StartGame = false;
-                    mainMenu.ExitGame = false;
-                    mainMenu.tutorial = false;
+                    if (_player.drect.Intersects(currentRoom.Door) && currentRoom.NextRooms.Count > 0 && currentRoomIndex != 0)
+                    {
+                        stageStep++;
+                        switch (stageStep)
+                        {
+                            case 1:
+                                currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
+                                break;
+                            case 2:
+                                currentRoomIndex = random.Next(4, 7);
+                                break;
+                            case 3:
+                                currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)]; // 4,5,6
+                                break;
+                            case 4:
+                                currentRoomIndex = 7;
+                                break;
+                            default:
+                                gameState = GameState.MainMenu;
+                                currentRoomIndex = 0;
+                                stageStep = 0;
+                                _player.Reset();
+                                break;
+                        }
+                        rooms[currentRoomIndex].ResetRoom();
+                        _playerBullets.Clear();
+                        _enemyBullets.Clear();
+                        _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                        Door_Open = false;
+                        DoorOpenTexture.Reset();
+                    }
+                    else if (_player.drect.Intersects(currentRoom.Door) && currentRoomIndex == 0)
+                    {
+                        gameState = GameState.MainMenu;
+                        _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                        _player.Reset();
+                        currentRoomIndex = random.Next(1, 4); ;
+                        stageStep = 0;
+                        currentRoom.ResetRoom();
+                        Door_Open = false;
+                        DoorOpenTexture.Reset();
+                        _enemyBullets.Clear();
+                        _playerBullets.Clear();
+                        mainMenu.StartGame = false;
+                        mainMenu.ExitGame = false;
+                        mainMenu.tutorial = false;
+                    }
                 }
             }
             if (currentRoomIndex == 7 && boss.Health > 0)
@@ -476,8 +495,17 @@ namespace Ghost_blade
 
                 _spriteBatch.Begin(transformMatrix: transform);
 
-                // Draw the current room
                 rooms[currentRoomIndex].Draw(_spriteBatch);
+
+                if (Door_Open)
+                {
+                    if (!DoorOpenTexture.IsEnd)
+                    { DoorOpenTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds); }
+                    else if (DoorOpenTexture.IsEnd)
+                    {
+                        DoorOpenTexture.DrawFrame(_spriteBatch, 5, rooms[currentRoomIndex].DoorPosition);
+                    }
+                }
                 // Draw the player
                 _player.Draw(_spriteBatch, camera.position);
 

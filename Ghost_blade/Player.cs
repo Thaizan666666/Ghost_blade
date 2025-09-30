@@ -161,6 +161,15 @@ namespace Ghost_blade
             AttackingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTexture2.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             Hand.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            //เติมเลือด
+            if(kState.IsKeyDown(Keys.H) && !previousKState.IsKeyDown(Keys.H))
+            {
+                Health += 2;
+            }
+            else if(Health > 5)
+            {
+                Health = 5;
+            }
 
             HandleDash(kState, deltaTime);
             HandleWeaponSwitching(kState);

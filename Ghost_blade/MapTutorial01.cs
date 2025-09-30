@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,10 +11,11 @@ namespace Ghost_blade
 {
     public class MapTutorial01 : Room
     {
-        public MapTutorial01(Texture2D bg, Texture2D layer2, Texture2D door, Texture2D enemyTexture, Texture2D bulletTexture)
-            : base(bg, layer2, door, new Rectangle(90 * 48, 71 * 48, 6 * 48, 1 * 48), new Vector2(22 * 48, 24 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2))
+        public MapTutorial01(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture, Texture2D enemyTexture, Texture2D bulletTexture)
+            : base(bg, layer2, DoorOpenTexture, new Rectangle(90 * 48, 71 * 48, 6 * 48, 1 * 48), new Vector2(90 * 48, 68 * 48),
+                  new Vector2(22 * 48, 24 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2))
         {
-            NextRooms = new List<int> {};
+            NextRooms = new List<int> { };
             int tileSize = 48;
 
             void AddObstacle(float xTile, float yTile, float widthTile, float heightTile)

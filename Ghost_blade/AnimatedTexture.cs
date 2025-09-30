@@ -204,7 +204,7 @@ namespace _321_Lab05_3
 
 
             batch.Draw(myTexture, screenPos, sourcerect, Color.White,
-                rotation, origin, Scale, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None,Depth);
+                rotation, origin, Scale, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Depth);
         }
 
         public bool IsPaused
@@ -219,6 +219,7 @@ namespace _321_Lab05_3
         {
             Frame = 0;
             TotalElapsed = 0f;
+            Ended = false;
         }
         public void Stop()
         {
