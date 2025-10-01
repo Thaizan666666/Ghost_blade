@@ -71,7 +71,7 @@ namespace Ghost_blade
             Hp_bar = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
             cursorTexture = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             cursorReloadTexture = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
-            DoorOpenTexture = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
+            DoorOpenTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
         
         protected override void Initialize()
@@ -80,7 +80,7 @@ namespace Ghost_blade
             _enemyBullets = new List<EnemyBullet>();
             rooms = new List<Room>();
             random = new Random();
-            currentRoomIndex = 1;//random.Next(1,4);
+            currentRoomIndex = 4;//random.Next(1,4);
             stageStep = 0;
             base.Initialize();
         }
@@ -175,8 +175,10 @@ namespace Ghost_blade
             _player.RunningGunTexture.Load(Content, "GB_Run-Sheet", 8, 1, 8);
             _player.AttackingTexture.Load(Content, "GB_Slash2-Sheet", 4, 1, 20);
             _player.AttackingTexture2.Load(Content, "GB_Slash4-Sheet", 4, 1, 20);
+            _player.AttackingTextureUp.Load(Content,"GB_SlashUp-Sheet",4,1, 20);
+            _player.AttackingTextureDown.Load(Content, "GB_SlashDown-Sheet", 4, 1, 20);
             _player.Hand.Load(Content, "A_job", 1, 1, 1);
-            DoorOpenTexture.Load(Content, "HP-Sheet", 6, 1, 8);
+            DoorOpenTexture.Load(Content, "Door_Sheet", 5, 1, 10);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             uiFont = Content.Load<SpriteFont>("UI_Font");
@@ -205,6 +207,8 @@ namespace Ghost_blade
                     currentRoomIndex = random.Next(1, 4); ;
                     stageStep = 0;
                     currentRoom.ResetRoom();
+                    Door_Open = false;
+                    DoorOpenTexture.Reset();
                     _enemyBullets.Clear();
                     _playerBullets.Clear();
                     mainMenu.StartGame = false;
@@ -252,6 +256,8 @@ namespace Ghost_blade
                     currentRoomIndex = random.Next(1, 4); ;
                     stageStep = 0;
                     currentRoom.ResetRoom();
+                    Door_Open = false;
+                    DoorOpenTexture.Reset();
                     _enemyBullets.Clear();
                     _playerBullets.Clear();
                     gameOver.StartGame = false;
@@ -503,7 +509,7 @@ namespace Ghost_blade
                     { DoorOpenTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds); }
                     else if (DoorOpenTexture.IsEnd)
                     {
-                        DoorOpenTexture.DrawFrame(_spriteBatch, 5, rooms[currentRoomIndex].DoorPosition);
+                        DoorOpenTexture.DrawFrame(_spriteBatch, 4, rooms[currentRoomIndex].DoorPosition);
                     }
                 }
                 // Draw the player

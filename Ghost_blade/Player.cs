@@ -91,6 +91,8 @@ namespace Ghost_blade
         public AnimatedTexture RunningGunTexture;
         public AnimatedTexture AttackingTexture;
         public AnimatedTexture AttackingTexture2;
+        public AnimatedTexture AttackingTextureUp;
+        public AnimatedTexture AttackingTextureDown;
         public AnimatedTexture GunDashingTexture;
         public AnimatedTexture BladeDashingTexture;
         public AnimatedTexture Hand;
@@ -144,6 +146,8 @@ namespace Ghost_blade
             BladeDashingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTexture2 = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            AttackingTextureUp = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            AttackingTextureDown = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             Hand = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
 
@@ -160,6 +164,8 @@ namespace Ghost_blade
             BladeDashingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTexture2.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            AttackingTextureUp.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            AttackingTextureDown.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             Hand.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             //เติมเลือด
             if(kState.IsKeyDown(Keys.H) && !previousKState.IsKeyDown(Keys.H))
@@ -596,7 +602,10 @@ namespace Ghost_blade
                     {
                         if (AttackDiraction == 1) // ล่าง
                         {
-
+                            if (flip == false)
+                            { AttackingTextureDown.DrawFrame(spriteBatch, position - new Vector2(64, 64), flip); }
+                            else
+                            { AttackingTextureDown.DrawFrame(spriteBatch, position - new Vector2(64, 64), flip); }
                         }
                         else if (AttackDiraction == 2) // ซ้าย
                         {
@@ -612,7 +621,10 @@ namespace Ghost_blade
                         }
                         else if (AttackDiraction == 3) // บน
                         {
-
+                            if (flip == false)
+                            { AttackingTextureUp.DrawFrame(spriteBatch, position - new Vector2(64, 64), flip); }
+                            else
+                            { AttackingTextureUp.DrawFrame(spriteBatch, position - new Vector2(64, 64), flip); }
                         }
                         else if (AttackDiraction == 4) // ขวา
                         {

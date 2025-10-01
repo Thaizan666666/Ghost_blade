@@ -145,6 +145,18 @@
 /processorParam:TextureFormat=Color
 /build:crosshairs-Sheet.png
 
+#begin Door_Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Door_Sheet.png
+
 #begin energy-Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -289,6 +301,30 @@
 /processorParam:TextureFormat=Color
 /build:GB_Slash4-Sheet.png
 
+#begin GB_SlashDown-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GB_SlashDown-Sheet.png
+
+#begin GB_SlashUp-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GB_SlashUp-Sheet.png
+
 #begin HP-Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -325,7 +361,7 @@
 /processorParam:TextureFormat=Color
 /build:Main_title-Sheet.png
 
-#begin Map_Boss_01.png
+#begin Map_boss_01.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -335,7 +371,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Map_Boss_01.png
+/build:Map_boss_01.png
 
 #begin Map_City_01_void.png
 /importer:TextureImporter

@@ -15,6 +15,7 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/A_job.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/crosshairs_reload-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Door_Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/energy-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/energy.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/firefoxBall.png</File>
@@ -27,10 +28,12 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Run-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Slash2-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Slash4-Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_SlashDown-Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_SlashUp-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/HP-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Main_title-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_Boss_01.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_boss_01.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_City_01_void.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_City_01.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_City_02_void.png</File>
@@ -57,6 +60,9 @@
     <File>Map_lab_02_void.png</File>
     <File>Map_lab_03_void.png</File>
     <File>Map_tutorial_void.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
