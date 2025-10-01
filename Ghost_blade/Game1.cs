@@ -291,94 +291,6 @@ namespace Ghost_blade
             if (_player.IsAlive)
             {
                 _player.Update(gameTime, camera.position);
-            }
-            else { return; }
-
-            MouseState mouseState = Mouse.GetState();
-            if (mouseState.LeftButton == ButtonState.Pressed)
-            {
-                Vector2 mouseWorld = new Vector2(mouseState.X, mouseState.Y) - camera.position;
-                Bullet newBullet = _player.Shoot(mouseWorld);
-                if (newBullet != null) _playerBullets.Add(newBullet);
-            }
-
-            // Update all enemies in the current room
-            foreach (var enemy in currentRoom.Enemies)
-            {
-                if (enemy.IsActive)
-                {
-                    enemy.Update(_player, currentRoom.Obstacles,gameTime);
-                    enemy.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
-                }
-            }
-
-            // Check for player sword collisions with all enemies
-            if (_player.meleeWeapon.AttackHitbox != Rectangle.Empty)
-            {
-                foreach (var enemy in currentRoom.Enemies)
-                {
-                    if (enemy.IsActive && _player.meleeWeapon.AttackHitbox.Intersects(enemy.boundingBox))
-                    {
-                        if (_player._isSlash)
-                        {
-                            enemy.TakeDamage(70, _player.position);
-                            _player._isSlash = false;
-                            break; // Exit the loop after hitting the first enemy
-                        }
-                    }
-                }
-                if (boss.IsbossAticve && _player.meleeWeapon.AttackHitbox.Intersects(boss.HitboxgetDamage))
-                {
-                    if (_player._isSlash)
-                    {
-                        boss.TakeDamage(70);
-                        _player._isSlash = false;
-                    }
-                }
-            }
-
-            // Update and check for player bullet collisions with all enemies
-            for (int i = _playerBullets.Count - 1; i >= 0; i--)
-            {
-                Bullet bullet = _playerBullets[i];
-                bullet.Update(gameTime, currentRoom.Obstacles);
-
-                foreach (var enemy in currentRoom.Enemies)
-                {
-                    if (enemy.IsActive && bullet.boundingBox.Intersects(enemy.boundingBox))
-                    {
-                        enemy.TakeDamage(40,_player.position);
-                        bullet.IsActive = false;
-                        break; // Exit the inner loop after hitting an enemy
-                    }
-                }
-                if(boss.IsbossAticve && bullet.boundingBox.Intersects(boss.HitboxgetDamage))
-                {
-                    boss.TakeDamage(40);
-                    bullet.IsActive = false;
-                }
-
-                // Remove inactive bullets
-                if (!bullet.IsActive)
-                {
-                    _playerBullets.RemoveAt(i);
-                }
-            }
-
-            // Enemy bullets update and collision checks
-            for (int i = _enemyBullets.Count - 1; i >= 0; i--)
-            {
-                EnemyBullet bullet = _enemyBullets[i];
-                bullet.Update(gameTime, currentRoom.Obstacles, _player);
-
-                if (!bullet.IsActive)
-                {
-                    _enemyBullets.RemoveAt(i);
-                }
-            }
-
-            if (_player.IsAlive)
-            {
                 if (currentRoom.Enemies.All(e => !e.IsActive))
                 {
                     Door_Open = true;
@@ -437,6 +349,91 @@ namespace Ghost_blade
                     }
                 }
             }
+            else { return; }
+
+            MouseState mouseState = Mouse.GetState();
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                Vector2 mouseWorld = new Vector2(mouseState.X, mouseState.Y) - camera.position;
+                Bullet newBullet = _player.Shoot(mouseWorld);
+                if (newBullet != null) _playerBullets.Add(newBullet);
+            }
+
+            // Update all enemies in the current room
+            foreach (var enemy in currentRoom.Enemies)
+            {
+                if (enemy.IsActive)
+                {
+                    enemy.Update(_player, currentRoom.Obstacles,gameTime);
+                    enemy.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
+                }
+            }
+
+            // Check for player sword collisions with all enemies
+            if (_player.meleeWeapon.AttackHitbox != Rectangle.Empty)
+            {
+                foreach (var enemy in currentRoom.Enemies)
+                {
+                    if (enemy.IsActive && _player.meleeWeapon.AttackHitbox.Intersects(enemy.boundingBox))
+                    {
+                        if (_player._isSlash)
+                        {
+                            enemy.TakeDamage(70, _player.position,true);
+                            _player._isSlash = false;
+                            break; // Exit the loop after hitting the first enemy
+                        }
+                    }
+                }
+                if (boss.IsbossAticve && _player.meleeWeapon.AttackHitbox.Intersects(boss.HitboxgetDamage))
+                {
+                    if (_player._isSlash)
+                    {
+                        boss.TakeDamage(70);
+                        _player._isSlash = false;
+                    }
+                }
+            }
+
+            // Update and check for player bullet collisions with all enemies
+            for (int i = _playerBullets.Count - 1; i >= 0; i--)
+            {
+                Bullet bullet = _playerBullets[i];
+                bullet.Update(gameTime, currentRoom.Obstacles);
+
+                foreach (var enemy in currentRoom.Enemies)
+                {
+                    if (enemy.IsActive && bullet.boundingBox.Intersects(enemy.boundingBox))
+                    {
+                        enemy.TakeDamage(40,_player.position,false);
+                        bullet.IsActive = false;
+                        break; // Exit the inner loop after hitting an enemy
+                    }
+                }
+                if(boss.IsbossAticve && bullet.boundingBox.Intersects(boss.HitboxgetDamage))
+                {
+                    boss.TakeDamage(40);
+                    bullet.IsActive = false;
+                }
+
+                // Remove inactive bullets
+                if (!bullet.IsActive)
+                {
+                    _playerBullets.RemoveAt(i);
+                }
+            }
+
+            // Enemy bullets update and collision checks
+            for (int i = _enemyBullets.Count - 1; i >= 0; i--)
+            {
+                EnemyBullet bullet = _enemyBullets[i];
+                bullet.Update(gameTime, currentRoom.Obstacles, _player);
+
+                if (!bullet.IsActive)
+                {
+                    _enemyBullets.RemoveAt(i);
+                }
+            }
+
             if (currentRoomIndex == 7 && boss.Health > 0)
             {
                 boss.IsbossAticve = true;
@@ -473,6 +470,16 @@ namespace Ghost_blade
                 {
                     enemy.Update(_player, currentRoom.Obstacles, gameTime);
                     enemy.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
+                }
+                if (_player.drect.Intersects(enemy.bulletammo) && enemy._isbulletammo == true )
+                {
+                    _player.maxAmmo += 10;
+                    enemy.bulletammo = new Rectangle(0, 0, 0, 0);
+                }
+                else if (_player.drect.Intersects(enemy.HpDrop) && enemy._isHpDrop == true)
+                {
+                    _player.Health += 1;
+                    enemy.HpDrop = new Rectangle(0, 0, 0, 0);
                 }
             }
 
@@ -540,10 +547,18 @@ namespace Ghost_blade
                 // Draw hitboxes
                 if (_isOpenhitbox)
                 {
-                    //(_spriteBatch, _player.drect, Color.Red, 1);
+                    //DrawRectangle(_spriteBatch, _player.drect, Color.Black, 1);
                     DrawRectangle(_spriteBatch, boss.HitboxgetDamage, Color.Yellow, 1);
                     DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
                     DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
+                    foreach (var room in rooms)
+                    {
+                        foreach (var enemy in room.Enemies)
+                        {
+                            DrawRectangle(_spriteBatch, enemy.bulletammo, Color.Yellow, 1);
+                            DrawRectangle(_spriteBatch, enemy.HpDrop, Color.Green, 1);
+                        }
+                    }
                 }
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {
@@ -599,7 +614,7 @@ namespace Ghost_blade
                             break;
                         }
                 }
-                string ammoText = $"{_player.currentAmmo}/10";
+                string ammoText = $"{_player.currentAmmo}/{_player.maxAmmo}";
                 _player.change_Weapon.DrawFrame(_spriteBatch, _player.currentWeaponFrame, new Vector2(1562, 885));
                 _spriteBatch.DrawString(uiFont, ammoText, new Vector2(1770, 840), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
                 _spriteBatch.End();

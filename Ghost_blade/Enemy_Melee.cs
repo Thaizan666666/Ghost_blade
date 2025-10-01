@@ -31,7 +31,7 @@ namespace Ghost_blade
             // Priority 1: Check for knockback first
             if (knockbackTimer > 0)
             {
-                Position += knockbackDirection * knockbackSpeed * deltaTime;
+                Position += knockbackDirection * knockbackSpeed * deltaTime * 5f;
                 knockbackTimer -= deltaTime;
                 isAttacking = false; // Cancel attack if knocked back
             }
@@ -90,6 +90,11 @@ namespace Ghost_blade
 
                 Vector2 newPosition = Position + desiredMovement * Speed;
                 Position = newPosition;
+                if (Health <= 0)
+                {
+                    this.Die();
+                    IsActive = false;
+                }
             }
         }
 
