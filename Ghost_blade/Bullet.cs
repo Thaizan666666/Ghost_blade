@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 public class Bullet
 {
-    private Texture2D texture;
-    private Vector2 position;
-    private Vector2 velocity;
-    private float rotation;
-    private float speed;
-    private float lifeTime;
-    private float currentLifeTime;
-    private readonly int hitboxSize = 10;
+    protected Texture2D texture;
+    protected Vector2 position;
+    protected Vector2 velocity;
+    protected float rotation;
+    protected float speed;
+    protected float lifeTime;
+    protected float currentLifeTime;
+    protected readonly int hitboxSize = 10;
 
     public bool IsActive { get; set; }
 

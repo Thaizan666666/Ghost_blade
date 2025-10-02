@@ -8,6 +8,7 @@ namespace Ghost_blade
     public class BossBulletAttacks : BossAttack
     {
         private List<EnemyBullet> bullets;
+        private List<Bullet> _parriedBullets;
         private bool isFiring = false;
 
         private const int BURST_COUNT = 50; // Number of bullets to fire in one burst
@@ -22,6 +23,7 @@ namespace Ghost_blade
         public BossBulletAttacks(Boss owner, Texture2D bulletTexture) : base(owner, bulletTexture)
         {
             bullets = new List<EnemyBullet>();
+            _parriedBullets = new List<Bullet>();
         }
 
         public override void Start(Player player)
@@ -61,14 +63,42 @@ namespace Ghost_blade
             // Update all active bullets and check for collision
             for (int i = bullets.Count - 1; i >= 0; i--)
             {
-                // Pass the obstacles list to the bullet's update method
-                bullets[i].Update(gameTime, Obstacles, player);
+                EnemyBullet currentEnemyBullet = bullets[i];
 
-                if (!bullets[i].IsActive)
+                // **เรียกใช้ Update และรับค่ากระสุน Parry คืนมา**
+                // (ต้องแน่ใจว่าได้แก้ไข EnemyBullet.Update เป็น public Bullet Update(...) แล้ว)
+                Bullet newParriedBullet = currentEnemyBullet.Update(gameTime, Obstacles, player);
+
+                // **ถ้ามีการ Parry เกิดขึ้น**
+                if (newParriedBullet != null)
+                {
+                    _parriedBullets.Add(newParriedBullet); // เพิ่มกระสุนใหม่เข้า List Parry
+                }
+
+                if (!currentEnemyBullet.IsActive)
                 {
                     bullets.RemoveAt(i);
                 }
-            }
+                for (int j = _parriedBullets.Count - 1; j >= 0; j--)
+                {
+                    Bullet parriedBullet = _parriedBullets[j];
+
+                    // อัปเดตการเคลื่อนที่และชนกับกำแพง (เรียก Update ของคลาส Bullet Base)
+                    parriedBullet.Update(gameTime, Obstacles);
+
+                    // *[TODO: เพิ่มโค้ดตรวจสอบการชนกับ Boss ที่นี่]*
+                    // if (parriedBullet.boundingBox.Intersects(boss.Hitbox)) 
+                    // { 
+                    //    boss.TakeDamage(1); 
+                    //    parriedBullet.IsActive = false; 
+                    // }
+
+                    if (!parriedBullet.IsActive)
+                    {
+                        _parriedBullets.RemoveAt(j);
+                    }
+                }
+        }
 
             // End the attack when all bullets are fired or the attack duration is over
             if (bulletsShotInBurst >= BURST_COUNT && bullets.Count == 0)
@@ -80,8 +110,14 @@ namespace Ghost_blade
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // Draw all active bullets
+            // Draw all active enemy bullets
             foreach (var bullet in bullets)
+            {
+                bullet.Draw(spriteBatch);
+            }
+
+            // **[เพิ่ม] วาดกระสุนที่ถูก Parry**
+            foreach (var bullet in _parriedBullets)
             {
                 bullet.Draw(spriteBatch);
             }

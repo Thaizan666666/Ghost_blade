@@ -9,6 +9,8 @@ public class Enemy
 {
     public Vector2 Position;
     public Texture2D Texture;
+    private Texture2D AmmoDrop;
+    private Texture2D DropHp;
     public float Speed;
     protected Vector2 direction;
     protected float detectionRadius;

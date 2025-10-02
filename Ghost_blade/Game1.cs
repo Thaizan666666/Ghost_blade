@@ -34,6 +34,8 @@ namespace Ghost_blade
         private Boss boss;
         private Texture2D _pixel;
         private Texture2D EnemyTexture;
+        private Texture2D AmmoDrop;
+        private Texture2D DropHp;
 
         private GameState gameState = GameState.MainMenu;
         private MainMenuScreen mainMenu;
@@ -426,11 +428,33 @@ namespace Ghost_blade
             for (int i = _enemyBullets.Count - 1; i >= 0; i--)
             {
                 EnemyBullet bullet = _enemyBullets[i];
-                bullet.Update(gameTime, currentRoom.Obstacles, _player);
+                Bullet newParriedBullet = bullet.Update(gameTime, currentRoom.Obstacles, _player);
+
+                // 2. ตรวจสอบว่ามีกระสุน Parry ถูกสร้างขึ้นมาหรือไม่
+                if (newParriedBullet != null)
+                {
+                    // 3. เพิ่มกระสุน Parry เข้าไปใน List ของกระสุนฝ่ายผู้เล่น
+                    _playerBullets.Add(newParriedBullet);
+                }
 
                 if (!bullet.IsActive)
                 {
                     _enemyBullets.RemoveAt(i);
+                }
+            }
+            for (int i = _playerBullets.Count - 1; i >= 0; i--)
+            {
+                Bullet parriedBullet = _playerBullets[i];
+
+                // (คุณอาจต้องสร้าง Method Update สำหรับ Bullet ธรรมดา ที่ไม่รับ Player)
+                // หรือถ้า Bullet มี Update(GameTime, List<Rectangle>) ก็เรียกใช้ตัวนั้นได้เลย
+                parriedBullet.Update(gameTime, currentRoom.Obstacles);
+
+                // *คุณอาจต้องเพิ่มโค้ดตรวจการชนกับ Boss ที่นี่ด้วย*
+
+                if (!parriedBullet.IsActive)
+                {
+                    _playerBullets.RemoveAt(i);
                 }
             }
 
@@ -550,7 +574,7 @@ namespace Ghost_blade
                     //DrawRectangle(_spriteBatch, _player.drect, Color.Black, 1);
                     DrawRectangle(_spriteBatch, boss.HitboxgetDamage, Color.Yellow, 1);
                     DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
-                    DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Red, 1);
+                    DrawRectangle(_spriteBatch, _player.meleeWeapon.ParryHitbox, Color.Red, 1);
                     foreach (var room in rooms)
                     {
                         foreach (var enemy in room.Enemies)
@@ -661,7 +685,6 @@ namespace Ghost_blade
         {
             // Draw the filled rectangle
             spriteBatch.Draw(_pixel, rectangle, color);
-
         }
     }
 }
