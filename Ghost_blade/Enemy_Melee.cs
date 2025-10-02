@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
-
+using _321_Lab05_3;
 namespace Ghost_blade
 {
     public class Enemy_Melee : Enemy
@@ -13,23 +13,36 @@ namespace Ghost_blade
 
         private float attackAnimationTimer = 0f;
         private const float AttackAnimationDuration = 0.2f;
-
+        private Vector2 lastPosition = Vector2.Zero;
+        private float distanceToPlayer;
         // New state variable
         private bool isAttacking = false;
 
-        public Enemy_Melee(Texture2D texture, Vector2 startPosition, float speed, float detectionRadius)
+        private Vector2 TexturePosition;
+        private bool flip = false;
+        private AnimatedTexture Enemymelee_Idle;
+        private AnimatedTexture Enemymelee_Walk;
+        private AnimatedTexture Enemymelee_Attack;
+
+        public Enemy_Melee(AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack,
+            Texture2D texture, Vector2 startPosition, float speed, float detectionRadius)
           : base(texture, startPosition, speed, detectionRadius)
         {
+            this.Enemymelee_Idle = Enemymelee_Idle;
+            this.Enemymelee_Walk = Enemymelee_Walk;
+            this.Enemymelee_Attack = Enemymelee_Attack;
         }
 
         public override void Update(Player player, List<Rectangle> obstacles, GameTime gameTime)
         {
+            
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+            Enemymelee_Idle.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            Enemymelee_Walk.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            Enemymelee_Attack.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             Vector2 desiredMovement = Vector2.Zero;
 
-            // Priority 1: Check for knockback first
-            if (knockbackTimer > 0)
+            if (knockbackTimer > 0)
             {
                 Position += knockbackDirection * knockbackSpeed * deltaTime * 5f;
                 knockbackTimer -= deltaTime;
@@ -54,7 +67,7 @@ namespace Ghost_blade
             // Priority 3: Normal behavior (chasing/attacking)
             else
             {
-                float distanceToPlayer = Vector2.Distance(Position, player.position);
+                distanceToPlayer = Vector2.Distance(Position, player.position);
 
                 // Check if the enemy can see the player
                 if (CanSeePlayer(player, obstacles))
@@ -95,6 +108,9 @@ namespace Ghost_blade
                     this.Die();
                     IsActive = false;
                 }
+
+                if (desiredMovement.X < 0) { flip = true; }
+                else if (desiredMovement.X > 0) { flip = false; }
             }
         }
 
@@ -130,6 +146,30 @@ namespace Ghost_blade
                     player.TakeDamage(this.Damage);
                     Console.WriteLine("Melee Enemy hit the player!");
                 }
+            }
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            TexturePosition = new Vector2 (Position.X - 32,Position.Y - 32);
+
+            if (IsActive)
+            {
+                if (knockbackTimer > 0)
+                {
+                    Enemymelee_Idle.DrawFrame(spriteBatch, TexturePosition, flip);
+                }
+                else if (distanceToPlayer <= 70)
+                {
+                    Enemymelee_Attack.DrawFrame(spriteBatch, TexturePosition, flip);
+                }
+                else
+                {
+                    if (Vector2.Distance(TexturePosition, lastPosition) > 0.1f)
+                        Enemymelee_Walk.DrawFrame(spriteBatch, TexturePosition, flip);
+                    else
+                        Enemymelee_Idle.DrawFrame(spriteBatch, TexturePosition  , flip);
+                }
+                lastPosition = TexturePosition;
             }
         }
     }

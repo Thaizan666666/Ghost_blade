@@ -12,9 +12,10 @@ namespace Ghost_blade
 {
     public class MapBoss01 : Room
     {
-        public MapBoss01(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture, Texture2D enemyTexture, Texture2D bulletTexture)
-            : base(bg, layer2, DoorOpenTexture, new Rectangle(36 * 48, 46 * 48, 6 * 48, 2 * 48), new Vector2(72 * 48, 17 * 48),
-                  new Vector2(40 * 48, 40 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2)) //
+        public MapBoss01(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture,
+            AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack, Texture2D enemyTexture, Texture2D bulletTexture)
+            : base(bg, layer2, DoorOpenTexture, new Rectangle(36 * 48, 46 * 48, 6 * 48, 2 * 48), new Vector2(0 * 48, 0 * 48),
+                  new Vector2(52 * 48, 26 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2)) //
         {
             NextRooms = new List<int> { 4, 5 };
             int tileSize = 48;
@@ -28,7 +29,12 @@ namespace Ghost_blade
 
                 Obstacles.Add(new Rectangle((int)MathF.Round(x), (int)MathF.Round(y), (int)MathF.Round(w), (int)MathF.Round(h)));
             }
-
+            AddObstacle(35, 18, 6, 2);
+            AddObstacle(41, 16, 25, 2);
+            AddObstacle(63, 18, 6, 2);
+            AddObstacle(34, 19, 1, 18);
+            AddObstacle(34, 34, 40, 1);
+            AddObstacle(69, 19, 1, 18);
         }
     }
 }

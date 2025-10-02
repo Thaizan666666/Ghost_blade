@@ -1,4 +1,5 @@
-﻿using Ghost_blade;
+﻿using _321_Lab05_3;
+using Ghost_blade;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,6 +11,9 @@ public class SpawnAttack : BossAttack
     private Texture2D enemyTexture1;
     private Texture2D enemyTexture2;
     private Texture2D bulletTexture;
+    private AnimatedTexture Enemymelee_Idle;
+    private AnimatedTexture Enemymelee_Walk;
+    private AnimatedTexture Enemymelee_Attack;
     private Random random;
 
     private List<Enemy> spawnedEnemies;
@@ -39,12 +43,16 @@ public class SpawnAttack : BossAttack
     private List<Enemy> newlySpawnedEnemies;
     private Texture2D pixelTexture; // Keep a reference to the pixelTexture for drawing the warning
 
-    public SpawnAttack(Boss owner, Texture2D pixelTexture, Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture)
+    public SpawnAttack(Boss owner, Texture2D pixelTexture, AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack,
+        Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture)
         : base(owner, pixelTexture)
     {
         this.pixelTexture = pixelTexture; // Store the pixel texture
         this.enemyTexture1 = enemyTex1;
         this.enemyTexture2 = enemyTex2;
+        this.Enemymelee_Idle = Enemymelee_Idle;
+        this.Enemymelee_Attack = Enemymelee_Attack;
+        this.Enemymelee_Walk = Enemymelee_Walk;
         this.bulletTexture = bulletTexture;
         this.random = new Random();
         this.spawnedEnemies = new List<Enemy>();
@@ -61,7 +69,7 @@ public class SpawnAttack : BossAttack
         spawnedEnemies.Clear();
         newlySpawnedEnemies.Clear();
         // Assuming position is the general area for spawning
-        position = boss.Position + new Vector2(0, 1055);
+        position = boss.Position + new Vector2(0, boss.Boss_height);
         // Start the first spawn immediately by preparing the pending spawn
         PrepareNextSpawn();
     }
@@ -96,7 +104,7 @@ public class SpawnAttack : BossAttack
 
         if (spawnData.EnemyType == 0)
         {
-            newEnemy = new Enemy_Melee(enemyTexture1, spawnPosition, 1.5f, 1000f);
+            newEnemy = new Enemy_Melee(Enemymelee_Idle,Enemymelee_Walk,Enemymelee_Attack, enemyTexture1, spawnPosition, 1.5f, 1000f);
         }
         else
         {

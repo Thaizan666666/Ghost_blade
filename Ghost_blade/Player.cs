@@ -96,7 +96,9 @@ namespace Ghost_blade
         public AnimatedTexture AttackingTextureDown;
         public AnimatedTexture GunDashingTexture;
         public AnimatedTexture BladeDashingTexture;
-        public AnimatedTexture Hand;
+        public Texture2D Hand;
+        public float HandRotation;
+        public Vector2 HandOrigin;
 
         public Rectangle drect
         {
@@ -149,7 +151,6 @@ namespace Ghost_blade
             AttackingTexture2 = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTextureUp = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTextureDown = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
-            Hand = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
@@ -167,7 +168,6 @@ namespace Ghost_blade
             AttackingTexture2.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTextureUp.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTextureDown.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-            Hand.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             //เติมเลือด
             if(kState.IsKeyDown(Keys.H) && !previousKState.IsKeyDown(Keys.H))
             {
@@ -573,14 +573,21 @@ namespace Ghost_blade
             {
                 Rectangle sourceRect = new Rectangle(currentFrame * frameWidth, 0, frameWidth, frameHeight);
                 Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
-                
-                if(!isSwordEquipped)
+                MouseState mouseState = Mouse.GetState();
+                Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
+                Vector2 screenCenter = new Vector2(1920 / 2f, 1080 / 2f);
+                float HandRotation = (float)Math.Atan2(mousePos.Y - screenCenter.Y, mousePos.X - screenCenter.X);
+                if (!isSwordEquipped)
                 {
-                    MouseState mouseState = Mouse.GetState();
-                    Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
-                    Vector2 screenCenter = new Vector2(1920 / 2f, 1080 / 2f);
-                    float Handrotation = (float)Math.Atan2(mousePos.Y - screenCenter.Y, mousePos.X - screenCenter.X);
-                    Hand.DrawFrame(spriteBatch, 1, position - new Vector2(12,12), Handrotation, flip);
+                    if (mousePos.X < screenCenter.X)
+                    {
+                        spriteBatch.Draw(Hand, new Vector2(position.X - 32, position.Y - 14), null, Color.White, HandRotation, HandOrigin, 2f, SpriteEffects.FlipVertically, 0f);
+                    }
+                    else 
+                    { 
+                        spriteBatch.Draw(Hand, new Vector2(position.X - 15, position.Y - 14), null, Color.White, HandRotation, HandOrigin, 2f, SpriteEffects.None, 0f);
+                    }
+
                 }
                 if (currentState == PlayerState.Idle)
                 {
@@ -644,6 +651,18 @@ namespace Ghost_blade
                             }
                         }
                     }
+                }
+                if (!isSwordEquipped)
+                {
+                    if (mousePos.X < screenCenter.X)
+                    {
+                        spriteBatch.Draw(Hand, new Vector2(position.X - 18, position.Y - 14), null, Color.White, HandRotation, HandOrigin, 2f, SpriteEffects.FlipVertically, 0f);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(Hand, new Vector2(position.X - 32, position.Y - 14), null, Color.White, HandRotation, HandOrigin, 2f, SpriteEffects.None, 0f);
+                    }
+
                 }
             }
         }

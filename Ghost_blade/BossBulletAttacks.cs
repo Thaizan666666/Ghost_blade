@@ -34,7 +34,7 @@ namespace Ghost_blade
             burstTimer = BURST_DELAY;
             attackTimer = ATTACK_DURATION;
             IsFinished = false;
-            position = boss.Position + new Vector2(0, +1055);
+            position = boss.Position + new Vector2(0, +boss.Boss_height);
         }
 
         public override void Update(GameTime gameTime, Player player, List<Rectangle> Obstacles)

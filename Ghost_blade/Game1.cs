@@ -46,9 +46,17 @@ namespace Ghost_blade
         private AnimatedTexture cursorTexture;
         private AnimatedTexture cursorReloadTexture;
         private AnimatedTexture DoorOpenTexture;
+        private AnimatedTexture Enemymelee_Idle;
+        private AnimatedTexture Enemymelee_Walk;
+        private AnimatedTexture Enemymelee_Attack;
         private int Enemy_Count;
         SpriteFont uiFont;
-        
+
+        private bool isBossDead = false;
+        private float timer = 0f;
+        private float fadeAlpha = 0f;
+        private Texture2D whiteTexture;
+
 
         public const float SCALE = 2f;
 
@@ -74,15 +82,18 @@ namespace Ghost_blade
             cursorTexture = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             cursorReloadTexture = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             DoorOpenTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            Enemymelee_Idle = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            Enemymelee_Walk = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            Enemymelee_Attack = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
-        
+
         protected override void Initialize()
         {
             _playerBullets = new List<Bullet>();
             _enemyBullets = new List<EnemyBullet>();
             rooms = new List<Room>();
             random = new Random();
-            currentRoomIndex = 4;//random.Next(1,4);
+            currentRoomIndex = 7;//random.Next(1,4);
             stageStep = 0;
             base.Initialize();
         }
@@ -118,7 +129,7 @@ namespace Ghost_blade
             Texture2D Map_lab_01 = Content.Load<Texture2D>("Map_lab_01");
             Texture2D Map_lab_02 = Content.Load<Texture2D>("Map_lab_02");
             Texture2D Map_lab_03 = Content.Load<Texture2D>("Map_lab_03");
-            Texture2D Map_Boss_01 = Content.Load<Texture2D>("Map_Boss_01");
+            Texture2D Map_Boss_01 = Content.Load<Texture2D>("Map_boss");
             Texture2D Map_tutorial_01_void = Content.Load<Texture2D>("Map_tutorial_void");
             Texture2D Map_city_01_void = Content.Load<Texture2D>("Map_City_01_void");
             Texture2D Map_city_02_void = Content.Load<Texture2D>("Map_City_02_void");
@@ -128,19 +139,20 @@ namespace Ghost_blade
             Texture2D Map_lab_03_void = Content.Load<Texture2D>("Map_lab_03_void");
 
             // Pass the pixel texture to the Beholster constructor
-            boss = new Boss(_bossTexture, new Vector2(Map_Boss_01.Width, Map_Boss_01.Height), _pixel, EnemyTexture, EnemyTexture, _bulletTexture);
+            boss = new Boss(_bossTexture, new Vector2(41 * 48, 8 * 48), _pixel, 
+                Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, EnemyTexture, _bulletTexture);
 
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
             {
-                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
-                new MapCity01(Map_city_01, Map_city_01_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
-                new MapCity02(Map_city_02, Map_city_02_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
-                new MapCity03(Map_city_03, Map_city_03_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
-                new MapLab01(Map_lab_01, Map_lab_01_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
-                new MapLab02(Map_lab_02, Map_lab_02_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
-                new MapLab03(Map_lab_03, Map_lab_03_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
-                new MapBoss01(Map_Boss_01, Map_lab_03_void, DoorOpenTexture, EnemyTexture, _bulletTexture),
+                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
+                new MapCity01(Map_city_01, Map_city_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
+                new MapCity02(Map_city_02, Map_city_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
+                new MapCity03(Map_city_03, Map_city_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
+                new MapLab01(Map_lab_01, Map_lab_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
+                new MapLab02(Map_lab_02, Map_lab_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
+                new MapLab03(Map_lab_03, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
+                new MapBoss01(Map_Boss_01, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
             };
 
 
@@ -179,12 +191,18 @@ namespace Ghost_blade
             _player.AttackingTexture2.Load(Content, "GB_Slash4-Sheet", 4, 1, 20);
             _player.AttackingTextureUp.Load(Content,"GB_SlashUp-Sheet",4,1, 20);
             _player.AttackingTextureDown.Load(Content, "GB_SlashDown-Sheet", 4, 1, 20);
-            _player.Hand.Load(Content, "A_job", 1, 1, 1);
             DoorOpenTexture.Load(Content, "Door_Sheet", 5, 1, 10);
+            Enemymelee_Idle.Load(Content, "enemy-Idle-12Frame_Sheet", 12, 1, 8);
+            Enemymelee_Walk.Load(Content, "enemywalk-Sheet", 8, 1, 8);
+            Enemymelee_Attack.Load(Content, "enemyattack-Sheet", 11, 1, 4);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             uiFont = Content.Load<SpriteFont>("UI_Font");
+            _player.Hand = Content.Load<Texture2D>("Gun"); 
+            _player.HandOrigin = new Vector2(0, 7 / 2f);
 
+            whiteTexture = new Texture2D(GraphicsDevice, 1, 1);
+            whiteTexture.SetData(new[] { Color.White });
         }
 
         protected override void Update(GameTime gameTime)
@@ -288,6 +306,31 @@ namespace Ghost_blade
                 return;
             }
 
+            if (boss.Health <= 0 && !isBossDead) 
+            {
+                isBossDead = true;
+                timer = 0f;
+            }
+            if (isBossDead)
+            {
+                timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (timer >= 3f && fadeAlpha < 1f) // ดีเลย์ 3 วิ แล้วเริ่ม fade
+                {
+                    fadeAlpha += (float)gameTime.ElapsedGameTime.TotalSeconds / 3f; // 3 วิ ให้เต็ม
+                    if (fadeAlpha >= 1f)
+                    {
+                        fadeAlpha = 1f;
+                        gameState = GameState.MainMenu;
+
+                        isBossDead = false;
+                        timer = 0f;
+                        fadeAlpha = 0f;
+                    }
+                }
+            }
+
+
             camera.Follow(_player.drect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
 
             if (_player.IsAlive)
@@ -299,7 +342,7 @@ namespace Ghost_blade
                 }
 
                 _player.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
-
+                
                 if (Door_Open)
                 {
                     if (_player.drect.Intersects(currentRoom.Door) && currentRoom.NextRooms.Count > 0 && currentRoomIndex != 0)
@@ -506,7 +549,6 @@ namespace Ghost_blade
                     enemy.HpDrop = new Rectangle(0, 0, 0, 0);
                 }
             }
-
             base.Update(gameTime);
         }
 
@@ -676,6 +718,11 @@ namespace Ghost_blade
                         cursorTexture.DrawFrame(_spriteBatch, 2, cursorPosition - new Vector2(25, 25));
                     }
                 }
+            }
+
+            if (fadeAlpha > 0f)
+            {
+                _spriteBatch.Draw(whiteTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White * fadeAlpha);
             }
             _spriteBatch.End();
             base.Draw(gameTime);
