@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../../../Downloads/GB_Dash-Blade_Sheet.png
+#begin ../../../../Map_lab_01.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,9 +23,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../../../../../Downloads/GB_Dash-Blade_Sheet.png;GB_Dash-Blade_Sheet.png
+/build:../../../../Map_lab_01.png;Map_lab_01.png
 
-#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_01_void.png
+#begin ../../../../Map_lab_02.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -35,79 +35,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_01_void.png;Map_City_01_void.png
-
-#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_02_void.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_02_void.png;Map_City_02_void.png
-
-#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_03_void.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_City_03_void.png;Map_City_03_void.png
-
-#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_01_void.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_01_void.png;Map_lab_01_void.png
-
-#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_02_void.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_02_void.png;Map_lab_02_void.png
-
-#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_03_void.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_lab_03_void.png;Map_lab_03_void.png
-
-#begin ../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_tutorial_void.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../../../../../Downloads/map_void-20250929T162219Z-1-001/map_void/Map_tutorial_void.png;Map_tutorial_void.png
+/build:../../../../Map_lab_02.png;Map_lab_02.png
 
 #begin A_job.png
 /importer:TextureImporter
@@ -156,6 +84,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Door_Sheet.png
+
+#begin enemy-Idle-12Frame_Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:enemy-Idle-12Frame_Sheet.png
+
+#begin enemyattack-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:enemyattack-Sheet.png
+
+#begin enemywalk-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:enemywalk-Sheet.png
 
 #begin energy-Sheet.png
 /importer:TextureImporter
@@ -325,6 +289,18 @@
 /processorParam:TextureFormat=Color
 /build:GB_SlashUp-Sheet.png
 
+#begin Gun.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Gun.png
+
 #begin HP-Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -361,7 +337,7 @@
 /processorParam:TextureFormat=Color
 /build:Main_title-Sheet.png
 
-#begin Map_boss_01.png
+#begin Map_boss.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -371,7 +347,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Map_boss_01.png
+/build:Map_boss.png
 
 #begin Map_City_01_void.png
 /importer:TextureImporter

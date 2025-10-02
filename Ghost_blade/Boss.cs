@@ -1,4 +1,5 @@
 ﻿// ต้องเพิ่ม using System.Diagnostics;
+using _321_Lab05_3;
 using Ghost_blade;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +14,8 @@ public class Boss
     public Vector2 Position;
     public Texture2D pixel;
     public Texture2D bulletTexture;
+    public int Boss_width = 1056;
+    public int Boss_height = 528;
     public bool IsbossAticve { get; set; }
 
     // Boss State
@@ -32,14 +35,15 @@ public class Boss
             return new Rectangle(
                         (int)(Position.X),
                         (int)(Position.Y),
-                        1632,
-                        1055
+                        Boss_width,
+                        Boss_height
                         );
         }
     }
 
     // Constructor
-    public Boss(Texture2D texture, Vector2 position, Texture2D pixelTexture, Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture)
+    public Boss(Texture2D texture, Vector2 position, Texture2D pixelTexture, AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk ,AnimatedTexture Enemymelee_Attack,
+        Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture)
     {
         this.Position = position;
         this.pixel = pixelTexture;
@@ -52,7 +56,7 @@ public class Boss
         // Pass the pixel texture for attacks that use it
         attacks.Add(new LaserAttack(this, pixelTexture));
         attacks.Add(new BossBulletAttacks(this, bulletTexture));
-        attacks.Add(new SpawnAttack(this, pixelTexture, enemyTex1, enemyTex2, bulletTexture));
+        attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, enemyTex1, enemyTex2, bulletTexture));
 
         currentState = BossState.Idle;
         attackTimer = 0.1f;
@@ -102,8 +106,8 @@ public class Boss
             Rectangle bossRect = new Rectangle(
             (int)(Position.X),
             (int)(Position.Y),
-            1632, // width
-            1055  // height
+            Boss_width, // width
+            Boss_height  // height
         );
 
             // Draw the red square using the 1x1 pixel texture

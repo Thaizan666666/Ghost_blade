@@ -12,7 +12,8 @@ namespace Ghost_blade
 {
     public class MapLab02 : Room
     {
-        public MapLab02(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture, Texture2D enemyTexture, Texture2D bulletTexture)
+        public MapLab02(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture,
+            AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack, Texture2D enemyTexture, Texture2D bulletTexture)
             : base(bg, layer2, DoorOpenTexture, new Rectangle(39 * 48, 17 * 48, 3 * 48, 1 * 48), new Vector2(39 * 48, 14 * 48),
                   new Vector2(95 * 48, 95 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2)) //
         {
@@ -85,8 +86,8 @@ namespace Ghost_blade
             AddObstacle(28, 33.5f, 1.5f, 5);
             AddObstacle(54.5f, 33.8f, 5, 5);
 
-            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(41 * tileSize, 63 * tileSize), 1.5f, 1000f));
-            AddEnemy(new Enemy_Melee(enemyTexture, new Vector2(42 * tileSize, 26 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, enemyTexture, new Vector2(41 * tileSize, 63 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, enemyTexture, new Vector2(42 * tileSize, 26 * tileSize), 1.5f, 1000f));
             AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(64 * tileSize, 64 * tileSize), 1.0f, 1000f, bulletTexture));
             AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(104 * tileSize, 90 * tileSize), 1.0f, 1000f, bulletTexture));
             AddEnemy(new Enemy_Shooting(enemyTexture, new Vector2(96 * tileSize, 90 * tileSize), 1.0f, 1000f, bulletTexture));

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using Ghost_blade;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using _321_Lab05_3;
 public class Enemy
 {
     public Vector2 Position;

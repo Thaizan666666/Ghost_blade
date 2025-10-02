@@ -46,7 +46,7 @@ namespace Ghost_blade
             coolDowmRealTimer = 0f;
 
             // Set the laser to always start at 0 degrees (pointing right)
-            laserAngle = (float)Math.Atan2(player.position.Y - (boss.Position.Y + 1055), player.position.X - (boss.Position.X + 1632));
+            laserAngle = (float)Math.Atan2(player.position.Y - (boss.Position.Y + boss.Boss_height), player.position.X - (boss.Position.X + boss.Boss_width));
 
             // Set a fixed rotation direction (e.g., clockwise)
             rotationDirection = 1f;
@@ -86,7 +86,7 @@ namespace Ghost_blade
                     currentRotationSpeed = MathHelper.Lerp(0, MAX_ROTATION_SPEED, fireTimer / FIRE_DURATION);
 
                     // Calculate the angle to the player (ใช้ 'player' parameter โดยตรง)
-                    float desiredAngle = (float)Math.Atan2(player.position.Y - (boss.Position.Y + 1055), player.position.X - (boss.Position.X + 1632));
+                    float desiredAngle = (float)Math.Atan2(player.position.Y - (boss.Position.Y + 1055), player.position.X - (boss.Position.X + boss.Boss_width));
 
                     // Use a slightly modified version of the previous logic to handle the overshoot
                     float angleDifference = MathHelper.WrapAngle(desiredAngle - laserAngle);
@@ -193,7 +193,7 @@ namespace Ghost_blade
         {
             float laserLength = 2000f;
             Vector2 origin = new Vector2(0, thickness / 2);
-            Vector2 laserStart = boss.Position + new Vector2(1632, 1055);
+            Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width, boss.Boss_height);
 
             // Hitbox calculation is now in Update()
 
