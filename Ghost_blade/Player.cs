@@ -28,7 +28,8 @@ namespace Ghost_blade
         private float fireDelay = 0.2f;
         private float timer = 0f;
         private Texture2D bulletTexture;
-        public byte currentAmmo;
+        public int currentAmmo;
+        public int maxAmmo { get; set; } = 30;
         public bool isSwordEquipped = true;
 
         private KeyboardState previousKState;
@@ -407,9 +408,11 @@ namespace Ghost_blade
 
         private void HandleReload(KeyboardState kState,MouseState mState, float deltaTime)
         {
+            const byte MAG_SIZE = 10;
             if (!isSwordEquipped)
             {
-                if ((!isReloading && kState.IsKeyDown(Keys.R)) || currentAmmo == 0 && mState.LeftButton == ButtonState.Pressed && !isReloading)
+                if ((!isReloading && kState.IsKeyDown(Keys.R) && currentAmmo < MAG_SIZE && maxAmmo > 0)||
+                (currentAmmo == 0 && mState.LeftButton == ButtonState.Pressed && !isReloading && maxAmmo > 0))
                 {
                     isReloading = true;
                     reloadTimer = ReloadTime;
@@ -418,12 +421,14 @@ namespace Ghost_blade
 
                 if (isReloading)
                 {
-                    currentAmmo = 0;
                     reloadTimer -= deltaTime;
                     if (reloadTimer <= 0f)
                     {
+                        int ammoNeeded = MAG_SIZE - currentAmmo;
+                        int ammoToTake = Math.Min(ammoNeeded, maxAmmo);
+                        maxAmmo -= ammoToTake;
+                        currentAmmo += ammoToTake;
                         isReloading = false;
-                        currentAmmo = 10;
                         Debug.WriteLine("Reload complete. Ammo = 10");
                     }
                 }

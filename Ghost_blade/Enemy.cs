@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Ghost_blade;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,6 +9,8 @@ public class Enemy
 {
     public Vector2 Position;
     public Texture2D Texture;
+    private Texture2D AmmoDrop;
+    private Texture2D DropHp;
     public float Speed;
     protected Vector2 direction;
     protected float detectionRadius;
@@ -26,19 +29,14 @@ public class Enemy
     protected float attackCooldown = 1.5f;
     protected float attackTimer;
 
+    protected Random randomDrop = new Random();
+    public bool _isbulletammo;
+    public bool _isHpDrop;
+
+    public Rectangle HpDrop;
+    public Rectangle bulletammo;
+
     public Rectangle boundingBox
-    {
-        get
-        {
-            return new Rectangle(
-                (int)(Position.X - hitboxWidth / 2),
-                (int)(Position.Y - hitboxHeight / 2),
-                hitboxWidth,
-                hitboxHeight
-            );
-        }
-    }
-    public Rectangle bulletammo
     {
         get
         {
@@ -67,7 +65,7 @@ public class Enemy
 
         if (knockbackTimer > 0)
         {
-            Position += knockbackDirection * knockbackSpeed * deltaTime;
+            Position += knockbackDirection * knockbackSpeed * 0.1f;
             knockbackTimer -= deltaTime;
         }
         else
@@ -83,12 +81,12 @@ public class Enemy
                 }
             }
 
-            Vector2 newPosition = Position + desiredMovement * Speed;
+            Vector2 newPosition = Position + desiredMovement * Speed * 1.5f;
             Position = newPosition;
         }
     }
 
-    public virtual void TakeDamage(int damage, Vector2 damageSourcePosition)
+    public virtual void TakeDamage(int damage, Vector2 damageSourcePosition,bool issword)
     {
         Health -= damage;
         knockbackDirection = Position - damageSourcePosition;
@@ -96,11 +94,13 @@ public class Enemy
         {
             knockbackDirection.Normalize();
         }
-        knockbackTimer = KnockbackDuration;
-
-        if (Health <= 0)
+        if (issword)
         {
-            this.Die();
+            knockbackTimer = KnockbackDuration;
+        }
+        else
+        {
+            knockbackTimer = 0.05f;
         }
     }
 
@@ -197,7 +197,33 @@ public class Enemy
     }
     public Rectangle Die()
     {
-        IsActive = false;
-        return bulletammo;
+        int currentrandomDrop = randomDrop.Next(1, 10);
+        Debug.WriteLine($"Niggar Drop Item {currentrandomDrop}");
+        if (currentrandomDrop == 1 || currentrandomDrop == 2)
+        {
+            _isbulletammo = true;
+            this.bulletammo = new Rectangle(
+                (int)(Position.X - hitboxWidth / 2),
+                (int)(Position.Y - hitboxHeight / 2),
+                hitboxWidth,
+                hitboxHeight
+            );
+            return bulletammo;
+        }
+        else if (currentrandomDrop == 3 || currentrandomDrop == 4 || currentrandomDrop == 5)
+        {
+            _isHpDrop = true;
+            this.HpDrop = new Rectangle(
+                (int)(Position.X - hitboxWidth / 2),
+                (int)(Position.Y - hitboxHeight / 2),
+                hitboxWidth,
+                hitboxHeight
+            );
+            return HpDrop;
+        }
+        else
+        {
+            return new Rectangle(0, 0, 0, 0);
+        }
     }
 }
