@@ -14,6 +14,9 @@ public class SpawnAttack : BossAttack
     private AnimatedTexture Enemymelee_Idle;
     private AnimatedTexture Enemymelee_Walk;
     private AnimatedTexture Enemymelee_Attack;
+    private AnimatedTexture EnemyShooting_Idle;
+    private AnimatedTexture EnemyShooting_Walk;
+
     private Random random;
 
     private List<Enemy> spawnedEnemies;
@@ -44,6 +47,7 @@ public class SpawnAttack : BossAttack
     private Texture2D pixelTexture; // Keep a reference to the pixelTexture for drawing the warning
 
     public SpawnAttack(Boss owner, Texture2D pixelTexture, AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack,
+        AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk,
         Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture)
         : base(owner, pixelTexture)
     {
@@ -53,6 +57,8 @@ public class SpawnAttack : BossAttack
         this.Enemymelee_Idle = Enemymelee_Idle;
         this.Enemymelee_Attack = Enemymelee_Attack;
         this.Enemymelee_Walk = Enemymelee_Walk;
+        this.EnemyShooting_Idle = EnemyShooting_Idle;
+        this.EnemyShooting_Walk = EnemyShooting_Walk;
         this.bulletTexture = bulletTexture;
         this.random = new Random();
         this.spawnedEnemies = new List<Enemy>();
@@ -108,7 +114,7 @@ public class SpawnAttack : BossAttack
         }
         else
         {
-            newEnemy = new Enemy_Shooting(enemyTexture2, spawnPosition, 1.0f, 1000f, bulletTexture);
+            newEnemy = new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, enemyTexture2, spawnPosition, 1.0f, 1000f, bulletTexture);
         }
 
         newlySpawnedEnemies.Add(newEnemy);

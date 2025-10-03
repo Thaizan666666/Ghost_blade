@@ -43,6 +43,7 @@ public class Boss
 
     // Constructor
     public Boss(Texture2D texture, Vector2 position, Texture2D pixelTexture, AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk ,AnimatedTexture Enemymelee_Attack,
+        AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk,
         Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture)
     {
         this.Position = position;
@@ -56,7 +57,7 @@ public class Boss
         // Pass the pixel texture for attacks that use it
         attacks.Add(new LaserAttack(this, pixelTexture));
         attacks.Add(new BossBulletAttacks(this, bulletTexture));
-        attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, enemyTex1, enemyTex2, bulletTexture));
+        attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, enemyTex1, enemyTex2, bulletTexture));
 
         currentState = BossState.Idle;
         attackTimer = 0.1f;

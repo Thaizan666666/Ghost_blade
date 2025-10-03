@@ -109,7 +109,7 @@ namespace Ghost_blade
 
                     float laserLength = 2000f;
                     float thickness = 10f; // ความหนาของเลเซอร์ในสถานะ Firing
-                    Vector2 laserStart = boss.Position + new Vector2(1632, 1055);
+                    Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width, boss.Boss_height);
 
                     // 1. กำหนดจุดปลายของเส้นเลเซอร์
                     Vector2 direction = new Vector2((float)Math.Cos(laserAngle), (float)Math.Sin(laserAngle));

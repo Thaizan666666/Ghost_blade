@@ -49,6 +49,8 @@ namespace Ghost_blade
         private AnimatedTexture Enemymelee_Idle;
         private AnimatedTexture Enemymelee_Walk;
         private AnimatedTexture Enemymelee_Attack;
+        private AnimatedTexture EnemyShooting_Idle;
+        private AnimatedTexture EnemyShooting_Walk;
         private int Enemy_Count;
         SpriteFont uiFont;
 
@@ -85,6 +87,8 @@ namespace Ghost_blade
             Enemymelee_Idle = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             Enemymelee_Walk = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             Enemymelee_Attack = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            EnemyShooting_Idle = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            EnemyShooting_Walk = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
 
         protected override void Initialize()
@@ -93,7 +97,7 @@ namespace Ghost_blade
             _enemyBullets = new List<EnemyBullet>();
             rooms = new List<Room>();
             random = new Random();
-            currentRoomIndex = 7;//random.Next(1,4);
+            currentRoomIndex = 6;//random.Next(1,4);
             stageStep = 0;
             base.Initialize();
         }
@@ -103,7 +107,7 @@ namespace Ghost_blade
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _bulletTexture = Content.Load<Texture2D>("A_job");
             Texture2D playerTexture = Content.Load<Texture2D>("GB_Idle-Sheet");
-            EnemyTexture = Content.Load<Texture2D>("firefoxBall");
+            EnemyTexture = Content.Load<Texture2D>("enemy-Idle-12Frame_Sheet");
             _swordTexture = new Texture2D(GraphicsDevice, 50, 20); // Create a 50x20 pixel texture
             Color[] data = new Color[50 * 20];
             for (int i = 0; i < data.Length; ++i) data[i] = Color.White; // Fill with red color
@@ -140,19 +144,19 @@ namespace Ghost_blade
 
             // Pass the pixel texture to the Beholster constructor
             boss = new Boss(_bossTexture, new Vector2(41 * 48, 8 * 48), _pixel, 
-                Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, EnemyTexture, _bulletTexture);
+                Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, EnemyTexture, _bulletTexture);
 
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
             {
-                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
-                new MapCity01(Map_city_01, Map_city_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
-                new MapCity02(Map_city_02, Map_city_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
-                new MapCity03(Map_city_03, Map_city_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
-                new MapLab01(Map_lab_01, Map_lab_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
-                new MapLab02(Map_lab_02, Map_lab_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
-                new MapLab03(Map_lab_03, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
-                new MapBoss01(Map_Boss_01, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyTexture, _bulletTexture),
+                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
+                new MapCity01(Map_city_01, Map_city_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
+                new MapCity02(Map_city_02, Map_city_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
+                new MapCity03(Map_city_03, Map_city_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
+                new MapLab01(Map_lab_01, Map_lab_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
+                new MapLab02(Map_lab_02, Map_lab_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
+                new MapLab03(Map_lab_03, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
+                new MapBoss01(Map_Boss_01, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
             };
 
 
@@ -181,8 +185,8 @@ namespace Ghost_blade
             cursorReloadTexture.Load(Content, "crosshairs_reload-Sheet", 4, 1, 20);
             _player.change_Weapon = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
             _player.change_Weapon.Load(Content, "UI_weapon-Sheet", 4, 1, 1);
-            _player.GunDashingTexture.Load(Content, "GB_Dash-Sheet", 4, 1, 20);
-            _player.BladeDashingTexture.Load(Content, "GB_Dash-Blade_Sheet", 4, 1, 20);
+            _player.GunDashingTexture.Load(Content, "GB_Dash-Sheet", 4, 1, 10);
+            _player.BladeDashingTexture.Load(Content, "GB_Dash-Blade_Sheet", 4, 1, 10);
             _player.IdleBladeTexture.Load(Content, "GB_Idle-Blade_Sheet", 4, 1, 8);
             _player.IdleGunTexture.Load(Content, "GB_Idle-Sheet", 4, 1, 8);
             _player.RunningBladeTexture.Load(Content, "GB_Run_Blade-Sheet", 8, 1, 8);
@@ -193,8 +197,10 @@ namespace Ghost_blade
             _player.AttackingTextureDown.Load(Content, "GB_SlashDown-Sheet", 4, 1, 20);
             DoorOpenTexture.Load(Content, "Door_Sheet", 5, 1, 10);
             Enemymelee_Idle.Load(Content, "enemy-Idle-12Frame_Sheet", 12, 1, 8);
-            Enemymelee_Walk.Load(Content, "enemywalk-Sheet", 8, 1, 8);
+            Enemymelee_Walk.Load(Content, "enemywalk-Sheet", 8, 1, 4);
             Enemymelee_Attack.Load(Content, "enemyattack-Sheet", 11, 1, 4);
+            EnemyShooting_Idle.Load(Content, "enemy-Idle-12Frame_Sheet", 12, 1, 8);
+            EnemyShooting_Walk.Load(Content, "enemywalk-Sheet", 8, 1, 4);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             uiFont = Content.Load<SpriteFont>("UI_Font");
@@ -588,7 +594,7 @@ namespace Ghost_blade
                 // Draw the player
                 _player.Draw(_spriteBatch, camera.position);
 
-                rooms[currentRoomIndex].DrawLayer2(_spriteBatch);
+                
                 // Draw all active enemies in the current room
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {
@@ -609,6 +615,7 @@ namespace Ghost_blade
                 {
                     boss.Draw(_spriteBatch);
                 }
+                rooms[currentRoomIndex].DrawLayer2(_spriteBatch);
 
                 // Draw hitboxes
                 if (_isOpenhitbox)

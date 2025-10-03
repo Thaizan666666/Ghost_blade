@@ -14,8 +14,8 @@ public class Enemy
     public float Speed;
     protected Vector2 direction;
     protected float detectionRadius;
-    private readonly int hitboxWidth = 32;
-    private readonly int hitboxHeight = 32;
+    private readonly int hitboxWidth = 34;
+    private readonly int hitboxHeight = 96;
     public bool IsActive { get; set; }
     public int Health { get; set; } = 200;
 
@@ -41,8 +41,8 @@ public class Enemy
         get
         {
             return new Rectangle(
-                (int)(Position.X - hitboxWidth / 2),
-                (int)(Position.Y - hitboxHeight / 2),
+                (int)(Position.X - hitboxWidth),
+                (int)(Position.Y - hitboxHeight/4),
                 hitboxWidth,
                 hitboxHeight
             );
@@ -205,8 +205,8 @@ public class Enemy
             this.bulletammo = new Rectangle(
                 (int)(Position.X - hitboxWidth / 2),
                 (int)(Position.Y - hitboxHeight / 2),
-                hitboxWidth,
-                hitboxHeight
+                50,
+                50
             );
             return bulletammo;
         }
@@ -216,8 +216,8 @@ public class Enemy
             this.HpDrop = new Rectangle(
                 (int)(Position.X - hitboxWidth / 2),
                 (int)(Position.Y - hitboxHeight / 2),
-                hitboxWidth,
-                hitboxHeight
+                50,
+                50
             );
             return HpDrop;
         }

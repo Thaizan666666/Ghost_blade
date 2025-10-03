@@ -40,7 +40,7 @@ namespace Ghost_blade
 
         private bool isDashing = false;
         private float dashTimer = 0f;
-        private const float DashDuration = 0.5f;
+        private const float DashDuration = 0.4f;
         private const float DashSpeedMultiplier = 3.0f;
         private Vector2 dashDirection;
         private const float DashCooldown = 0.75f;
@@ -52,7 +52,7 @@ namespace Ghost_blade
 
         public bool _isInvincible = false;
         private float _invincibilityTimer = 0f;
-        private const float InvincibilityDuration = 0.5f;
+        private const float InvincibilityDuration = 0.4f;
 
         public bool IsAlive { get; private set; }
         public bool _isSlash { get; set; } = true;
@@ -577,7 +577,7 @@ namespace Ghost_blade
                 Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
                 Vector2 screenCenter = new Vector2(1920 / 2f, 1080 / 2f);
                 float HandRotation = (float)Math.Atan2(mousePos.Y - screenCenter.Y, mousePos.X - screenCenter.X);
-                if (!isSwordEquipped)
+                if (!isSwordEquipped && currentState != PlayerState.Dashing)
                 {
                     if (mousePos.X < screenCenter.X)
                     {
@@ -652,7 +652,7 @@ namespace Ghost_blade
                         }
                     }
                 }
-                if (!isSwordEquipped)
+                if (!isSwordEquipped && currentState != PlayerState.Dashing)
                 {
                     if (mousePos.X < screenCenter.X)
                     {

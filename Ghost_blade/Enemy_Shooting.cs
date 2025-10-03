@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -25,6 +26,8 @@ namespace Ghost_blade
         private int bulletsShotInBurst;
         private float burstTimer;
 
+        private AnimatedTexture EnemyShooting_Idle;
+        private AnimatedTexture EnemyShooting_Walk;
         public Texture2D bulletTexture;
         private float fireTimer;
         private const float FIRE_RATE = 1.0f;
@@ -32,12 +35,14 @@ namespace Ghost_blade
 
         public Action<Bullet> OnShoot;
 
-        public Enemy_Shooting(Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture)
+        public Enemy_Shooting(AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture)
             : base(texture, startPosition, speed, detectionRadius)
         {
             this.Health = 140;
             this.currentState = EnemyState.Idle;
             this.stateTimer = 0f;
+            this.EnemyShooting_Idle = EnemyShooting_Idle;
+            this.EnemyShooting_Walk = EnemyShooting_Walk;
             this.bulletTexture = bulletTexture;
             this.fireTimer = FIRE_RATE;
             this.IsActive = true;
@@ -47,7 +52,8 @@ namespace Ghost_blade
         public override void Update(Player player, List<Rectangle> obstacles, GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+            EnemyShooting_Idle.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            EnemyShooting_Walk.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             // Priority 1: Check if the enemy is being knocked back
             if (knockbackTimer > 0)
             {
@@ -234,7 +240,7 @@ namespace Ghost_blade
         {
             if (IsActive)
             {
-                spriteBatch.Draw(Texture, Position, null, Color.Green, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
+                EnemyShooting_Walk.DrawFrame(spriteBatch, Position);
             }
         }
     }

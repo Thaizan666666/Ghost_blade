@@ -12,7 +12,9 @@ namespace Ghost_blade
     public class MapCity01 : Room
     {
         public MapCity01(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture,
-            AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack, Texture2D enemyTexture, Texture2D bulletTexture)
+            AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack,
+            AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk,
+            Texture2D enemyTexture, Texture2D bulletTexture)
             : base(bg, layer2, DoorOpenTexture, new Rectangle(72 * 48, 17 * 48, 6 * 48, 1 * 48), new Vector2(72 * 48, 14 * 48),
                   new Vector2(113 * 48, 17 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2))
         {

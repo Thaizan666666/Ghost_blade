@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../Map_lab_01.png
+#begin ../../../../../../Downloads/Map_boss.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,19 +23,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../../../Map_lab_01.png;Map_lab_01.png
-
-#begin ../../../../Map_lab_02.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../../../Map_lab_02.png;Map_lab_02.png
+/build:../../../../../../Downloads/Map_boss.png;Map_boss.png
 
 #begin A_job.png
 /importer:TextureImporter
@@ -349,6 +337,18 @@
 /processorParam:TextureFormat=Color
 /build:Map_boss.png
 
+#begin Map_boss.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Map_boss.png
+
 #begin Map_City_01_void.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -445,6 +445,18 @@
 /processorParam:TextureFormat=Color
 /build:Map_lab_01.png
 
+#begin Map_lab_01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Map_lab_01.png
+
 #begin Map_lab_02_void.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -456,6 +468,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Map_lab_02_void.png
+
+#begin Map_lab_02.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Map_lab_02.png
 
 #begin Map_lab_02.png
 /importer:TextureImporter

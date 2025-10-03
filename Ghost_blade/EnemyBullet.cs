@@ -22,14 +22,14 @@ namespace Ghost_blade
             base.Update(gameTime, obstacles);
             Bullet parriedBullet = null;
             if (!IsActive) return null;
-
             // Then, add the specialized collision check for the player.
-            if (boundingBox.Intersects(player.HitboxgetDamage) && player._isInvincible == false)
+            if (IsActive && boundingBox.Intersects(player.HitboxgetDamage) && player._isInvincible == false)
             {
                 player.TakeDamage(1);
                 IsActive = false;
                 Debug.WriteLine($"Hp = {player.Health}");
             }
+
             if (IsActive && boundingBox.Intersects(player.meleeWeapon.ParryHitbox))
             {
                 IsActive = false;
