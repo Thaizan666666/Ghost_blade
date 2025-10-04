@@ -29,13 +29,14 @@ namespace Ghost_blade
         private AnimatedTexture EnemyShooting_Idle;
         private AnimatedTexture EnemyShooting_Walk;
         public Texture2D bulletTexture;
+        public Texture2D parry; 
         private float fireTimer;
         private const float FIRE_RATE = 1.0f;
         private float fleeRadius = 500f;
 
         public Action<Bullet> OnShoot;
 
-        public Enemy_Shooting(AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture)
+        public Enemy_Shooting(AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture, Texture2D parry)
             : base(texture, startPosition, speed, detectionRadius)
         {
             this.Health = 140;
@@ -47,6 +48,7 @@ namespace Ghost_blade
             this.fireTimer = FIRE_RATE;
             this.IsActive = true;
             this.Speed = speed;
+            this.parry = parry;
         }
 
         public override void Update(Player player, List<Rectangle> obstacles, GameTime gameTime)
@@ -198,7 +200,7 @@ namespace Ghost_blade
             float offsetDistance = 20f;
             Vector2 startPosition = Position + direction * offsetDistance;
 
-            var bullet = new EnemyBullet(bulletTexture, startPosition, direction, 15f, 0f, 2f);
+            var bullet = new EnemyBullet(bulletTexture, startPosition, direction, 15f, 0f, 2f,parry);
 
             OnShoot?.Invoke(bullet);
         }

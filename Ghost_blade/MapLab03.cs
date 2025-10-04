@@ -18,7 +18,7 @@ namespace Ghost_blade
         public MapLab03(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture,
             AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack,
             AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk,
-            Texture2D enemyTexture, Texture2D bulletTexture)
+            Texture2D enemyTexture, Texture2D bulletTexture,Texture2D parry)
             : base(bg, layer2, DoorOpenTexture, new Rectangle(89 * 48, 39 * 48, 4 * 48, 1 * 48), new Vector2(89 * 48, 36 * 48),
                   new Vector2(23 * 48, 96 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2)) //
         {
@@ -83,9 +83,9 @@ namespace Ghost_blade
 
             AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, enemyTexture, new Vector2(15 * tileSize, 70 * tileSize), 1.5f, 1000f));
             AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, enemyTexture, new Vector2(16 * tileSize, 30 * tileSize), 1.5f, 1000f));
-            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, enemyTexture, new Vector2(37 * tileSize, 70 * tileSize), 1.0f, 1000f, bulletTexture));
-            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, enemyTexture, new Vector2(33 * tileSize, 54 * tileSize), 1.0f, 1000f, bulletTexture));
-            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, enemyTexture, new Vector2(85 * tileSize, 48 * tileSize), 1.0f, 1000f, bulletTexture));
+            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, enemyTexture, new Vector2(37 * tileSize, 70 * tileSize), 1.0f, 1000f, bulletTexture, parry));
+            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, enemyTexture, new Vector2(33 * tileSize, 54 * tileSize), 1.0f, 1000f, bulletTexture, parry));
+            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, enemyTexture, new Vector2(85 * tileSize, 48 * tileSize), 1.0f, 1000f, bulletTexture, parry));
         }
     }
 }

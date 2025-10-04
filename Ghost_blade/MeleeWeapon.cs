@@ -23,8 +23,15 @@ public class MeleeWeapon
     // Set a very short window for parry at the start of the swing
     private float _parryDuration = 1f;
 
+    private bool _isULTActive = false;
+    public float _ultTimer = 0f;
+    private float _ultTotalDuration = 2.0f; // ระยะเวลารวมของ ULT (2.0 วินาที)
+    private float _ultHitboxInterval = 0.2f; // ช่วงเวลาที่ต้องสร้าง Hitbox (0.2 วินาที)
+    private float _ultHitboxCooldown = 0f; // ตัวนับเวลาสำหรับช่วง 0.2 วิ
+
     public Rectangle AttackHitbox { get; private set; }
     public Rectangle ParryHitbox { get; private set; }
+    public Rectangle ULTHitbox { get; private set; }
     public int Attack {  get; private set; }
 
     public MeleeWeapon(Texture2D weaponTexture)
@@ -74,6 +81,36 @@ public class MeleeWeapon
             ParryHitbox = Rectangle.Empty;
         }
         // --- END NEW PARRY LOGIC ---
+        if (_isULTActive)
+        {
+            _ultTimer -= deltaTime;
+            _ultHitboxCooldown -= deltaTime;
+
+            // เช็คว่าหมดเวลา ULT แล้วหรือไม่
+            if (_ultTimer <= 0)
+            {
+                _isULTActive = false;
+                ULTHitbox = Rectangle.Empty; // ล้าง Hitbox เมื่อ ULT จบลง
+                _ultHitboxCooldown = 0f;
+            }
+            // ถ้าถึงช่วงเวลาที่ต้องสร้าง Hitbox ใหม่ (ทุก 0.2 วินาที)
+            else if (_ultHitboxCooldown <= 0)
+            {
+                // สร้าง Hitbox ขนาดใหญ่รอบตัวผู้เล่น
+                ULTHitbox = new Rectangle(
+                    (int)playerPosition.X - 900 / 2,
+                    (int)playerPosition.Y - 700 / 2,
+                    900,
+                    700
+                );
+                Attack = 5; // กำหนดค่า Attack สำหรับการโจมตี ULT
+                _ultHitboxCooldown = _ultHitboxInterval; // รีเซ็ตตัวนับสำหรับช่วงเวลาถัดไป
+            }
+            else // ในช่วงระหว่างการสร้าง Hitbox (0.2 วิ) ให้เคลียร์ Hitbox
+            {
+                ULTHitbox = Rectangle.Empty;
+            }
+        }
     }
 
     // เมธอดใหม่สำหรับเริ่มการโจมตี ซึ่งจะถูกเรียกเมื่อกดปุ่มโจมตี
@@ -150,6 +187,15 @@ public class MeleeWeapon
                 parrySize,
                 parrySize * 2
             );
+        }
+    }
+    public void PerformULT(Vector2 playerPosition)
+    {
+        if (!_isULTActive)
+        {
+            _isULTActive = true;
+            _ultTimer = _ultTotalDuration;    // เริ่มนับเวลารวม (2 วิ)
+            _ultHitboxCooldown = 0f;          // ตั้งให้สร้าง Hitbox ทันทีในการ Update ครั้งถัดไป
         }
     }
 }

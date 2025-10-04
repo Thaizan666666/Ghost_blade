@@ -36,7 +36,7 @@ namespace Ghost_blade
         private MouseState previousMState;
         private Vector2 lastMovementDirection = new Vector2(1, 0);
         public MeleeWeapon meleeWeapon { get; private set; }
-        public int Health { get; set; } = 5;
+        public int Health { get; set; } = 2;
 
         private bool isDashing = false;
         private float dashTimer = 0f;
@@ -83,6 +83,7 @@ namespace Ghost_blade
         private float weaponFrameTimer = 0f;
         private float weaponFrameRate = 0.1f;
         private int framefinish;
+        public bool isDamageFlickering = false;
 
         private bool flip = false;
         private bool attackf = false;
@@ -181,7 +182,7 @@ namespace Ghost_blade
             HandleDash(kState, deltaTime);
             HandleWeaponSwitching(kState);
             HandleReload(kState,mState, deltaTime);
-            HandleAttacks(mState, cameraPosition); // Pass cameraPosition here
+            HandleAttacks(kState,mState, cameraPosition); // Pass cameraPosition here
 
             MouseState mouse = Mouse.GetState();
             if (mouse.X < 1920/2) { flip = true;}
@@ -245,6 +246,8 @@ namespace Ghost_blade
                 if (_invincibilityTimer <= 0)
                 {
                     _isInvincible = false;
+
+                    isDamageFlickering = false;
                 }
             }
 
@@ -278,12 +281,12 @@ namespace Ghost_blade
             }
         }
 
-        private void HandleAttacks(MouseState mState, Vector2 cameraPosition) // ต้องเพิ่ม cameraPosition เป็น parameter
+        private void HandleAttacks(KeyboardState kState,MouseState mState, Vector2 cameraPosition) // ต้องเพิ่ม cameraPosition เป็น parameter
         {
             bool _iscanattack = isDashing;
             if (!_iscanattack)
             {
-                if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released && meleeWeapon._parryTimer <= 0)
+                if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released && meleeWeapon._parryTimer <= 0 && meleeWeapon._ultTimer <= 0)
                 {
                     if (isSwordEquipped)
                     {
@@ -292,7 +295,7 @@ namespace Ghost_blade
                         _isSlash = true;
                     }
                 }
-                if (mState.RightButton == ButtonState.Pressed && previousMState.RightButton == ButtonState.Released)
+                if (mState.RightButton == ButtonState.Pressed && previousMState.RightButton == ButtonState.Released && meleeWeapon._ultTimer <=0)
                 {
                     if (isSwordEquipped && currentState != PlayerState.Attacking && !isDashing && parryCooldownTimer <= 0)
                     {
@@ -300,13 +303,19 @@ namespace Ghost_blade
                         parryCooldownTimer = ParryCooldown;
                     }
                 }
+                if(kState.IsKeyDown(Keys.X) && !previousKState.IsKeyDown(Keys.X))
+                {
+                    meleeWeapon.PerformULT(position);
+                    _isInvincible = true;
+                    _invincibilityTimer = 2.0f;
+                }
             }
         }
 
         // ** (ส่วนอื่นๆ ของคลาสที่ไม่ได้เปลี่ยนแปลง) **
         private void HandleDash(KeyboardState kState, float deltaTime)
         {
-            bool isActionActive = currentState == PlayerState.Attacking || meleeWeapon._parryTimer > 0;
+            bool isActionActive = currentState == PlayerState.Attacking || meleeWeapon._parryTimer > 0 || meleeWeapon._ultTimer > 0;
             if (dashCooldownTimer > 0)
             {
                 dashCooldownTimer -= deltaTime;
@@ -545,6 +554,7 @@ namespace Ghost_blade
             _isInvincible = true;
             _invincibilityTimer = InvincibilityDuration;
 
+            isDamageFlickering = true;
             if (Health <= 0)
             {
                 Die();
@@ -571,6 +581,19 @@ namespace Ghost_blade
         {
             if (IsAlive)
             {
+                Color drawColor = Color.White;
+                if (isDamageFlickering)
+                {
+                    // ใช้ค่า flickerInterval ที่กำหนด
+                    const float flickerInterval = 0.05f;
+
+                    // ใช้ _invincibilityTimer เพื่อควบคุมจังหวะกะพริบ สลับระหว่าง White (มองเห็น) และ Transparent (หายไป)
+                    if ((int)(_invincibilityTimer / flickerInterval) % 2 == 0)
+                    {
+                        drawColor = Color.Transparent; // กะพริบหายไป
+                    }
+                    // ถ้าเป็นเลขคี่ จะใช้ drawColor = Color.White (ค่าเริ่มต้น)
+                }
                 Rectangle sourceRect = new Rectangle(currentFrame * frameWidth, 0, frameWidth, frameHeight);
                 Vector2 origin = new Vector2(frameWidth / 2, frameHeight / 2);
                 MouseState mouseState = Mouse.GetState();
@@ -581,11 +604,11 @@ namespace Ghost_blade
                 {
                     if (mousePos.X < screenCenter.X)
                     {
-                        spriteBatch.Draw(Hand, new Vector2(position.X - 32, position.Y - 14), null, Color.White, HandRotation, HandOrigin, 2f, SpriteEffects.FlipVertically, 0f);
+                        spriteBatch.Draw(Hand, new Vector2(position.X - 32, position.Y - 14), null, drawColor, HandRotation, HandOrigin, 2f, SpriteEffects.FlipVertically, 0f);
                     }
                     else 
                     { 
-                        spriteBatch.Draw(Hand, new Vector2(position.X - 15, position.Y - 14), null, Color.White, HandRotation, HandOrigin, 2f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(Hand, new Vector2(position.X - 15, position.Y - 14), null, drawColor, HandRotation, HandOrigin, 2f, SpriteEffects.None, 0f);
                     }
 
                 }
@@ -656,11 +679,11 @@ namespace Ghost_blade
                 {
                     if (mousePos.X < screenCenter.X)
                     {
-                        spriteBatch.Draw(Hand, new Vector2(position.X - 18, position.Y - 14), null, Color.White, HandRotation, HandOrigin, 2f, SpriteEffects.FlipVertically, 0f);
+                        spriteBatch.Draw(Hand, new Vector2(position.X - 18, position.Y - 14), null, drawColor, HandRotation, HandOrigin, 2f, SpriteEffects.FlipVertically, 0f);
                     }
                     else
                     {
-                        spriteBatch.Draw(Hand, new Vector2(position.X - 32, position.Y - 14), null, Color.White, HandRotation, HandOrigin, 2f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(Hand, new Vector2(position.X - 32, position.Y - 14), null, drawColor, HandRotation, HandOrigin, 2f, SpriteEffects.None, 0f);
                     }
 
                 }

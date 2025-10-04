@@ -11,6 +11,7 @@ public class SpawnAttack : BossAttack
     private Texture2D enemyTexture1;
     private Texture2D enemyTexture2;
     private Texture2D bulletTexture;
+    private Texture2D parryTexture;
     private AnimatedTexture Enemymelee_Idle;
     private AnimatedTexture Enemymelee_Walk;
     private AnimatedTexture Enemymelee_Attack;
@@ -48,7 +49,7 @@ public class SpawnAttack : BossAttack
 
     public SpawnAttack(Boss owner, Texture2D pixelTexture, AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack,
         AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk,
-        Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture)
+        Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture, Texture2D parryTexture)
         : base(owner, pixelTexture)
     {
         this.pixelTexture = pixelTexture; // Store the pixel texture
@@ -63,6 +64,7 @@ public class SpawnAttack : BossAttack
         this.random = new Random();
         this.spawnedEnemies = new List<Enemy>();
         this.newlySpawnedEnemies = new List<Enemy>();
+        this.parryTexture = parryTexture;
     }
 
     public override void Start(Player player)
@@ -114,7 +116,7 @@ public class SpawnAttack : BossAttack
         }
         else
         {
-            newEnemy = new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, enemyTexture2, spawnPosition, 1.0f, 1000f, bulletTexture);
+            newEnemy = new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, enemyTexture2, spawnPosition, 1.0f, 1000f, bulletTexture,parryTexture);
         }
 
         newlySpawnedEnemies.Add(newEnemy);

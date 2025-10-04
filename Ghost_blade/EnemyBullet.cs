@@ -8,10 +8,12 @@ namespace Ghost_blade
     // EnemyBullet inherits all the properties and methods from the base Bullet class.
     public class EnemyBullet : Bullet
     {
+        private Texture2D parry;
         // The constructor calls the base class constructor to set up common properties.
-        public EnemyBullet(Texture2D texture, Vector2 startPosition, Vector2 direction, float bulletSpeed, float bulletRotation, float lifeDuration)
+        public EnemyBullet(Texture2D texture, Vector2 startPosition, Vector2 direction, float bulletSpeed, float bulletRotation, float lifeDuration, Texture2D parry)
             : base(texture, startPosition, direction, bulletSpeed, bulletRotation, lifeDuration)
         {
+            this.parry = parry;
         }
 
         // The override keyword lets you specialize the behavior for this class.
@@ -35,7 +37,7 @@ namespace Ghost_blade
                 IsActive = false;
                 Vector2 parryDirection = -this.velocity;
                 parriedBullet = new Bullet(
-                    this.texture,
+                    this.parry,
                     this.position,
                     parryDirection,
                     this.speed * 1.5f, // ให้กระสุน Parry เร็วขึ้น

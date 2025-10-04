@@ -14,6 +14,7 @@ public class Boss
     public Vector2 Position;
     public Texture2D pixel;
     public Texture2D bulletTexture;
+    public Texture2D parrybulletTexture;
     public int Boss_width = 1056;
     public int Boss_height = 528;
     public bool IsbossAticve { get; set; }
@@ -44,11 +45,12 @@ public class Boss
     // Constructor
     public Boss(Texture2D texture, Vector2 position, Texture2D pixelTexture, AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk ,AnimatedTexture Enemymelee_Attack,
         AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk,
-        Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture)
+        Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture,Texture2D parry)
     {
         this.Position = position;
         this.pixel = pixelTexture;
         this.bulletTexture = bulletTexture;
+        this.parrybulletTexture = parry;
         this.random = new Random();
         this.timeBetweenAttacks = 0.5f;
 
@@ -56,8 +58,8 @@ public class Boss
 
         // Pass the pixel texture for attacks that use it
         attacks.Add(new LaserAttack(this, pixelTexture));
-        attacks.Add(new BossBulletAttacks(this, bulletTexture));
-        attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, enemyTex1, enemyTex2, bulletTexture));
+        attacks.Add(new BossBulletAttacks(this, bulletTexture, parry));
+        attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, enemyTex1, enemyTex2, bulletTexture, parry));
 
         currentState = BossState.Idle;
         attackTimer = 0.1f;
