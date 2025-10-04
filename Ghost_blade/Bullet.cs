@@ -76,7 +76,7 @@ public class Bullet
             Color.White,
             rotation,
             origin,
-            1.0f,
+            4.0f,
             SpriteEffects.None,
             0f
         );

@@ -20,8 +20,9 @@ namespace Ghost_blade
         private Player _player;
         private List<Bullet> _playerBullets;
         private List<EnemyBullet> _enemyBullets;
-        private Texture2D _bulletTexture;
+        private Texture2D _PlayerbulletTexture;
         private FollowsCamera camera;
+        private Texture2D _parrybullet;
 
         private List<Room> rooms;
         private int currentRoomIndex;
@@ -30,6 +31,7 @@ namespace Ghost_blade
 
         private Texture2D _swordTexture;
 
+        private Texture2D _EnemybulletTexture;
         private Texture2D _bossTexture;
         private Boss boss;
         private Texture2D _pixel;
@@ -41,6 +43,9 @@ namespace Ghost_blade
         private MainMenuScreen mainMenu;
         private GameOverScreen gameOver;
         private bool Door_Open = false;
+
+        private KeyboardState previousKState;
+        private KeyboardState currentKState;
 
         private AnimatedTexture Hp_bar;
         private AnimatedTexture cursorTexture;
@@ -66,6 +71,7 @@ namespace Ghost_blade
         {
             MainMenu,
             Playing,
+            Paused,
             GameOver
         }
 
@@ -105,7 +111,9 @@ namespace Ghost_blade
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _bulletTexture = Content.Load<Texture2D>("A_job");
+            _PlayerbulletTexture = Content.Load<Texture2D>("Player_Bullet");
+            _EnemybulletTexture = Content.Load<Texture2D>("Enemy_Bullet");
+            _parrybullet = Content.Load<Texture2D>("Parry_Bullet");
             Texture2D playerTexture = Content.Load<Texture2D>("GB_Idle-Sheet");
             EnemyTexture = Content.Load<Texture2D>("enemy-Idle-12Frame_Sheet");
             _swordTexture = new Texture2D(GraphicsDevice, 50, 20); // Create a 50x20 pixel texture
@@ -115,7 +123,7 @@ namespace Ghost_blade
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
 
-            _player = new Player(playerTexture, _bulletTexture, _swordTexture, new Vector2(960 * 2, 540 * 2));
+            _player = new Player(playerTexture, _PlayerbulletTexture, _swordTexture, new Vector2(960 * 2, 540 * 2));
             // Removed direct Enemy and Enemy_Shooting creation.
             _bossTexture = new Texture2D(GraphicsDevice, 1, 1);
             _bossTexture.SetData(new[] { Color.White });
@@ -144,19 +152,19 @@ namespace Ghost_blade
 
             // Pass the pixel texture to the Beholster constructor
             boss = new Boss(_bossTexture, new Vector2(41 * 48, 8 * 48), _pixel, 
-                Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, EnemyTexture, _bulletTexture);
+                Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, EnemyTexture, _EnemybulletTexture,_parrybullet);
 
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
             {
-                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
-                new MapCity01(Map_city_01, Map_city_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
-                new MapCity02(Map_city_02, Map_city_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
-                new MapCity03(Map_city_03, Map_city_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
-                new MapLab01(Map_lab_01, Map_lab_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
-                new MapLab02(Map_lab_02, Map_lab_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
-                new MapLab03(Map_lab_03, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
-                new MapBoss01(Map_Boss_01, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _bulletTexture),
+                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture,_parrybullet),
+                new MapCity01(Map_city_01, Map_city_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture, _parrybullet),
+                new MapCity02(Map_city_02, Map_city_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture, _parrybullet),
+                new MapCity03(Map_city_03, Map_city_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture, _parrybullet),
+                new MapLab01(Map_lab_01, Map_lab_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture, _parrybullet),
+                new MapLab02(Map_lab_02, Map_lab_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture, _parrybullet),
+                new MapLab03(Map_lab_03, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture,_parrybullet),
+                new MapBoss01(Map_Boss_01, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture,_parrybullet),
             };
 
 
@@ -213,17 +221,26 @@ namespace Ghost_blade
 
         protected override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.O))
+            currentKState = Keyboard.GetState();
+
+            if (currentKState.IsKeyDown(Keys.P) && !previousKState.IsKeyDown(Keys.P))
+            {
+                if (gameState == GameState.Playing)
+                    gameState = GameState.Paused;
+                else if (gameState == GameState.Paused)
+                    gameState = GameState.Playing;
+            }
+            if (currentKState.IsKeyDown(Keys.O) && !previousKState.IsKeyDown(Keys.O) && _isOpenhitbox == false)
             {
                 _isOpenhitbox = true;
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Y))
+            else if (currentKState.IsKeyDown(Keys.O) && !previousKState.IsKeyDown(Keys.O) && _isOpenhitbox == true)
             {
                 _isOpenhitbox = false;
             }
             Debug.WriteLine($"Player Position: X={_player.position.X/48}, Y={_player.position.Y/48}");
             Room currentRoom = rooms[currentRoomIndex];
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (currentKState.IsKeyDown(Keys.Escape))
             {
                 if (gameState == GameState.Playing)
                 {
@@ -242,9 +259,10 @@ namespace Ghost_blade
                 }
                 return;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.I))
+            if (currentKState.IsKeyDown(Keys.I))
             {
                 currentRoomIndex = 7;
+                _player.position = rooms[currentRoomIndex].StartPosition;
             }
 
             if (gameState == GameState.MainMenu)
@@ -312,249 +330,253 @@ namespace Ghost_blade
                 return;
             }
 
-            if (boss.Health <= 0 && !isBossDead) 
+            if (gameState == GameState.Playing)
             {
-                isBossDead = true;
-                timer = 0f;
-            }
-            if (isBossDead)
-            {
-                timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                if (timer >= 3f && fadeAlpha < 1f) // ดีเลย์ 3 วิ แล้วเริ่ม fade
+                if (boss.Health <= 0 && !isBossDead)
                 {
-                    fadeAlpha += (float)gameTime.ElapsedGameTime.TotalSeconds / 3f; // 3 วิ ให้เต็ม
-                    if (fadeAlpha >= 1f)
-                    {
-                        fadeAlpha = 1f;
-                        gameState = GameState.MainMenu;
-
-                        isBossDead = false;
-                        timer = 0f;
-                        fadeAlpha = 0f;
-                    }
+                    isBossDead = true;
+                    timer = 0f;
                 }
-            }
-
-
-            camera.Follow(_player.drect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
-
-            if (_player.IsAlive)
-            {
-                _player.Update(gameTime, camera.position);
-                if (currentRoom.Enemies.All(e => !e.IsActive))
+                if (isBossDead)
                 {
-                    Door_Open = true;
-                }
+                    timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                _player.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
-                
-                if (Door_Open)
-                {
-                    if (_player.drect.Intersects(currentRoom.Door) && currentRoom.NextRooms.Count > 0 && currentRoomIndex != 0)
+                    if (timer >= 3f && fadeAlpha < 1f) // ดีเลย์ 3 วิ แล้วเริ่ม fade
                     {
-                        stageStep++;
-                        switch (stageStep)
+                        fadeAlpha += (float)gameTime.ElapsedGameTime.TotalSeconds / 3f; // 3 วิ ให้เต็ม
+                        if (fadeAlpha >= 1f)
                         {
-                            case 1:
-                                currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
-                                break;
-                            case 2:
-                                currentRoomIndex = random.Next(4, 7);
-                                break;
-                            case 3:
-                                currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)]; // 4,5,6
-                                break;
-                            case 4:
-                                currentRoomIndex = 7;
-                                break;
-                            default:
-                                gameState = GameState.MainMenu;
-                                currentRoomIndex = 0;
-                                stageStep = 0;
-                                _player.Reset();
-                                break;
+                            fadeAlpha = 1f;
+                            gameState = GameState.MainMenu;
+
+                            isBossDead = false;
+                            timer = 0f;
+                            fadeAlpha = 0f;
                         }
-                        rooms[currentRoomIndex].ResetRoom();
-                        _playerBullets.Clear();
-                        _enemyBullets.Clear();
-                        _player.SetPosition(rooms[currentRoomIndex].StartPosition);
-                        Door_Open = false;
-                        DoorOpenTexture.Reset();
-                    }
-                    else if (_player.drect.Intersects(currentRoom.Door) && currentRoomIndex == 0)
-                    {
-                        gameState = GameState.MainMenu;
-                        _player.SetPosition(rooms[currentRoomIndex].StartPosition);
-                        _player.Reset();
-                        currentRoomIndex = random.Next(1, 4); ;
-                        stageStep = 0;
-                        currentRoom.ResetRoom();
-                        Door_Open = false;
-                        DoorOpenTexture.Reset();
-                        _enemyBullets.Clear();
-                        _playerBullets.Clear();
-                        mainMenu.StartGame = false;
-                        mainMenu.ExitGame = false;
-                        mainMenu.tutorial = false;
                     }
                 }
-            }
-            else { return; }
 
-            MouseState mouseState = Mouse.GetState();
-            if (mouseState.LeftButton == ButtonState.Pressed)
-            {
-                Vector2 mouseWorld = new Vector2(mouseState.X, mouseState.Y) - camera.position;
-                Bullet newBullet = _player.Shoot(mouseWorld);
-                if (newBullet != null) _playerBullets.Add(newBullet);
-            }
 
-            // Update all enemies in the current room
-            foreach (var enemy in currentRoom.Enemies)
-            {
-                if (enemy.IsActive)
+                camera.Follow(_player.drect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
+
+                if (_player.IsAlive)
                 {
-                    enemy.Update(_player, currentRoom.Obstacles,gameTime);
-                    enemy.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
-                }
-            }
+                    _player.Update(gameTime, camera.position);
+                    if (currentRoom.Enemies.All(e => !e.IsActive))
+                    {
+                        Door_Open = true;
+                    }
 
-            // Check for player sword collisions with all enemies
-            if (_player.meleeWeapon.AttackHitbox != Rectangle.Empty)
-            {
+                    _player.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
+
+                    if (Door_Open)
+                    {
+                        if (_player.drect.Intersects(currentRoom.Door) && currentRoom.NextRooms.Count > 0 && currentRoomIndex != 0)
+                        {
+                            stageStep++;
+                            switch (stageStep)
+                            {
+                                case 1:
+                                    currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)];
+                                    break;
+                                case 2:
+                                    currentRoomIndex = random.Next(4, 7);
+                                    break;
+                                case 3:
+                                    currentRoomIndex = currentRoom.NextRooms[random.Next(currentRoom.NextRooms.Count)]; // 4,5,6
+                                    break;
+                                case 4:
+                                    currentRoomIndex = 7;
+                                    break;
+                                default:
+                                    gameState = GameState.MainMenu;
+                                    currentRoomIndex = 0;
+                                    stageStep = 0;
+                                    _player.Reset();
+                                    break;
+                            }
+                            rooms[currentRoomIndex].ResetRoom();
+                            _playerBullets.Clear();
+                            _enemyBullets.Clear();
+                            _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                            Door_Open = false;
+                            DoorOpenTexture.Reset();
+                        }
+                        else if (_player.drect.Intersects(currentRoom.Door) && currentRoomIndex == 0)
+                        {
+                            gameState = GameState.MainMenu;
+                            _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                            _player.Reset();
+                            currentRoomIndex = random.Next(1, 4); ;
+                            stageStep = 0;
+                            currentRoom.ResetRoom();
+                            Door_Open = false;
+                            DoorOpenTexture.Reset();
+                            _enemyBullets.Clear();
+                            _playerBullets.Clear();
+                            mainMenu.StartGame = false;
+                            mainMenu.ExitGame = false;
+                            mainMenu.tutorial = false;
+                        }
+                    }
+                }
+                else { return; }
+
+                MouseState mouseState = Mouse.GetState();
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    Vector2 mouseWorld = new Vector2(mouseState.X, mouseState.Y) - camera.position;
+                    Bullet newBullet = _player.Shoot(mouseWorld);
+                    if (newBullet != null) _playerBullets.Add(newBullet);
+                }
+
+                // Update all enemies in the current room
                 foreach (var enemy in currentRoom.Enemies)
                 {
-                    if (enemy.IsActive && _player.meleeWeapon.AttackHitbox.Intersects(enemy.boundingBox))
+                    if (enemy.IsActive)
+                    {
+                        enemy.Update(_player, currentRoom.Obstacles, gameTime);
+                        enemy.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
+                    }
+                }
+
+                // Check for player sword collisions with all enemies
+                if (_player.meleeWeapon.AttackHitbox != Rectangle.Empty)
+                {
+                    foreach (var enemy in currentRoom.Enemies)
+                    {
+                        if (enemy.IsActive && _player.meleeWeapon.AttackHitbox.Intersects(enemy.boundingBox))
+                        {
+                            if (_player._isSlash)
+                            {
+                                enemy.TakeDamage(70, _player.position, true);
+                                _player._isSlash = false;
+                                break; // Exit the loop after hitting the first enemy
+                            }
+                        }
+                    }
+                    if (boss.IsbossAticve && _player.meleeWeapon.AttackHitbox.Intersects(boss.HitboxgetDamage))
                     {
                         if (_player._isSlash)
                         {
-                            enemy.TakeDamage(70, _player.position,true);
+                            boss.TakeDamage(70);
                             _player._isSlash = false;
-                            break; // Exit the loop after hitting the first enemy
                         }
                     }
                 }
-                if (boss.IsbossAticve && _player.meleeWeapon.AttackHitbox.Intersects(boss.HitboxgetDamage))
+
+                // Update and check for player bullet collisions with all enemies
+                for (int i = _playerBullets.Count - 1; i >= 0; i--)
                 {
-                    if (_player._isSlash)
+                    Bullet bullet = _playerBullets[i];
+                    bullet.Update(gameTime, currentRoom.Obstacles);
+
+                    foreach (var enemy in currentRoom.Enemies)
                     {
-                        boss.TakeDamage(70);
-                        _player._isSlash = false;
+                        if (enemy.IsActive && bullet.boundingBox.Intersects(enemy.boundingBox))
+                        {
+                            enemy.TakeDamage(40, _player.position, false);
+                            bullet.IsActive = false;
+                            break; // Exit the inner loop after hitting an enemy
+                        }
+                    }
+                    if (boss.IsbossAticve && bullet.boundingBox.Intersects(boss.HitboxgetDamage))
+                    {
+                        boss.TakeDamage(40);
+                        bullet.IsActive = false;
+                    }
+
+                    // Remove inactive bullets
+                    if (!bullet.IsActive)
+                    {
+                        _playerBullets.RemoveAt(i);
                     }
                 }
-            }
 
-            // Update and check for player bullet collisions with all enemies
-            for (int i = _playerBullets.Count - 1; i >= 0; i--)
-            {
-                Bullet bullet = _playerBullets[i];
-                bullet.Update(gameTime, currentRoom.Obstacles);
+                // Enemy bullets update and collision checks
+                for (int i = _enemyBullets.Count - 1; i >= 0; i--)
+                {
+                    EnemyBullet bullet = _enemyBullets[i];
+                    Bullet newParriedBullet = bullet.Update(gameTime, currentRoom.Obstacles, _player);
 
+                    // 2. ตรวจสอบว่ามีกระสุน Parry ถูกสร้างขึ้นมาหรือไม่
+                    if (newParriedBullet != null)
+                    {
+                        // 3. เพิ่มกระสุน Parry เข้าไปใน List ของกระสุนฝ่ายผู้เล่น
+                        _playerBullets.Add(newParriedBullet);
+                    }
+
+                    if (!bullet.IsActive)
+                    {
+                        _enemyBullets.RemoveAt(i);
+                    }
+                }
+                for (int i = _playerBullets.Count - 1; i >= 0; i--)
+                {
+                    Bullet parriedBullet = _playerBullets[i];
+
+                    // (คุณอาจต้องสร้าง Method Update สำหรับ Bullet ธรรมดา ที่ไม่รับ Player)
+                    // หรือถ้า Bullet มี Update(GameTime, List<Rectangle>) ก็เรียกใช้ตัวนั้นได้เลย
+                    parriedBullet.Update(gameTime, currentRoom.Obstacles);
+
+                    // *คุณอาจต้องเพิ่มโค้ดตรวจการชนกับ Boss ที่นี่ด้วย*
+
+                    if (!parriedBullet.IsActive)
+                    {
+                        _playerBullets.RemoveAt(i);
+                    }
+                }
+
+                if (currentRoomIndex == 7 && boss.Health > 0)
+                {
+                    boss.IsbossAticve = true;
+                }
+                else
+                {
+                    boss.IsbossAticve = false;
+                }
+                if (boss.IsbossAticve)
+                {
+                    boss.Update(gameTime, _player, currentRoom.Obstacles);
+                    var newlySpawnedEnemies = boss.GetSpawnedEnemies();
+
+                    // *** เพิ่มโค้ดส่วนนี้เข้าไป ***
+                    if (newlySpawnedEnemies.Count > 0)
+                    {
+                        foreach (var enemy in newlySpawnedEnemies)
+                        {
+                            // ตรวจสอบว่าเป็น Enemy_Shooting หรือไม่
+                            if (enemy is Enemy_Shooting shootingEnemy)
+                            {
+                                // สมัครรับเหตุการณ์ OnShoot ที่นี่
+                                shootingEnemy.OnShoot += bullet => _enemyBullets.Add((EnemyBullet)bullet);
+                            }
+                            // เพิ่มศัตรูใหม่ลงในรายการหลัก
+                            currentRoom.Enemies.Add(enemy);
+                        }
+                    }
+                }
+                // ... โค้ดสำหรับอัปเดตและเช็กการชนของศัตรูใน currentRoom.Enemies ...
                 foreach (var enemy in currentRoom.Enemies)
                 {
-                    if (enemy.IsActive && bullet.boundingBox.Intersects(enemy.boundingBox))
+                    if (enemy.IsActive)
                     {
-                        enemy.TakeDamage(40,_player.position,false);
-                        bullet.IsActive = false;
-                        break; // Exit the inner loop after hitting an enemy
+                        enemy.Update(_player, currentRoom.Obstacles, gameTime);
+                        enemy.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
                     }
-                }
-                if(boss.IsbossAticve && bullet.boundingBox.Intersects(boss.HitboxgetDamage))
-                {
-                    boss.TakeDamage(40);
-                    bullet.IsActive = false;
-                }
-
-                // Remove inactive bullets
-                if (!bullet.IsActive)
-                {
-                    _playerBullets.RemoveAt(i);
-                }
-            }
-
-            // Enemy bullets update and collision checks
-            for (int i = _enemyBullets.Count - 1; i >= 0; i--)
-            {
-                EnemyBullet bullet = _enemyBullets[i];
-                Bullet newParriedBullet = bullet.Update(gameTime, currentRoom.Obstacles, _player);
-
-                // 2. ตรวจสอบว่ามีกระสุน Parry ถูกสร้างขึ้นมาหรือไม่
-                if (newParriedBullet != null)
-                {
-                    // 3. เพิ่มกระสุน Parry เข้าไปใน List ของกระสุนฝ่ายผู้เล่น
-                    _playerBullets.Add(newParriedBullet);
-                }
-
-                if (!bullet.IsActive)
-                {
-                    _enemyBullets.RemoveAt(i);
-                }
-            }
-            for (int i = _playerBullets.Count - 1; i >= 0; i--)
-            {
-                Bullet parriedBullet = _playerBullets[i];
-
-                // (คุณอาจต้องสร้าง Method Update สำหรับ Bullet ธรรมดา ที่ไม่รับ Player)
-                // หรือถ้า Bullet มี Update(GameTime, List<Rectangle>) ก็เรียกใช้ตัวนั้นได้เลย
-                parriedBullet.Update(gameTime, currentRoom.Obstacles);
-
-                // *คุณอาจต้องเพิ่มโค้ดตรวจการชนกับ Boss ที่นี่ด้วย*
-
-                if (!parriedBullet.IsActive)
-                {
-                    _playerBullets.RemoveAt(i);
-                }
-            }
-
-            if (currentRoomIndex == 7 && boss.Health > 0)
-            {
-                boss.IsbossAticve = true;
-            }
-            else
-            {
-                boss.IsbossAticve = false;
-            }
-            if (boss.IsbossAticve)
-            {
-                boss.Update(gameTime, _player, currentRoom.Obstacles);
-                var newlySpawnedEnemies = boss.GetSpawnedEnemies();
-
-                // *** เพิ่มโค้ดส่วนนี้เข้าไป ***
-                if (newlySpawnedEnemies.Count > 0)
-                {
-                    foreach (var enemy in newlySpawnedEnemies)
+                    if (_player.drect.Intersects(enemy.bulletammo) && enemy._isbulletammo == true)
                     {
-                        // ตรวจสอบว่าเป็น Enemy_Shooting หรือไม่
-                        if (enemy is Enemy_Shooting shootingEnemy)
-                        {
-                            // สมัครรับเหตุการณ์ OnShoot ที่นี่
-                            shootingEnemy.OnShoot += bullet => _enemyBullets.Add((EnemyBullet)bullet);
-                        }
-                        // เพิ่มศัตรูใหม่ลงในรายการหลัก
-                        currentRoom.Enemies.Add(enemy);
+                        _player.maxAmmo += 10;
+                        enemy.bulletammo = new Rectangle(0, 0, 0, 0);
+                    }
+                    else if (_player.drect.Intersects(enemy.HpDrop) && enemy._isHpDrop == true)
+                    {
+                        _player.Health += 1;
+                        enemy.HpDrop = new Rectangle(0, 0, 0, 0);
                     }
                 }
             }
-            // ... โค้ดสำหรับอัปเดตและเช็กการชนของศัตรูใน currentRoom.Enemies ...
-            foreach (var enemy in currentRoom.Enemies)
-            {
-                if (enemy.IsActive)
-                {
-                    enemy.Update(_player, currentRoom.Obstacles, gameTime);
-                    enemy.ClampPosition(currentRoom.Bounds, currentRoom.Obstacles);
-                }
-                if (_player.drect.Intersects(enemy.bulletammo) && enemy._isbulletammo == true )
-                {
-                    _player.maxAmmo += 10;
-                    enemy.bulletammo = new Rectangle(0, 0, 0, 0);
-                }
-                else if (_player.drect.Intersects(enemy.HpDrop) && enemy._isHpDrop == true)
-                {
-                    _player.Health += 1;
-                    enemy.HpDrop = new Rectangle(0, 0, 0, 0);
-                }
-            }
+            previousKState = currentKState;
             base.Update(gameTime);
         }
 
@@ -624,6 +646,7 @@ namespace Ghost_blade
                     DrawRectangle(_spriteBatch, boss.HitboxgetDamage, Color.Yellow, 1);
                     DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
                     DrawRectangle(_spriteBatch, _player.meleeWeapon.ParryHitbox, Color.Red, 1);
+                    DrawRectangle(_spriteBatch,_player.meleeWeapon.ULTHitbox, Color.Red, 1);
                     foreach (var room in rooms)
                     {
                         foreach (var enemy in room.Enemies)

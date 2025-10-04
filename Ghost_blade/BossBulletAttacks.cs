@@ -10,6 +10,7 @@ namespace Ghost_blade
         private List<EnemyBullet> bullets;
         private List<Bullet> _parriedBullets;
         private bool isFiring = false;
+        private Texture2D parry;
 
         private const int BURST_COUNT = 50; // Number of bullets to fire in one burst
         private const float BURST_DELAY = 0.15f; // Delay between each bullet shot in the burst
@@ -20,10 +21,11 @@ namespace Ghost_blade
         private float burstTimer;
         private float attackTimer;
 
-        public BossBulletAttacks(Boss owner, Texture2D bulletTexture) : base(owner, bulletTexture)
+        public BossBulletAttacks(Boss owner, Texture2D bulletTexture,Texture2D parry) : base(owner, bulletTexture)
         {
             bullets = new List<EnemyBullet>();
             _parriedBullets = new List<Bullet>();
+            this.parry = parry;
         }
 
         public override void Start(Player player)
@@ -54,7 +56,7 @@ namespace Ghost_blade
                 directionToPlayer.Normalize();
 
                 // Create and add the new bullet
-                bullets.Add(new EnemyBullet(pixelTexture, position, directionToPlayer, 8f, 0f, 3f));
+                bullets.Add(new EnemyBullet(pixelTexture, position, directionToPlayer, 8f, 0f, 3f,parry));
 
                 bulletsShotInBurst++;
                 burstTimer = BURST_DELAY; // Reset the timer for the next shot

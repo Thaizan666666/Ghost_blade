@@ -9,6 +9,7 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/crosshairs_reload-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Door_Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Enemy_Bullet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemy-Idle-12Frame_Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemyattack-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemywalk-Sheet.png</File>
@@ -45,11 +46,16 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_lab_03.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_tutorial_void.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_tutorial.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Parry_Bullet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Player_Bullet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/UI_Font.spritefont</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/UI_weapon-Sheet.png</File>
   </SourceFiles>
   <DestFiles>
     <File>Map_boss.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
