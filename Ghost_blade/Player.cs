@@ -22,7 +22,7 @@ namespace Ghost_blade
         public Vector2 position { get; set; }
         public Vector2 velocity { get; private set; }
 
-        private float speed;
+        public float speed { get; set; }
         private float rotation;
         
         private float fireDelay = 0.2f;
@@ -284,9 +284,9 @@ namespace Ghost_blade
         private void HandleAttacks(KeyboardState kState,MouseState mState, Vector2 cameraPosition) // ต้องเพิ่ม cameraPosition เป็น parameter
         {
             bool _iscanattack = isDashing;
-            if (!_iscanattack)
+            if (!_iscanattack || meleeWeapon._ultTimer > 0)
             {
-                if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released && meleeWeapon._parryTimer <= 0 && meleeWeapon._ultTimer <= 0)
+                if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released && meleeWeapon._parryTimer <= 0)
                 {
                     if (isSwordEquipped)
                     {
@@ -295,19 +295,13 @@ namespace Ghost_blade
                         _isSlash = true;
                     }
                 }
-                if (mState.RightButton == ButtonState.Pressed && previousMState.RightButton == ButtonState.Released && meleeWeapon._ultTimer <=0)
+                if (mState.RightButton == ButtonState.Pressed && previousMState.RightButton == ButtonState.Released)
                 {
                     if (isSwordEquipped && currentState != PlayerState.Attacking && !isDashing && parryCooldownTimer <= 0)
                     {
                         meleeWeapon.PerformParry(position, cameraPosition);
                         parryCooldownTimer = ParryCooldown;
                     }
-                }
-                if(kState.IsKeyDown(Keys.X) && !previousKState.IsKeyDown(Keys.X))
-                {
-                    meleeWeapon.PerformULT(position);
-                    _isInvincible = true;
-                    _invincibilityTimer = 2.0f;
                 }
             }
         }
@@ -362,7 +356,7 @@ namespace Ghost_blade
 
         private void HandleMovement(KeyboardState kState)
         {
-            bool isActionActive = isDashing || currentState == PlayerState.Attacking || meleeWeapon._parryTimer > 0;
+            bool isActionActive = isDashing || currentState == PlayerState.Attacking || meleeWeapon._parryTimer > 0 || meleeWeapon._ultTimer > 0;
             if (!isActionActive)
             {
                 Vector2 newVelocity = Vector2.Zero;

@@ -72,6 +72,7 @@ namespace Ghost_blade
             MainMenu,
             Playing,
             Paused,
+            justmentcut,
             GameOver
         }
 
@@ -221,6 +222,7 @@ namespace Ghost_blade
 
         protected override void Update(GameTime gameTime)
         {
+            Debug.WriteLine(_player.meleeWeapon._ultTimer);
             currentKState = Keyboard.GetState();
 
             if (currentKState.IsKeyDown(Keys.P) && !previousKState.IsKeyDown(Keys.P))
@@ -230,15 +232,13 @@ namespace Ghost_blade
                 else if (gameState == GameState.Paused)
                     gameState = GameState.Playing;
             }
-            if (currentKState.IsKeyDown(Keys.O) && !previousKState.IsKeyDown(Keys.O) && _isOpenhitbox == false)
+            if (currentKState.IsKeyDown(Keys.O) && !previousKState.IsKeyDown(Keys.O))
             {
-                _isOpenhitbox = true;
+                if (_isOpenhitbox == false)
+                { _isOpenhitbox = true; }
+                else { _isOpenhitbox = false; }
             }
-            else if (currentKState.IsKeyDown(Keys.O) && !previousKState.IsKeyDown(Keys.O) && _isOpenhitbox == true)
-            {
-                _isOpenhitbox = false;
-            }
-            Debug.WriteLine($"Player Position: X={_player.position.X/48}, Y={_player.position.Y/48}");
+            //Debug.WriteLine($"Player Position: X={_player.position.X/48}, Y={_player.position.Y/48}");
             Room currentRoom = rooms[currentRoomIndex];
             if (currentKState.IsKeyDown(Keys.Escape))
             {
@@ -576,6 +576,48 @@ namespace Ghost_blade
                     }
                 }
             }
+            if (currentKState.IsKeyDown(Keys.X) && !previousKState.IsKeyDown(Keys.X) && _player.isSwordEquipped)
+            {
+                if (gameState == GameState.Playing)
+                {
+                    gameState = GameState.justmentcut;
+                    _player.meleeWeapon.getULTHitbox(_player.position);
+                    _player.meleeWeapon._ultTimer = 2f;
+                    _player.meleeWeapon._ultTimer = 2f; // <-- ตั้งค่าเป็น 2f
+                    _player.meleeWeapon._isULTActive = true; // <-- ต้องแน่ใจว่าตั้งค่านี้ด้วย
+                }
+            }
+            if (gameState == GameState.justmentcut)
+            {
+                // 1. อัปเดต Player เพื่อให้ Animation ขยับ
+                _player.Update(gameTime, camera.position); // Update Player แต่ไม่ให้รับ Input/เคลื่อนที่
+
+                // 2. จัดการ ULT Timer และ Hitbox
+                if (_player.meleeWeapon._isULTActive) // ตรวจสอบว่า ULT กำลังทำงาน
+                {
+                    // *คุณต้องมีตัวแปร Timer ใน MeleeWeapon*
+                    foreach (var enemy in currentRoom.Enemies)
+                    {
+                        if (enemy.IsActive && _player.meleeWeapon.ULTHitbox.Intersects(enemy.boundingBox))
+                        {
+                                enemy.TakeDamage(500, _player.position, false);
+                        }
+                    }
+                    if (boss.IsbossAticve && _player.meleeWeapon.ULTHitbox.Intersects(boss.HitboxgetDamage))
+                    {
+                        boss.TakeDamage(500);
+                    }
+                    _player.meleeWeapon._ultTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    if (_player.meleeWeapon._ultTimer <= 0)
+                    {
+                        // สิ้นสุด ULT
+                        _player.meleeWeapon._isULTActive = false;
+                        _player.meleeWeapon.ULTHitbox = Rectangle.Empty;
+                        gameState = GameState.Playing;
+                    }
+                }
+            }
             previousKState = currentKState;
             base.Update(gameTime);
         }
@@ -596,7 +638,7 @@ namespace Ghost_blade
                 gameOver.Draw(_spriteBatch);
                 _spriteBatch.End();
             }
-            else if (gameState == GameState.Playing)
+            else if (gameState == GameState.Playing || gameState == GameState.justmentcut)
             {
                 var transform = Matrix.CreateTranslation(camera.position.X, camera.position.Y, 0);
 
@@ -646,7 +688,7 @@ namespace Ghost_blade
                     DrawRectangle(_spriteBatch, boss.HitboxgetDamage, Color.Yellow, 1);
                     DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
                     DrawRectangle(_spriteBatch, _player.meleeWeapon.ParryHitbox, Color.Red, 1);
-                    DrawRectangle(_spriteBatch,_player.meleeWeapon.ULTHitbox, Color.Red, 1);
+                    DrawRectangle(_spriteBatch, _player.meleeWeapon.ULTHitbox, Color.Red, 1);
                     foreach (var room in rooms)
                     {
                         foreach (var enemy in room.Enemies)
@@ -655,21 +697,22 @@ namespace Ghost_blade
                             DrawRectangle(_spriteBatch, enemy.HpDrop, Color.Green, 1);
                         }
                     }
-                }
-                foreach (var enemy in rooms[currentRoomIndex].Enemies)
-                {
-                    if (enemy.IsActive)
-                    {
-                        // Draw the enemy's main bounding box
-                        DrawRectangle(_spriteBatch, enemy.boundingBox, Color.Orange, 1);
 
-                        // Check if this specific enemy is a Melee type
-                        if (enemy is Enemy_Melee meleeEnemy)
+                    foreach (var enemy in rooms[currentRoomIndex].Enemies)
+                    {
+                        if (enemy.IsActive)
                         {
-                            // Draw the melee attack hitbox only if it's currently active
-                            if (meleeEnemy.AttackHitbox != Rectangle.Empty)
+                            // Draw the enemy's main bounding box
+                            DrawRectangle(_spriteBatch, enemy.boundingBox, Color.Orange, 1);
+
+                            // Check if this specific enemy is a Melee type
+                            if (enemy is Enemy_Melee meleeEnemy)
                             {
-                                DrawRectangle(_spriteBatch, meleeEnemy.AttackHitbox, Color.Red, 1);
+                                // Draw the melee attack hitbox only if it's currently active
+                                if (meleeEnemy.AttackHitbox != Rectangle.Empty)
+                                {
+                                    DrawRectangle(_spriteBatch, meleeEnemy.AttackHitbox, Color.Red, 1);
+                                }
                             }
                         }
                     }

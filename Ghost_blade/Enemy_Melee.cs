@@ -118,6 +118,7 @@ namespace Ghost_blade
         {
             int attackWidth = 60;
             int attackHeight = 60;
+            int attackDistance = 30;
 
             Vector2 directionToPlayer = player.position - this.Position;
             if (directionToPlayer != Vector2.Zero)
@@ -125,7 +126,7 @@ namespace Ghost_blade
                 directionToPlayer.Normalize();
             }
 
-            Vector2 attackPosition = this.Position + directionToPlayer * (this.Texture.Width / 2 + 10);
+            Vector2 attackPosition = this.Position + directionToPlayer * attackDistance;
 
             // Create the hitbox for this frame
             Rectangle attackHitbox = new Rectangle(
@@ -150,7 +151,7 @@ namespace Ghost_blade
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            TexturePosition = new Vector2 (Position.X - 32,Position.Y - 32);
+            TexturePosition = new Vector2 (Position.X - 36,Position.Y - 32);
 
             if (IsActive)
             {
@@ -160,7 +161,7 @@ namespace Ghost_blade
                 }
                 else if (distanceToPlayer <= 70)
                 {
-                    Enemymelee_Attack.DrawFrame(spriteBatch, TexturePosition, flip);
+                    Enemymelee_Attack.DrawFrame(spriteBatch, TexturePosition - new Vector2(36,0), flip);
                 }
                 else
                 {
