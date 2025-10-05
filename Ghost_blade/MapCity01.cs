@@ -12,10 +12,10 @@ namespace Ghost_blade
     public class MapCity01 : Room
     {
         public MapCity01(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture,
-            AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack,
-            AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk,
-            Texture2D enemyTexture, Texture2D bulletTexture,Texture2D parry)
-            : base(bg, layer2, DoorOpenTexture, new Rectangle(72 * 48, 17 * 48, 6 * 48, 1 * 48), new Vector2(72 * 48, 14 * 48),
+            AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack, AnimatedTexture Enemymelee_Death,
+            AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death,
+            Texture2D enemyTexture, Texture2D bulletTexture, Texture2D parry)
+            : base(bg, layer2, DoorOpenTexture, new Rectangle(0 * 48, 0 * 48, 6 * 48, 1 * 48), new Vector2(0 * 48, 0 * 48),
                   new Vector2(113 * 48, 17 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2))
         {
             NextRooms = new List<int> { 2, 3 };
@@ -76,6 +76,8 @@ namespace Ghost_blade
             AddObstacle(57.5f, 83, 6, 2);
             AddObstacle(39, 94.5f, 6, 3);
             AddObstacle(57.5f, 95, 6, 2);
+            AddObstacle(72, 17, 1, 1);
+            AddObstacle(77, 17, 1, 1);
 
         }
     }

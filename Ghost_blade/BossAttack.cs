@@ -21,4 +21,9 @@ public abstract class BossAttack
     public abstract void Start(Player player);
     public abstract void Update(GameTime gameTime, Player player, List<Rectangle> obstacles);
     public abstract void Draw(SpriteBatch spriteBatch);
+    public virtual void Reset()
+    {
+        IsFinished = false;
+    }
+
 }

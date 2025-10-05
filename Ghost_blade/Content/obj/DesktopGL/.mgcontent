@@ -4,55 +4,73 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/../../../../../../Downloads/Map_boss.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/A_job.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/crosshairs_reload-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Door_Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Enemy_Bullet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemy-Idle-12Frame_Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemyattack-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemywalk-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/energy-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/energy.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/firefoxBall.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/gameover-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Dash-Blade_Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Dash-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Idle-Blade_Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Idle-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Run_Blade-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Run-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Slash2-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Slash4-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_SlashDown-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_SlashUp-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Gun.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/HP-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Main_title-Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_boss.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_City_01_void.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_City_01.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_City_02_void.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_City_02.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_City_03_void.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_City_03.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_lab_01_void.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_lab_01.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_lab_02_void.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_lab_02.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_lab_03_void.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_lab_03.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_tutorial_void.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_tutorial.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Parry_Bullet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Player_Bullet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/UI_Font.spritefont</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/UI_weapon-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/A_job.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Ammo.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs_reload-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Door_city_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Door_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Enemy_Bullet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemy-Idle-12Frame_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemyattack-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemydeath-25FrameSheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemyshooting_death-25FrameSheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemyshooting_walk-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemyshooting-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemywalk-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/energy-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/energy.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/firefoxBall.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/gameover-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Dash-Blade_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Dash-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Idle-Blade_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Idle-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Run_Blade-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Run-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Slash2-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Slash4-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_SlashDown-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_SlashUp-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Gun.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Heal.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/hp_boss_1.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/hp_boss_2.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/HP-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Main_title-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_boss.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_01_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_01.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_02_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_02.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_03_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_03.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_01_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_01.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_02_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_02.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_03_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_lab_03.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_tutorial_void.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_tutorial.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Parry_Bullet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Player_Bullet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Spotgame-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/UI_Font.spritefont</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/UI_weapon-Sheet.png</File>
   </SourceFiles>
   <DestFiles>
-    <File>Map_boss.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

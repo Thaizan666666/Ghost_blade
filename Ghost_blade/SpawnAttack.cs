@@ -17,6 +17,8 @@ public class SpawnAttack : BossAttack
     private AnimatedTexture Enemymelee_Attack;
     private AnimatedTexture EnemyShooting_Idle;
     private AnimatedTexture EnemyShooting_Walk;
+    private AnimatedTexture Enemymelee_Death;
+    private AnimatedTexture EnemyShooting_Death;
 
     private Random random;
 
@@ -47,19 +49,21 @@ public class SpawnAttack : BossAttack
     private List<Enemy> newlySpawnedEnemies;
     private Texture2D pixelTexture; // Keep a reference to the pixelTexture for drawing the warning
 
-    public SpawnAttack(Boss owner, Texture2D pixelTexture, AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack,
-        AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk,
+    public SpawnAttack(Boss owner, Texture2D pixelTexture, AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack, AnimatedTexture Enemymelee_Death,
+        AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death,
         Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture, Texture2D parryTexture)
         : base(owner, pixelTexture)
     {
         this.pixelTexture = pixelTexture; // Store the pixel texture
         this.enemyTexture1 = enemyTex1;
         this.enemyTexture2 = enemyTex2;
-        this.Enemymelee_Idle = Enemymelee_Idle;
-        this.Enemymelee_Attack = Enemymelee_Attack;
-        this.Enemymelee_Walk = Enemymelee_Walk;
-        this.EnemyShooting_Idle = EnemyShooting_Idle;
-        this.EnemyShooting_Walk = EnemyShooting_Walk;
+        this.Enemymelee_Idle = Enemymelee_Idle.Clone();
+        this.Enemymelee_Attack = Enemymelee_Attack.Clone();
+        this.Enemymelee_Walk = Enemymelee_Walk.Clone();
+        this.EnemyShooting_Idle = EnemyShooting_Idle.Clone();
+        this.EnemyShooting_Walk = EnemyShooting_Walk.Clone();
+        this.Enemymelee_Death = Enemymelee_Death.Clone();
+        this.EnemyShooting_Death = EnemyShooting_Death.Clone();
         this.bulletTexture = bulletTexture;
         this.random = new Random();
         this.spawnedEnemies = new List<Enemy>();
@@ -112,11 +116,11 @@ public class SpawnAttack : BossAttack
 
         if (spawnData.EnemyType == 0)
         {
-            newEnemy = new Enemy_Melee(Enemymelee_Idle,Enemymelee_Walk,Enemymelee_Attack, enemyTexture1, spawnPosition, 1.5f, 1000f);
+            newEnemy = new Enemy_Melee(Enemymelee_Idle,Enemymelee_Walk, Enemymelee_Death, Enemymelee_Attack, enemyTexture1, spawnPosition, 1.5f, 1000f);
         }
         else
         {
-            newEnemy = new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, enemyTexture2, spawnPosition, 1.0f, 1000f, bulletTexture,parryTexture);
+            newEnemy = new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTexture2, spawnPosition, 1.0f, 1000f, bulletTexture,parryTexture);
         }
 
         newlySpawnedEnemies.Add(newEnemy);
@@ -201,5 +205,15 @@ public class SpawnAttack : BossAttack
     public int GetActiveSpawnedEnemyCount()
     {
         return spawnedEnemies.Count;
+    }
+    public override void Reset()
+    {
+        base.Reset();
+        hasFinishedInitialSpawns = false;
+        enemiesSpawnedCount = 0;
+        timer = 0f;
+        nextPendingSpawn = null;
+        spawnedEnemies.Clear();
+        newlySpawnedEnemies.Clear();
     }
 }

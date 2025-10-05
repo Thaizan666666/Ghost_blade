@@ -37,11 +37,14 @@ namespace Ghost_blade
         private Texture2D _pixel;
         private Texture2D EnemyTexture;
         private Texture2D AmmoDrop;
-        private Texture2D DropHp;
+        private Texture2D HealDrop;
+        private Texture2D Boss_Max_Hp;
+        private Texture2D Boss_Current_Hp;
 
         private GameState gameState = GameState.MainMenu;
         private MainMenuScreen mainMenu;
         private GameOverScreen gameOver;
+        private PausedScreen paused;
         private bool Door_Open = false;
 
         private KeyboardState previousKState;
@@ -50,12 +53,15 @@ namespace Ghost_blade
         private AnimatedTexture Hp_bar;
         private AnimatedTexture cursorTexture;
         private AnimatedTexture cursorReloadTexture;
-        private AnimatedTexture DoorOpenTexture;
+        private AnimatedTexture DoorCityOpenTexture;
         private AnimatedTexture Enemymelee_Idle;
         private AnimatedTexture Enemymelee_Walk;
         private AnimatedTexture Enemymelee_Attack;
         private AnimatedTexture EnemyShooting_Idle;
         private AnimatedTexture EnemyShooting_Walk;
+        private AnimatedTexture Enemymelee_Death;
+        private AnimatedTexture EnemyShooting_Death;
+
         private int Enemy_Count;
         SpriteFont uiFont;
 
@@ -89,12 +95,14 @@ namespace Ghost_blade
             Hp_bar = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
             cursorTexture = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             cursorReloadTexture = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
-            DoorOpenTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            DoorCityOpenTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             Enemymelee_Idle = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             Enemymelee_Walk = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             Enemymelee_Attack = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             EnemyShooting_Idle = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             EnemyShooting_Walk = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            Enemymelee_Death = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            EnemyShooting_Death = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
 
         protected override void Initialize()
@@ -114,8 +122,13 @@ namespace Ghost_blade
             _PlayerbulletTexture = Content.Load<Texture2D>("Player_Bullet");
             _EnemybulletTexture = Content.Load<Texture2D>("Enemy_Bullet");
             _parrybullet = Content.Load<Texture2D>("Parry_Bullet");
+            AmmoDrop = Content.Load<Texture2D>("Ammo");
+            HealDrop = Content.Load<Texture2D>("Heal");
             Texture2D playerTexture = Content.Load<Texture2D>("GB_Idle-Sheet");
             EnemyTexture = Content.Load<Texture2D>("enemy-Idle-12Frame_Sheet");
+            Boss_Max_Hp = Content.Load<Texture2D>("hp_boss_1");
+            Boss_Current_Hp = Content.Load<Texture2D>("hp_boss_2");
+
             _swordTexture = new Texture2D(GraphicsDevice, 50, 20); // Create a 50x20 pixel texture
             Color[] data = new Color[50 * 20];
             for (int i = 0; i < data.Length; ++i) data[i] = Color.White; // Fill with red color
@@ -136,8 +149,8 @@ namespace Ghost_blade
             // Backgrounds
             Texture2D Map_tutorial_01 = Content.Load<Texture2D>("Map_tutorial");
             Texture2D Map_city_01 = Content.Load<Texture2D>("Map_City_01");
-            Texture2D Map_city_02 = Content.Load<Texture2D>("Map_City_02");
-            Texture2D Map_city_03 = Content.Load<Texture2D>("Map_City_03");
+            Texture2D Map_city_02 = Content.Load<Texture2D>("Map_City_03");
+            Texture2D Map_city_03 = Content.Load<Texture2D>("Map_City_02");
             Texture2D Map_lab_01 = Content.Load<Texture2D>("Map_lab_01");
             Texture2D Map_lab_02 = Content.Load<Texture2D>("Map_lab_02");
             Texture2D Map_lab_03 = Content.Load<Texture2D>("Map_lab_03");
@@ -150,21 +163,44 @@ namespace Ghost_blade
             Texture2D Map_lab_02_void = Content.Load<Texture2D>("Map_lab_02_void");
             Texture2D Map_lab_03_void = Content.Load<Texture2D>("Map_lab_03_void");
 
+            Hp_bar.Load(Content, "HP-Sheet", 6, 1, 8);
+            cursorTexture.Load(Content, "crosshairs-Sheet", 4, 1, 20);
+            cursorReloadTexture.Load(Content, "crosshairs_reload-Sheet", 4, 1, 20);
+            _player.change_Weapon = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
+            _player.change_Weapon.Load(Content, "UI_weapon-Sheet", 4, 1, 1);
+            _player.GunDashingTexture.Load(Content, "GB_Dash-Sheet", 4, 1, 10);
+            _player.BladeDashingTexture.Load(Content, "GB_Dash-Blade_Sheet", 4, 1, 10);
+            _player.IdleBladeTexture.Load(Content, "GB_Idle-Blade_Sheet", 4, 1, 8);
+            _player.IdleGunTexture.Load(Content, "GB_Idle-Sheet", 4, 1, 8);
+            _player.RunningBladeTexture.Load(Content, "GB_Run_Blade-Sheet", 8, 1, 8);
+            _player.RunningGunTexture.Load(Content, "GB_Run-Sheet", 8, 1, 8);
+            _player.AttackingTexture.Load(Content, "GB_Slash2-Sheet", 4, 1, 20);
+            _player.AttackingTexture2.Load(Content, "GB_Slash4-Sheet", 4, 1, 20);
+            _player.AttackingTextureUp.Load(Content, "GB_SlashUp-Sheet", 4, 1, 20);
+            _player.AttackingTextureDown.Load(Content, "GB_SlashDown-Sheet", 4, 1, 20);
+            DoorCityOpenTexture.Load(Content, "Door_city_Sheet", 4, 1, 8);
+            Enemymelee_Idle.Load(Content, "enemy-Idle-12Frame_Sheet", 12, 1, 8);
+            Enemymelee_Walk.Load(Content, "enemywalk-Sheet", 8, 1, 4);
+            Enemymelee_Attack.Load(Content, "enemyattack-Sheet", 11, 1, 4);
+            EnemyShooting_Idle.Load(Content, "enemyshooting-Sheet", 12, 1, 8);
+            EnemyShooting_Walk.Load(Content, "enemyshooting_walk-Sheet", 8, 1, 4);
+            Enemymelee_Death.Load(Content, "enemydeath-25FrameSheet", 25, 1, 12);
+            EnemyShooting_Death.Load(Content, "enemyshooting_death-25FrameSheet", 25, 1, 8);
             // Pass the pixel texture to the Beholster constructor
             boss = new Boss(_bossTexture, new Vector2(41 * 48, 8 * 48), _pixel, 
-                Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, EnemyTexture, _EnemybulletTexture,_parrybullet);
+                Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, EnemyTexture, _EnemybulletTexture,_parrybullet);
 
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
             {
-                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture,_parrybullet),
-                new MapCity01(Map_city_01, Map_city_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture, _parrybullet),
-                new MapCity02(Map_city_02, Map_city_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture, _parrybullet),
-                new MapCity03(Map_city_03, Map_city_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture, _parrybullet),
-                new MapLab01(Map_lab_01, Map_lab_01_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture, _parrybullet),
-                new MapLab02(Map_lab_02, Map_lab_02_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture, _parrybullet),
-                new MapLab03(Map_lab_03, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture,_parrybullet),
-                new MapBoss01(Map_Boss_01, Map_lab_03_void, DoorOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack,EnemyShooting_Idle, EnemyShooting_Walk, EnemyTexture, _EnemybulletTexture,_parrybullet),
+                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture,_parrybullet),
+                new MapCity01(Map_city_01, Map_city_01_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet),
+                new MapCity02(Map_city_02, Map_city_02_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet),
+                new MapCity03(Map_city_03, Map_city_03_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet),
+                new MapLab01(Map_lab_01, Map_lab_01_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet),
+                new MapLab02(Map_lab_02, Map_lab_02_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet),
+                new MapLab03(Map_lab_03, Map_lab_03_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture,_parrybullet),
+                new MapBoss01(Map_Boss_01, Map_lab_03_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture,_parrybullet),
             };
 
 
@@ -185,30 +221,8 @@ namespace Ghost_blade
 
             _player.SetPosition(rooms[currentRoomIndex].StartPosition);
             mainMenu = new MainMenuScreen(GraphicsDevice, Content);
-
             gameOver = new GameOverScreen(GraphicsDevice, Content);
-
-            Hp_bar.Load(Content, "HP-Sheet", 6, 1, 8);
-            cursorTexture.Load(Content, "crosshairs-Sheet", 4, 1, 20);
-            cursorReloadTexture.Load(Content, "crosshairs_reload-Sheet", 4, 1, 20);
-            _player.change_Weapon = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
-            _player.change_Weapon.Load(Content, "UI_weapon-Sheet", 4, 1, 1);
-            _player.GunDashingTexture.Load(Content, "GB_Dash-Sheet", 4, 1, 10);
-            _player.BladeDashingTexture.Load(Content, "GB_Dash-Blade_Sheet", 4, 1, 10);
-            _player.IdleBladeTexture.Load(Content, "GB_Idle-Blade_Sheet", 4, 1, 8);
-            _player.IdleGunTexture.Load(Content, "GB_Idle-Sheet", 4, 1, 8);
-            _player.RunningBladeTexture.Load(Content, "GB_Run_Blade-Sheet", 8, 1, 8);
-            _player.RunningGunTexture.Load(Content, "GB_Run-Sheet", 8, 1, 8);
-            _player.AttackingTexture.Load(Content, "GB_Slash2-Sheet", 4, 1, 20);
-            _player.AttackingTexture2.Load(Content, "GB_Slash4-Sheet", 4, 1, 20);
-            _player.AttackingTextureUp.Load(Content,"GB_SlashUp-Sheet",4,1, 20);
-            _player.AttackingTextureDown.Load(Content, "GB_SlashDown-Sheet", 4, 1, 20);
-            DoorOpenTexture.Load(Content, "Door_Sheet", 5, 1, 10);
-            Enemymelee_Idle.Load(Content, "enemy-Idle-12Frame_Sheet", 12, 1, 8);
-            Enemymelee_Walk.Load(Content, "enemywalk-Sheet", 8, 1, 4);
-            Enemymelee_Attack.Load(Content, "enemyattack-Sheet", 11, 1, 4);
-            EnemyShooting_Idle.Load(Content, "enemy-Idle-12Frame_Sheet", 12, 1, 8);
-            EnemyShooting_Walk.Load(Content, "enemywalk-Sheet", 8, 1, 4);
+            paused = new PausedScreen(GraphicsDevice, Content);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             uiFont = Content.Load<SpriteFont>("UI_Font");
@@ -223,12 +237,15 @@ namespace Ghost_blade
         {
             currentKState = Keyboard.GetState();
 
-            if (currentKState.IsKeyDown(Keys.P) && !previousKState.IsKeyDown(Keys.P))
+            if (currentKState.IsKeyDown(Keys.Escape))
             {
                 if (gameState == GameState.Playing)
+                {
                     gameState = GameState.Paused;
-                else if (gameState == GameState.Paused)
-                    gameState = GameState.Playing;
+                    paused.StartGame = false;
+                    paused.Menu = false;
+                }
+                return;
             }
             if (currentKState.IsKeyDown(Keys.O) && !previousKState.IsKeyDown(Keys.O) && _isOpenhitbox == false)
             {
@@ -240,29 +257,39 @@ namespace Ghost_blade
             }
             Debug.WriteLine($"Player Position: X={_player.position.X/48}, Y={_player.position.Y/48}");
             Room currentRoom = rooms[currentRoomIndex];
-            if (currentKState.IsKeyDown(Keys.Escape))
-            {
-                if (gameState == GameState.Playing)
-                {
-                    gameState = GameState.MainMenu;
-                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
-                    _player.Reset();
-                    currentRoomIndex = random.Next(1, 4); ;
-                    stageStep = 0;
-                    currentRoom.ResetRoom();
-                    Door_Open = false;
-                    DoorOpenTexture.Reset();
-                    _enemyBullets.Clear();
-                    _playerBullets.Clear();
-                    mainMenu.StartGame = false;
-                    mainMenu.ExitGame = false;
-                }
-                return;
-            }
+            
             if (currentKState.IsKeyDown(Keys.I))
             {
                 currentRoomIndex = 7;
                 _player.position = rooms[currentRoomIndex].StartPosition;
+            }
+
+            if (gameState == GameState.Paused) 
+            {
+                paused.Update(gameTime);
+                if (paused.StartGame) 
+                {
+                    gameState = GameState.Playing;
+                    paused.StartGame = false;
+                    paused.Menu = false;
+                }
+                if (paused.Menu)
+                {
+                    gameState = GameState.MainMenu;
+                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                    _player.Reset();
+                    boss.Reset();
+                    currentRoomIndex = 6;// random.Next(1, 4); ;
+                    stageStep = 0;
+                    currentRoom.ResetRoom();
+                    Door_Open = false;
+                    DoorCityOpenTexture.Reset();
+                    _enemyBullets.Clear();
+                    _playerBullets.Clear();
+                    paused.StartGame = false;
+                    paused.Menu = false;
+                }
+                return;
             }
 
             if (gameState == GameState.MainMenu)
@@ -297,11 +324,12 @@ namespace Ghost_blade
 
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     _player.Reset();
-                    currentRoomIndex = random.Next(1, 4); ;
+                    boss.Reset();
+                    currentRoomIndex = random.Next(1, 4);
                     stageStep = 0;
                     currentRoom.ResetRoom();
                     Door_Open = false;
-                    DoorOpenTexture.Reset();
+                    DoorCityOpenTexture.Reset();
                     _enemyBullets.Clear();
                     _playerBullets.Clear();
                     gameOver.StartGame = false;
@@ -393,6 +421,7 @@ namespace Ghost_blade
                                     currentRoomIndex = 0;
                                     stageStep = 0;
                                     _player.Reset();
+                                    boss.Reset();
                                     break;
                             }
                             rooms[currentRoomIndex].ResetRoom();
@@ -400,18 +429,20 @@ namespace Ghost_blade
                             _enemyBullets.Clear();
                             _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                             Door_Open = false;
-                            DoorOpenTexture.Reset();
+                            DoorCityOpenTexture.Reset();
                         }
                         else if (_player.drect.Intersects(currentRoom.Door) && currentRoomIndex == 0)
                         {
                             gameState = GameState.MainMenu;
                             _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                             _player.Reset();
+                            boss.Reset();
+                            
                             currentRoomIndex = random.Next(1, 4); ;
                             stageStep = 0;
                             currentRoom.ResetRoom();
                             Door_Open = false;
-                            DoorOpenTexture.Reset();
+                            DoorCityOpenTexture.Reset();
                             _enemyBullets.Clear();
                             _playerBullets.Clear();
                             mainMenu.StartGame = false;
@@ -568,11 +599,13 @@ namespace Ghost_blade
                     {
                         _player.maxAmmo += 10;
                         enemy.bulletammo = new Rectangle(0, 0, 0, 0);
+                        enemy._isbulletammo = false;
                     }
                     else if (_player.drect.Intersects(enemy.HpDrop) && enemy._isHpDrop == true)
                     {
                         _player.Health += 1;
                         enemy.HpDrop = new Rectangle(0, 0, 0, 0);
+                        enemy._isHpDrop = false;
                     }
                 }
             }
@@ -583,6 +616,12 @@ namespace Ghost_blade
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+            if (gameState == GameState.Paused)
+            {
+                _spriteBatch.Begin();
+                paused.Draw(_spriteBatch);
+                _spriteBatch.End();
+            }
             if (gameState == GameState.MainMenu)
             {
                 // สำหรับเมนู ไม่ต้องใช้ camera
@@ -606,11 +645,11 @@ namespace Ghost_blade
 
                 if (Door_Open)
                 {
-                    if (!DoorOpenTexture.IsEnd)
-                    { DoorOpenTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds); }
-                    else if (DoorOpenTexture.IsEnd)
+                    if (!DoorCityOpenTexture.IsEnd)
+                    { DoorCityOpenTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds); }
+                    else if (DoorCityOpenTexture.IsEnd)
                     {
-                        DoorOpenTexture.DrawFrame(_spriteBatch, 4, rooms[currentRoomIndex].DoorPosition);
+                        DoorCityOpenTexture.DrawFrame(_spriteBatch, 4, rooms[currentRoomIndex].DoorPosition);
                     }
                 }
                 // Draw the player
@@ -620,7 +659,16 @@ namespace Ghost_blade
                 // Draw all active enemies in the current room
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {
-                    enemy.Draw(_spriteBatch);
+                    enemy.Draw(_spriteBatch,gameTime);
+
+                    if (enemy._isbulletammo) 
+                    {
+                        _spriteBatch.Draw(AmmoDrop, enemy.Position - new Vector2(17 , 48), null , Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+                    }
+                    if (enemy._isHpDrop)
+                    {
+                        _spriteBatch.Draw(HealDrop, enemy.Position - new Vector2(17, 48), null, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+                    }
                 }
 
                 foreach (var bullet in _playerBullets)
@@ -713,6 +761,18 @@ namespace Ghost_blade
                 string ammoText = $"{_player.currentAmmo}/{_player.maxAmmo}";
                 _player.change_Weapon.DrawFrame(_spriteBatch, _player.currentWeaponFrame, new Vector2(1562, 885));
                 _spriteBatch.DrawString(uiFont, ammoText, new Vector2(1770, 840), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
+
+                if (boss.IsbossAticve)
+                {
+                    Vector2 bossHpPos = new Vector2(1920 / 2 - Boss_Max_Hp.Width / 2, 900);
+                    float healthPercent = (float)boss.Health / boss.MaxHealth;
+                    if (healthPercent < 0f) healthPercent = 0f;
+                    _spriteBatch.Draw(Boss_Max_Hp, bossHpPos, Color.White);
+                    Rectangle srcRect = new Rectangle(0, 0, (int)(Boss_Current_Hp.Width * healthPercent), Boss_Current_Hp.Height);
+                    Rectangle destRect = new Rectangle((int)bossHpPos.X, (int)bossHpPos.Y, srcRect.Width, srcRect.Height);
+                    _spriteBatch.Draw(Boss_Current_Hp, destRect, srcRect, Color.White);
+                }
+
                 _spriteBatch.End();
             }
             MouseState mouseState = Mouse.GetState();

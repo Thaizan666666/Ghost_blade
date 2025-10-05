@@ -239,6 +239,32 @@ namespace _321_Lab05_3
             this.pauseFrame = frame;
             this.pauseRow = row;
         }
+        public AnimatedTexture Clone()
+        {
+            AnimatedTexture clone = new AnimatedTexture(this.Origin, this.Rotation, this.Scale, this.Depth);
+
+            // คัดลอกค่า field ที่จำเป็นสำหรับการทำงาน
+            clone.framecount = this.framecount;
+            clone.framerow = this.framerow;
+            clone.startframe = this.startframe;
+            clone.endframe = this.endframe;
+            clone.TimePerFrame = this.TimePerFrame;
+            clone.Overload = this.Overload;
+            clone.startrow = this.startrow;
+
+            // แชร์ texture เดิม (ไม่โหลดใหม่)
+            clone.myTexture = this.myTexture;
+
+            // รีเซ็ตค่า animation state ของ clone ให้เป็นของตัวเอง
+            clone.Frame = 0;
+            clone.frame_r = 0;
+            clone.TotalElapsed = 0f;
+            clone.Paused = false;
+            clone.Ended = false;
+
+            return clone;
+        }
 
     }
+
 }

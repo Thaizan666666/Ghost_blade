@@ -16,14 +16,14 @@ namespace Ghost_blade
         public Vector2 StartPosition { get; private set; }
         public List<int> NextRooms { get; protected set; }
         public List<Enemy> Enemies { get; private set; }
-        private AnimatedTexture DoorOpenTexture;
+        private AnimatedTexture DoorCityOpenTexture;
         public Vector2 DoorPosition;
 
         public Room(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture, Rectangle doorRectangle, Vector2 DoorPosition, Vector2 startPosition, Rectangle bounds)
         {
             this.background = bg;
             this.layer2 = layer2;
-            this.DoorOpenTexture = DoorOpenTexture;
+            this.DoorCityOpenTexture = DoorOpenTexture;
             this.Door = doorRectangle;
             this.DoorPosition = DoorPosition;
             this.StartPosition = startPosition;
@@ -48,7 +48,7 @@ namespace Ghost_blade
         {
             spriteBatch.Draw(background, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
 
-            DoorOpenTexture.DrawFrame(spriteBatch, DoorPosition);
+            DoorCityOpenTexture.DrawFrame(spriteBatch, DoorPosition);
 
             Texture2D pixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });

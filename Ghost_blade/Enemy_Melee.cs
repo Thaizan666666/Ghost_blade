@@ -20,26 +20,28 @@ namespace Ghost_blade
 
         private Vector2 TexturePosition;
         private bool flip = false;
+        private bool isDying = false;
+        private bool hasPlayedDeath = false;
         private AnimatedTexture Enemymelee_Idle;
         private AnimatedTexture Enemymelee_Walk;
         private AnimatedTexture Enemymelee_Attack;
+        private AnimatedTexture Enemymelee_Death;
 
-        public Enemy_Melee(AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack,
+        public Enemy_Melee(AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack, AnimatedTexture Enemymelee_Death,
             Texture2D texture, Vector2 startPosition, float speed, float detectionRadius)
           : base(texture, startPosition, speed, detectionRadius)
         {
-            this.Enemymelee_Idle = Enemymelee_Idle;
-            this.Enemymelee_Walk = Enemymelee_Walk;
-            this.Enemymelee_Attack = Enemymelee_Attack;
+            this.Enemymelee_Idle = Enemymelee_Idle.Clone();
+            this.Enemymelee_Walk = Enemymelee_Walk.Clone();
+            this.Enemymelee_Attack = Enemymelee_Attack.Clone();
+            this.Enemymelee_Death = Enemymelee_Death.Clone();
         }
 
         public override void Update(Player player, List<Rectangle> obstacles, GameTime gameTime)
         {
-            
+
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Enemymelee_Idle.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-            Enemymelee_Walk.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-            Enemymelee_Attack.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+
             Vector2 desiredMovement = Vector2.Zero;
 
             if (knockbackTimer > 0)
@@ -103,10 +105,12 @@ namespace Ghost_blade
 
                 Vector2 newPosition = Position + desiredMovement * Speed;
                 Position = newPosition;
-                if (Health <= 0)
+                if (Health <= 0 && !hasPlayedDeath)
                 {
                     this.Die();
                     IsActive = false;
+                    isDying = true;
+                    Enemymelee_Death.Reset();
                 }
 
                 if (desiredMovement.X < 0) { flip = true; }
@@ -148,12 +152,15 @@ namespace Ghost_blade
                 }
             }
         }
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            TexturePosition = new Vector2 (Position.X - 32,Position.Y - 32);
+            TexturePosition = new Vector2(Position.X - 32, Position.Y - 32);
 
             if (IsActive)
             {
+                Enemymelee_Idle.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                Enemymelee_Walk.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                Enemymelee_Attack.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                 if (knockbackTimer > 0)
                 {
                     Enemymelee_Idle.DrawFrame(spriteBatch, TexturePosition, flip);
@@ -167,10 +174,30 @@ namespace Ghost_blade
                     if (Vector2.Distance(TexturePosition, lastPosition) > 0.1f)
                         Enemymelee_Walk.DrawFrame(spriteBatch, TexturePosition, flip);
                     else
-                        Enemymelee_Idle.DrawFrame(spriteBatch, TexturePosition  , flip);
+                        Enemymelee_Idle.DrawFrame(spriteBatch, TexturePosition, flip);
                 }
                 lastPosition = TexturePosition;
             }
+            else if (isDying)
+            {
+                if (!Enemymelee_Death.IsEnd)
+                {
+                    Enemymelee_Death.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                    Enemymelee_Death.DrawFrame(spriteBatch, TexturePosition);
+
+                }
+                else
+                {
+                    hasPlayedDeath = true;
+                }
+            }
+        }
+        public override void Reset()
+        {
+            base.Reset();
+            isDying = false;
+            hasPlayedDeath = false;
+            Health = 200;
         }
     }
 }
