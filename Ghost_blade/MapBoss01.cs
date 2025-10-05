@@ -35,8 +35,10 @@ namespace Ghost_blade
             AddObstacle(41, 16, 25, 2);
             AddObstacle(63, 18, 6, 2);
             AddObstacle(34, 19, 1, 18);
-            AddObstacle(34, 34, 40, 1);
+            AddObstacle(34, 35, 40, 1);
             AddObstacle(69, 19, 1, 18);
+            AddObstacle(41, 29, 6, 1.2f);
+            AddObstacle(57, 29, 6, 1.2f);
         }
     }
 }

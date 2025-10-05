@@ -15,7 +15,7 @@ namespace Ghost_blade
             AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack, AnimatedTexture Enemymelee_Death,
             AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death,
             Texture2D enemyTexture, Texture2D bulletTexture, Texture2D parry)
-            : base(bg, layer2, DoorOpenTexture, new Rectangle(36 * 48, 30 * 48, 6 * 48, 2 * 48), new Vector2(36 * 48, 29 * 48),
+            : base(bg, layer2, DoorOpenTexture, new Rectangle(37 * 48, 31 * 48, 4 * 48, 1 * 48), new Vector2(37 * 48, 28 * 48),
                   new Vector2(109 * 48, 101 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2))
         {
             NextRooms = new List<int> { 1, 3 };
@@ -82,6 +82,9 @@ namespace Ghost_blade
             AddObstacle(110, 14, 5, 1.5f);
             AddObstacle(120.3f, 61f, 1, 1);
             AddObstacle(93.8f, 49, 1, 1);
+            AddObstacle(36, 30, 7, 1);
+            AddObstacle(36, 31, 1, 1);
+            AddObstacle(41, 31, 1, 1);
         }
     }
 }

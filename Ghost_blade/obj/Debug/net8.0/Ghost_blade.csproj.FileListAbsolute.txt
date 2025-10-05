@@ -144,7 +144,6 @@ C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\GB_SlashDown-Sheet.xnb
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\GB_SlashUp-Sheet.xnb
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Door_Sheet.xnb
-D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Door_Sheet.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\GB_SlashDown-Sheet.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\GB_SlashUp-Sheet.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_lab_03_void.xnb
@@ -184,3 +183,7 @@ C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\hp_boss_1.xnb
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\hp_boss_2.xnb
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Spotgame-Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Door_lab_Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\start_city-Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\start_obivionlab-Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\stat_tutorial-Sheet.xnb
