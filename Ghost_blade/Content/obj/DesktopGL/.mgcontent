@@ -9,7 +9,7 @@
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs_reload-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Door_city_Sheet.png</File>
-    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Door_Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Door_lab_Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Enemy_Bullet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemy-Idle-12Frame_Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemyattack-Sheet.png</File>
@@ -57,10 +57,16 @@
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Parry_Bullet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Player_Bullet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Spotgame-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/start_city-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/start_obivionlab-Sheet.png</File>
+    <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/stat_tutorial-Sheet.png</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/UI_Font.spritefont</File>
     <File>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/UI_weapon-Sheet.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

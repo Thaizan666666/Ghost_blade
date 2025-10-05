@@ -1,6 +1,7 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/A_job.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/A_job.xnb","TextureProcessor","Texture2DContent",155,841,0.0812202
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Door_city_Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Door_city_Sheet.xnb","TextureProcessor","Texture2DContent",1756,72437,0.092614
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Door_city_Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Door_city_Sheet.xnb","TextureProcessor","Texture2DContent",2646,147541,0.1048446
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Door_lab_Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Door_lab_Sheet.xnb","TextureProcessor","Texture2DContent",3148,184405,0.0312075
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Enemy_Bullet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Enemy_Bullet.xnb","TextureProcessor","Texture2DContent",101,121,0.0025679
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemydeath-25FrameSheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/enemydeath-25FrameSheet.xnb","TextureProcessor","Texture2DContent",3133,134485,0.0858252
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/enemyshooting_death-25FrameSheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/enemyshooting_death-25FrameSheet.xnb","TextureProcessor","Texture2DContent",4214,220885,0.0128357
@@ -9,10 +10,14 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/firefoxBall.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/firefoxBall.xnb","TextureProcessor","Texture2DContent",5449,9301,0.0026908
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/hp_boss_1.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/hp_boss_1.xnb","TextureProcessor","Texture2DContent",699,211285,0.1081111
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/hp_boss_2.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/hp_boss_2.xnb","TextureProcessor","Texture2DContent",564,211285,0.01388
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_boss.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Map_boss.xnb","TextureProcessor","Texture2DContent",48190,13500085,0.2267618
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_boss.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Map_boss.xnb","TextureProcessor","Texture2DContent",49366,13500085,0.3913398
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_01.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Map_City_01.xnb","TextureProcessor","Texture2DContent",147576,39025885,1.0478956
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_02.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Map_City_02.xnb","TextureProcessor","Texture2DContent",149003,39025885,0.79222
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_City_03.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Map_City_03.xnb","TextureProcessor","Texture2DContent",152657,39025885,0.621007
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_tutorial.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Map_tutorial.xnb","TextureProcessor","Texture2DContent",87326,21676117,0.476658
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Parry_Bullet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Parry_Bullet.xnb","TextureProcessor","Texture2DContent",103,121,0.0023065
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Player_Bullet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Player_Bullet.xnb","TextureProcessor","Texture2DContent",101,121,0.0034367
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Spotgame-Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Spotgame-Sheet.xnb","TextureProcessor","Texture2DContent",90040,16588885,0.4090546
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/start_city-Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/start_city-Sheet.xnb","TextureProcessor","Texture2DContent",44858,30960085,0.7816688
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/start_obivionlab-Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/start_obivionlab-Sheet.xnb","TextureProcessor","Texture2DContent",44571,30960085,0.860008
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/stat_tutorial-Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/stat_tutorial-Sheet.xnb","TextureProcessor","Texture2DContent",42640,30960085,0.7484548

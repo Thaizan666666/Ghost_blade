@@ -73,7 +73,7 @@
 /processorParam:TextureFormat=Color
 /build:Door_city_Sheet.png
 
-#begin Door_Sheet.png
+#begin Door_lab_Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -83,7 +83,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Door_Sheet.png
+/build:Door_lab_Sheet.png
 
 #begin Enemy_Bullet.png
 /importer:TextureImporter
@@ -648,6 +648,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Spotgame-Sheet.png
+
+#begin start_city-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:start_city-Sheet.png
+
+#begin start_obivionlab-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:start_obivionlab-Sheet.png
+
+#begin stat_tutorial-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:stat_tutorial-Sheet.png
 
 #begin UI_Font.spritefont
 /importer:FontDescriptionImporter
