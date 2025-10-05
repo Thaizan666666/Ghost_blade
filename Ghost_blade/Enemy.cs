@@ -151,9 +151,10 @@ public class Enemy
     {
         if (IsActive)
         {
-            spriteBatch.Draw(Texture, Position, null, Color.Red, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
+            //spriteBatch.Draw(Texture, Position, null, Color.White, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
         }
     }
+    public virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime) { }
 
     public bool CanSeePlayer(Player player, List<Rectangle> obstacles)
     {
@@ -189,17 +190,18 @@ public class Enemy
         return true;
     }
 
-    public void Reset()
+    public virtual void Reset()
     {
         IsActive = true;
-        Health = 200;
         knockbackTimer = 0f;
+        _isbulletammo = false;
+        _isHpDrop = false;
     }
     public Rectangle Die()
     {
         int currentrandomDrop = randomDrop.Next(1, 10);
         Debug.WriteLine($"Niggar Drop Item {currentrandomDrop}");
-        if (currentrandomDrop == 1 || currentrandomDrop == 2)
+        if (currentrandomDrop == 2 || currentrandomDrop == 3 || currentrandomDrop == 4 || currentrandomDrop == 5)
         {
             _isbulletammo = true;
             this.bulletammo = new Rectangle(
@@ -210,7 +212,7 @@ public class Enemy
             );
             return bulletammo;
         }
-        else if (currentrandomDrop == 3 || currentrandomDrop == 4 || currentrandomDrop == 5)
+        else if (currentrandomDrop == 1 )
         {
             _isHpDrop = true;
             this.HpDrop = new Rectangle(

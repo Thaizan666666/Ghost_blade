@@ -10,6 +10,7 @@ using System.Diagnostics;
 public class Boss
 {
     // Properties
+    public int MaxHealth { get; set; } = 1500;
     public int Health { get; set; } = 1500;
     public Vector2 Position;
     public Texture2D pixel;
@@ -43,8 +44,9 @@ public class Boss
     }
 
     // Constructor
-    public Boss(Texture2D texture, Vector2 position, Texture2D pixelTexture, AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk ,AnimatedTexture Enemymelee_Attack,
-        AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk,
+    public Boss(Texture2D texture, Vector2 position, Texture2D pixelTexture, 
+        AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk ,AnimatedTexture Enemymelee_Attack, AnimatedTexture Enemymelee_Death,
+        AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death,
         Texture2D enemyTex1, Texture2D enemyTex2, Texture2D bulletTexture,Texture2D parry)
     {
         this.Position = position;
@@ -59,7 +61,7 @@ public class Boss
         // Pass the pixel texture for attacks that use it
         attacks.Add(new LaserAttack(this, pixelTexture));
         attacks.Add(new BossBulletAttacks(this, bulletTexture, parry));
-        attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, enemyTex1, enemyTex2, bulletTexture, parry));
+        attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Death, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTex1, enemyTex2, bulletTexture, parry));
 
         currentState = BossState.Idle;
         attackTimer = 0.1f;
@@ -182,5 +184,19 @@ public class Boss
         {
             this.IsbossAticve = false;
         }
+    }
+
+    public void Reset() 
+    {
+        IsbossAticve = false ;
+        Health = MaxHealth;
+        currentState = BossState.Idle;
+        attackTimer = 0f;
+        currentAttack = null;
+        foreach (var attack in attacks)
+        {
+            attack.Reset();
+        }
+        
     }
 }

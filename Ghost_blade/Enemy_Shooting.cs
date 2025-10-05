@@ -25,25 +25,35 @@ namespace Ghost_blade
 
         private int bulletsShotInBurst;
         private float burstTimer;
-
+        private Vector2 lastPosition = Vector2.Zero;
+        private Vector2 TexturePosition;
+        private bool flip = true;
+        private bool isDying = false;
+        private bool hasPlayedDeath = false;
         private AnimatedTexture EnemyShooting_Idle;
         private AnimatedTexture EnemyShooting_Walk;
+        private AnimatedTexture EnemyShooting_Death;
+
+
+        private Vector2 lastMovement = Vector2.Zero;
+
         public Texture2D bulletTexture;
-        public Texture2D parry; 
+        public Texture2D parry;
         private float fireTimer;
         private const float FIRE_RATE = 1.0f;
         private float fleeRadius = 500f;
 
         public Action<Bullet> OnShoot;
 
-        public Enemy_Shooting(AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture, Texture2D parry)
+        public Enemy_Shooting(AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death, Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture, Texture2D parry)
             : base(texture, startPosition, speed, detectionRadius)
         {
             this.Health = 140;
             this.currentState = EnemyState.Idle;
             this.stateTimer = 0f;
-            this.EnemyShooting_Idle = EnemyShooting_Idle;
-            this.EnemyShooting_Walk = EnemyShooting_Walk;
+            this.EnemyShooting_Idle = EnemyShooting_Idle.Clone();
+            this.EnemyShooting_Walk = EnemyShooting_Walk.Clone();
+            this.EnemyShooting_Death = EnemyShooting_Death.Clone();
             this.bulletTexture = bulletTexture;
             this.fireTimer = FIRE_RATE;
             this.IsActive = true;
@@ -54,8 +64,7 @@ namespace Ghost_blade
         public override void Update(Player player, List<Rectangle> obstacles, GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            EnemyShooting_Idle.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-            EnemyShooting_Walk.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            
             // Priority 1: Check if the enemy is being knocked back
             if (knockbackTimer > 0)
             {
@@ -165,7 +174,13 @@ namespace Ghost_blade
             {
                 this.Die();
                 IsActive = false;
+                isDying = true;
+                EnemyShooting_Death.Reset();
             }
+
+            if (player.position.X > Position.X) { flip = false; }
+            else if (player.position.X < Position.X) { flip = true; }
+            lastMovement = desiredMovement;
         }
 
         // Override the TakeDamage method to handle knockback logic
@@ -200,7 +215,7 @@ namespace Ghost_blade
             float offsetDistance = 20f;
             Vector2 startPosition = Position + direction * offsetDistance;
 
-            var bullet = new EnemyBullet(bulletTexture, startPosition, direction, 15f, 0f, 2f,parry);
+            var bullet = new EnemyBullet(bulletTexture, startPosition, direction, 15f, 0f, 2f, parry);
 
             OnShoot?.Invoke(bullet);
         }
@@ -238,12 +253,49 @@ namespace Ghost_blade
             return true; // ใกล้พอและมองเห็น
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            EnemyShooting_Idle.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            EnemyShooting_Walk.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            EnemyShooting_Death.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            TexturePosition = new Vector2(Position.X - 50, Position.Y - 30);
             if (IsActive)
             {
-                EnemyShooting_Walk.DrawFrame(spriteBatch, Position);
+                if (knockbackTimer > 0)
+                {
+                    EnemyShooting_Idle.DrawFrame(spriteBatch, TexturePosition, flip);
+                }
+                else if (lastMovement.LengthSquared() > 0)
+                {
+                    EnemyShooting_Walk.DrawFrame(spriteBatch, TexturePosition, flip);
+                }
+                else
+                {
+                    EnemyShooting_Idle.DrawFrame(spriteBatch, TexturePosition, flip);
+                }
+    
+                lastPosition = TexturePosition;
             }
+            else if (isDying)
+            {
+                if (!EnemyShooting_Death.IsEnd)
+                {
+                    EnemyShooting_Death.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                    EnemyShooting_Death.DrawFrame(spriteBatch, TexturePosition);
+
+                }
+                else
+                {
+                    hasPlayedDeath = true;
+                }
+            }
+        }
+        public override void Reset()
+        {
+            base.Reset();
+            isDying = false;
+            hasPlayedDeath = false;
+            Health = 140;
         }
     }
 }
