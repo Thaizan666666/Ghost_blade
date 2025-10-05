@@ -47,5 +47,34 @@ namespace Ghost_blade
             }
             return parriedBullet;
         }
+        public Bullet Update(GameTime gameTime, List<Rectangle> obstacles, Player player,Vector2 enemyposition)
+        {
+            // First, call the base class's Update method to handle generic bullet logic.
+            base.Update(gameTime, obstacles);
+            Bullet parriedBullet = null;
+            if (!IsActive) return null;
+            // Then, add the specialized collision check for the player.
+            if (IsActive && boundingBox.Intersects(player.HitboxgetDamage) && player._isInvincible == false)
+            {
+                player.TakeDamage(1);
+                IsActive = false;
+                Debug.WriteLine($"Hp = {player.Health}");
+            }
+
+            if (IsActive && boundingBox.Intersects(player.meleeWeapon.ParryHitbox))
+            {
+                IsActive = false;
+                Vector2 parryDirection = player.position - enemyposition;
+                parriedBullet = new Bullet(
+                    this.parry,
+                    this.position,
+                    parryDirection,
+                    this.speed * 1.5f, // ให้กระสุน Parry เร็วขึ้น
+                    this.rotation,
+                    this.lifeTime
+                );
+            }
+            return parriedBullet;
+        }
     }
 }

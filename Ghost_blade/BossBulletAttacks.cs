@@ -69,7 +69,7 @@ namespace Ghost_blade
 
                 // **เรียกใช้ Update และรับค่ากระสุน Parry คืนมา**
                 // (ต้องแน่ใจว่าได้แก้ไข EnemyBullet.Update เป็น public Bullet Update(...) แล้ว)
-                Bullet newParriedBullet = currentEnemyBullet.Update(gameTime, Obstacles, player);
+                Bullet newParriedBullet = currentEnemyBullet.Update(gameTime, Obstacles, player,boss.Position);
 
                 // **ถ้ามีการ Parry เกิดขึ้น**
                 if (newParriedBullet != null)

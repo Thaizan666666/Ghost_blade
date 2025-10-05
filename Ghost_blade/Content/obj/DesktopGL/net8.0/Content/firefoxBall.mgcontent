@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/firefoxBall.png</SourceFile>
-  <SourceTime>2025-09-13T19:12:33.9505201+07:00</SourceTime>
-  <DestFile>D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/firefoxBall.xnb</DestFile>
-  <DestTime>2025-10-05T02:58:40.0018295+07:00</DestTime>
+  <SourceFile>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/firefoxBall.png</SourceFile>
+  <SourceTime>2025-07-03T14:15:09.245923+07:00</SourceTime>
+  <DestFile>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/firefoxBall.xnb</DestFile>
+  <DestTime>2025-10-06T00:31:38.9464679+07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-06-02T17:31:02+07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

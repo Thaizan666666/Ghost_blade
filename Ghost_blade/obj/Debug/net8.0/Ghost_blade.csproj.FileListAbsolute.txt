@@ -174,3 +174,13 @@ D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\enemyshooting_de
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\enemyshooting_walk-Sheet.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\hp_boss_1.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\hp_boss_2.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Ammo.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Door_city_Sheet.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\enemydeath-25FrameSheet.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\enemyshooting-Sheet.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\enemyshooting_death-25FrameSheet.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\enemyshooting_walk-Sheet.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Heal.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\hp_boss_1.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\hp_boss_2.xnb
+C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Spotgame-Sheet.xnb
