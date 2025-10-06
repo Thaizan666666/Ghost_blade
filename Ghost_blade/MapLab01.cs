@@ -16,8 +16,8 @@ namespace Ghost_blade
 
         public MapLab01(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture,
             AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack, AnimatedTexture Enemymelee_Death,
-            AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death,
-            Texture2D enemyTexture, Texture2D bulletTexture, Texture2D parry, Texture2D Laser)
+            AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death, Texture2D enemyTexture1,
+            AnimatedTexture ChargingLaser, AnimatedTexture DeathLaser, Texture2D enemyTexture, Texture2D bulletTexture, Texture2D parry, Texture2D Laser)
             : base(bg, layer2, DoorOpenTexture, new Rectangle(109 * 48, 49 * 48, 4 * 48, 1 * 48), new Vector2(109 * 48, 46 * 48),
                   new Vector2(15 * 48, 15 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2))
         {
@@ -98,6 +98,18 @@ namespace Ghost_blade
             AddObstacle(113, 63.5f, 1, 3);
 
             // Add enemies specific to this room
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(61 * tileSize, 10 * tileSize), 1.5f, 1000f));
+            AddEnemy(new EnemyLaser(enemyTexture1, enemyTexture, ChargingLaser, DeathLaser, enemyTexture, new Vector2(64 * tileSize, 18 * tileSize), 1.0f, 1000f, Laser));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(73 * tileSize, 18 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(62 * tileSize, 26 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(45 * tileSize, 58 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(71 * tileSize, 58 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(72 * tileSize, 68 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTexture, new Vector2(57 * tileSize, 70 * tileSize), 1.0f, 1000f, bulletTexture, parry));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(106 * tileSize, 74 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(105 * tileSize, 59 * tileSize), 1.5f, 1000f));
+            AddEnemy(new EnemyLaser(enemyTexture1, enemyTexture, ChargingLaser, DeathLaser, enemyTexture, new Vector2(112 * tileSize, 55 * tileSize), 1.0f, 1000f, Laser));
+            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTexture, new Vector2(122 * tileSize, 63 * tileSize), 1.0f, 1000f, bulletTexture, parry));
         }
 
     }

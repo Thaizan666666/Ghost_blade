@@ -221,8 +221,8 @@ namespace Ghost_blade
                 new MapCity01(Map_city_01, Map_city_01_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet,_pixel),
                 new MapCity02(Map_city_02, Map_city_02_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet,_pixel),
                 new MapCity03(Map_city_03, Map_city_03_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet,_pixel),
-                new MapLab01(Map_lab_01, Map_lab_01_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet,_pixel),
-                new MapLab02(Map_lab_02, Map_lab_02_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet,_pixel),
+                new MapLab01(Map_lab_01, Map_lab_01_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture,EnemyLaser_ChargingLaser,EnemyLaser_Death,EnemyTexture, _EnemybulletTexture,_parrybullet,_pixel),
+                new MapLab02(Map_lab_02, Map_lab_02_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture,EnemyLaser_ChargingLaser,EnemyLaser_Death,EnemyTexture, _EnemybulletTexture,_parrybullet,_pixel),
                 new MapLab03(Map_lab_03, Map_lab_03_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture,EnemyLaser_ChargingLaser,EnemyLaser_Death,EnemyTexture, _EnemybulletTexture,_parrybullet,_pixel),
                 new MapBoss01(Map_Boss_01, Map_Boss_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture,_parrybullet,_pixel),
             };
@@ -289,7 +289,12 @@ namespace Ghost_blade
             }
             if (currentKState.IsKeyDown(Keys.U))
             {
-                currentRoomIndex = 6;
+                currentRoomIndex = 1;
+                _player.position = rooms[currentRoomIndex].StartPosition;
+            }
+            if (currentKState.IsKeyDown(Keys.P) && !previousKState.IsKeyDown(Keys.P))
+            {
+                currentRoomIndex += 1;
                 _player.position = rooms[currentRoomIndex].StartPosition;
             }
 
