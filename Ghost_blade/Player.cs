@@ -316,6 +316,7 @@ namespace Ghost_blade
                         meleeWeapon.PerformParry(position, cameraPosition);
                         currentState = PlayerState.parry;
                         parryCooldownTimer = ParryCooldown;
+                        velocity = Vector2.Zero;
                     }
                 }
             }
@@ -561,7 +562,7 @@ namespace Ghost_blade
             Debug.WriteLine($"Player took {damage} damage. Health is now {Health}");
 
             _isInvincible = true;
-            _invincibilityTimer = InvincibilityDuration;
+            _invincibilityTimer = 1f;
 
             isDamageFlickering = true;
             if (Health <= 0)
@@ -624,8 +625,7 @@ namespace Ghost_blade
                 if (currentState == PlayerState.Idle)
                 {
                     if (isSwordEquipped) { IdleBladeTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48),flip); }
-                    else if (!isSwordEquipped && flip == false) { IdleGunTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
-                    else if (!isSwordEquipped && flip == true) { IdleGunTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                    else if (!isSwordEquipped) { IdleGunTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
                 }
                 else if (currentState == PlayerState.Running)
                 {
@@ -686,7 +686,7 @@ namespace Ghost_blade
                 }
                 else if (currentState == PlayerState.parry)
                 {
-                    ParryTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip);
+                    ParryTexture.DrawFrame(spriteBatch, position - new Vector2(72, 48), flip);
                 }
                 if (!isSwordEquipped && currentState != PlayerState.Dashing)
                 {

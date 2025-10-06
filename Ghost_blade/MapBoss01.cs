@@ -39,8 +39,6 @@ namespace Ghost_blade
             AddObstacle(69, 19, 1, 18);
             AddObstacle(41, 29, 6, 1.2f);
             AddObstacle(57, 29, 6, 1.2f);
-            AddEnemy(new EnemyLaser(enemyTexture, new Vector2(63 * tileSize, 25 * tileSize), 1.5f, 1000f,Laser));
-
         }
     }
 }

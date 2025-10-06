@@ -282,7 +282,6 @@ namespace Ghost_blade
                 {
                     EnemyShooting_Death.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                     EnemyShooting_Death.DrawFrame(spriteBatch, TexturePosition);
-
                 }
                 else
                 {

@@ -14,7 +14,7 @@ namespace Ghost_blade
         public MapCity03(Texture2D bg, Texture2D layer2, AnimatedTexture DoorOpenTexture,
             AnimatedTexture Enemymelee_Idle, AnimatedTexture Enemymelee_Walk, AnimatedTexture Enemymelee_Attack, AnimatedTexture Enemymelee_Death,
             AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death,
-            Texture2D enemyTexture, Texture2D bulletTexture, Texture2D parry)
+            Texture2D enemyTexture, Texture2D bulletTexture, Texture2D parry, Texture2D Laser)
             : base(bg, layer2, DoorOpenTexture, new Rectangle(85 * 48, 25 * 48, 4 * 48, 1 * 48), new Vector2(85 * 48, 22 * 48),
                   new Vector2(22 * 48, 20 * 48), new Rectangle(0, 0, 3285 * 2, 2970 * 2))
         {

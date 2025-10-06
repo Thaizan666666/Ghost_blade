@@ -150,7 +150,7 @@ namespace Ghost_blade
                     if (distanceSquared <= hitDistance * hitDistance)
                     {
                         // Collision detected!
-                        player.TakeDamage(2);
+                        player.TakeDamage(1);
                     }
                     // **********************************
 

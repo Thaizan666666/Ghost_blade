@@ -2,163 +2,174 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
-// สมมติว่า Player, Boss, BossAttack, Enemy อยู่ใน namespace ที่เหมาะสม
-// ต้องแน่ใจว่า class Player มีคุณสมบัติ .position และ .HitboxgetDamage
-// และมีเมธอด TakeDamage(int damage)
+using Ghost_blade;
+using _321_Lab05_3; // สมมติว่านี่คือ Namespace ของ AnimatedTexture
 
 namespace Ghost_blade
 {
-    // คลาสที่สืบทอดมาจาก Enemy
+    // คลาสนี้ทำหน้าที่เป็นป้อมปืน (Turret) ที่ยิงเลเซอร์และไม่เคลื่อนที่
     public class EnemyLaser : Enemy
     {
-        // === ตัวแปรสำหรับสถานะการโจมตี ===
-        private enum LaserState { Charging, Firing, CoolingDown };
-        private LaserState currentAttackState;
+        private enum EnemyState
+        {
+            Idle,
+            Charging, // ชาร์จพลังงาน (หันตามและกระพริบ)
+            Firing,   // ยิงเลเซอร์หนา (ล็อกเป้าและแสดง Laser.png)
+            Cooldown
+        }
 
-        // === ตัวแปรจับเวลา ===
-        private float chargeTimer;
-        private float fireTimer;
-        private float damageCooldownTimer = 0f;
+        private EnemyState currentState;
+        private float stateTimer;
+        private Vector2 laserDirection; // เก็บเป้าหมายสุดท้ายที่ล็อกไว้
 
-        // === ค่าคงที่ของ Laser Attack Logic ===
-        private const float CHARGE_DURATION = 1.0f; // เวลาชาร์จ
-        private const float FIRE_DURATION = 3.0f;    // เวลาที่ยิงเลเซอร์
-        private const float ATTACK_COOLDOWN_DURATION = 2.0f; // หน่วงเวลาระหว่างรอบการโจมตี
+        // === การตั้งค่าการยิงเลเซอร์ ===
+        private const float CHARGE_DURATION = 3f;
+        private const float PRE_FIRE_DELAY = 0.5f; // NEW: ดีเลย์ $0.5 \text{s}$ ก่อนยิงเพื่อให้ผู้เล่นหลบได้
+        private const float FIRING_DURATION = 0.15f;
+        private const float ATTACK_COOLDOWN = 4f;
+        private const int LASER_DAMAGE_INSTANT = 1; // ความเสียหาย 1 หน่วย ต่อเฟรม ขณะที่อยู่ในเลเซอร์
 
-        // === ค่าคงที่ของ Damage/Collision ===
-        private const float DAMAGE_COOLDOWN_DURATION = 0.2f; // โจมตีผู้เล่นซ้ำทุก 0.2 วิ
-        private const int LASER_DAMAGE = 1;
+        // NEW: สำหรับการวาดเส้นเลเซอร์และการคำนวณการชน
+        private const float LASER_LENGTH = 2000f; // ความยาวของเส้นเลเซอร์
+        private const float LASER_THICKNESS = 10f; // ความหนาของเส้นเลเซอร์
 
-        // === ตัวแปรเลเซอร์ ===
-        private float laserAngle;
-        private const float LASER_THICKNESS_CHARGE = 4f;
-        private const float LASER_THICKNESS_FIRE = 8f;
-        private const float LASER_LENGTH = 1500f;
+        // (ตัวแปร Animation State และ Texture เหมือนเดิม)
+        private bool flip = true;
+        private bool isDying = false;
+        private bool hasPlayedDeath = false;
+        private Texture2D Anim_Idle;
+        private Texture2D Anim_Firing;
+        private AnimatedTexture Anim_Charging;
+        private AnimatedTexture Anim_Death;
+        private Vector2 lastMovement = Vector2.Zero;
+        private Vector2 TexturePosition;
 
-        // === ค่าคงที่ควบคุมการเล็ง (Aiming) ===
-        private const float AIMING_SPEED_CHARGING = 10f; // เล็งเร็ว (ตามผู้เล่นขณะชาร์จ)
-        private const float AIMING_SPEED_FIRING = 0.5f;   // เล็งช้ามาก (ขณะยิง)
+        // NEW: Texture 1x1 สำหรับวาดเส้นเลเซอร์
+        private Texture2D pixelTexture;
 
-        private readonly Texture2D pixelTexture;
+        public Action<EnemyLaser, Vector2> OnShootLaser; // ส่งทิศทางที่ล็อกไว้ไปด้วย
 
-        public EnemyLaser(Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D pixelTexture)
+        // Helper property เพื่อคำนวณจุดกึ่งกลางของ Turret (จุดเริ่มต้นของเลเซอร์)
+        private Vector2 TextureCenter => new Vector2(Anim_Idle.Width / 2f, Anim_Idle.Height / 2f);
+
+
+        public EnemyLaser(
+            Texture2D IdleLaser, Texture2D FiringLaser, AnimatedTexture ChargingLaser,
+            AnimatedTexture DeathLaser, Texture2D texture, Vector2 startPosition,
+            float speed, float detectionRadius, Texture2D laserProjectileTexture)
             : base(texture, startPosition, speed, detectionRadius)
         {
-            this.pixelTexture = pixelTexture;
-            this.currentAttackState = LaserState.CoolingDown;
-            this.attackTimer = ATTACK_COOLDOWN_DURATION;
-            this.Health = 50;
+            this.Health = 250;
+            this.currentState = EnemyState.Idle;
+            this.stateTimer = 0f;
+            this.Anim_Idle = IdleLaser;
+            this.Anim_Firing = FiringLaser;
+            this.Anim_Charging = ChargingLaser.Clone();
+            this.Anim_Death = DeathLaser.Clone();
+            this.IsActive = true;
+            this.Speed = speed;
+
+            // NEW: เก็บ pixelTexture ที่ใช้ในการวาดเส้น
+            this.pixelTexture = laserProjectileTexture;
         }
 
         public override void Update(Player player, List<Rectangle> obstacles, GameTime gameTime)
         {
-            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // 1. อัปเดต Damage Cooldown
-            if (damageCooldownTimer > 0)
-            {
-                damageCooldownTimer -= delta;
-            }
-
-            // 2. จัดการ Knockback Timer (ไม่ต้องย้ายตำแหน่ง แต่ต้องให้ Timer นับถอยหลัง)
-            if (knockbackTimer > 0)
-            {
-                // **ไม่ใส่โค้ด Position += ...** ทำให้ไม่เคลื่อนที่
-                knockbackTimer -= delta;
-            }
-
-            // **[สำคัญ]: ไม่เรียก base.Update() ทำให้ไม่เคลื่อนที่และไม่ไล่ล่า**
-
-            // 3. ตรวจสอบว่าสามารถเห็นผู้เล่นได้
-            bool canAttack = CanSeePlayer(player, obstacles);
-
-            // 4. สถานะการโจมตีด้วยเลเซอร์
-            switch (currentAttackState)
-            {
-                case LaserState.CoolingDown:
-                    attackTimer -= delta;
-                    if (attackTimer <= 0 && canAttack)
-                    {
-                        StartLaserAttack(player);
-                    }
-                    break;
-
-                case LaserState.Charging:
-                    chargeTimer += delta;
-                    AimLaser(player, AIMING_SPEED_CHARGING, delta);
-
-                    if (chargeTimer >= CHARGE_DURATION)
-                    {
-                        currentAttackState = LaserState.Firing;
-                        fireTimer = 0f;
-                    }
-                    break;
-
-                case LaserState.Firing:
-                    fireTimer += delta;
-                    AimLaser(player, AIMING_SPEED_FIRING, delta);
-                    CheckLaserCollision(player);
-
-                    if (fireTimer >= FIRE_DURATION)
-                    {
-                        currentAttackState = LaserState.CoolingDown;
-                        attackTimer = ATTACK_COOLDOWN_DURATION;
-                    }
-                    break;
-            }
-        }
-
-        // เขียนทับ TakeDamage เพื่อให้แน่ใจว่า Knockback จะไม่เกิดขึ้น
-        public override void TakeDamage(int damage, Vector2 damageSourcePosition, bool issword)
-        {
-            // 1. ลดพลังชีวิต
-            Health -= damage;
-
-            // 2. ป้องกัน Knockback โดยสมบูรณ์
-            knockbackTimer = 0f;
-
-            // 3. ตรวจสอบสถานะการตาย
             if (Health <= 0)
             {
-                IsActive = false;
-                // เมธอด Die() ควรจัดการ Drop Item และ/หรือตั้งค่า IsActive = false
-                Die();
+                // (Death Logic เหมือนเดิม)
+                if (!isDying) { this.Die(); isDying = true; Anim_Death.Reset(); }
+                if (!hasPlayedDeath) { Anim_Death.UpdateFrame(deltaTime); return; }
+                IsActive = false; return;
+            }
+
+            if (stateTimer > 0)
+            {
+                stateTimer -= deltaTime;
+            }
+
+            float distance = Vector2.Distance(Position, player.position);
+
+            // *** State Machine Logic ***
+            switch (currentState)
+            {
+                case EnemyState.Idle:
+                case EnemyState.Cooldown:
+                    // 1. Idle/Cooldown: หันหน้าตามผู้เล่น
+                    UpdateFlipDirection(player);
+                    if (CanSeePlayer(player, obstacles) && stateTimer <= 0 && distance <= detectionRadius)
+                    {
+                        currentState = EnemyState.Charging;
+                        stateTimer = CHARGE_DURATION;
+                        Anim_Charging.Reset();
+                    }
+                    else
+                    {
+                        currentState = EnemyState.Idle;
+                    }
+                    break;
+
+                case EnemyState.Charging:
+                    // 2. Charging:
+
+                    if (stateTimer > PRE_FIRE_DELAY)
+                    {
+                        // Active Tracking: ติดตามผู้เล่น (Tracking)
+                        UpdateFlipDirection(player);
+                        laserDirection = player.position - Position - TextureCenter;
+                        if (laserDirection != Vector2.Zero) laserDirection.Normalize();
+                    }
+                    else if (stateTimer <= PRE_FIRE_DELAY && stateTimer > 0)
+                    {
+                        // Pre-fire Lock: ช่วงดีเลย์ $0.2 \text{s}$ สุดท้าย (ไม่มี Tracking, ล็อกเป้าหมายแล้ว)
+                    }
+
+                    Anim_Charging.UpdateFrame(deltaTime);
+                    if (stateTimer <= 0)
+                    {
+                        // ทิศทางสุดท้ายถูกล็อกไว้ในตัวแปร laserDirection แล้ว
+
+                        currentState = EnemyState.Firing;
+                        stateTimer = FIRING_DURATION;
+
+                        // *** เรียกเมธอดสร้างเลเซอร์หนา (Hitscan) สำหรับสัญญาณภายนอก ***
+                        ShootLaser(laserDirection);
+                    }
+                    break;
+
+                case EnemyState.Firing:
+                    // 3. Firing: ไม่มีการหันหน้า (ล็อกเป้าแล้ว)
+
+                    // NEW: ตรวจสอบการชนและสร้างความเสียหาย
+                    ApplyContinuousLaserDamage(player);
+
+                    if (stateTimer <= 0)
+                    {
+                        currentState = EnemyState.Cooldown;
+                        stateTimer = ATTACK_COOLDOWN;
+                    }
+                    break;
             }
         }
 
-        private void StartLaserAttack(Player player)
+        // NEW: เมธอดสำหรับตรวจสอบการชนและสร้างความเสียหาย (ตามรูปแบบ Hitscan จาก LaserAttack)
+        private void ApplyContinuousLaserDamage(Player player)
         {
-            currentAttackState = LaserState.Charging;
-            chargeTimer = 0f;
-            Vector2 laserCenter = Position;
-            laserAngle = (float)Math.Atan2(player.position.Y - laserCenter.Y, player.position.X - laserCenter.X);
-        }
+            if (laserDirection == Vector2.Zero) return;
 
-        private void AimLaser(Player player, float aimingSpeed, float delta)
-        {
-            Vector2 laserCenter = Position; // จุดกำเนิดเลเซอร์คือตำแหน่ง Enemy
-            float desiredAngle = (float)Math.Atan2(player.position.Y - laserCenter.Y, player.position.X - laserCenter.X);
-
-            // การหมุนแบบนุ่มนวล
-            float angleDifference = MathHelper.WrapAngle(desiredAngle - laserAngle);
-            laserAngle += angleDifference * aimingSpeed * delta;
-        }
-
-        private void CheckLaserCollision(Player player)
-        {
-            float thickness = LASER_THICKNESS_FIRE;
-            Vector2 laserStart = Position;
-
-            Vector2 direction = new Vector2((float)Math.Cos(laserAngle), (float)Math.Sin(laserAngle));
+            Vector2 laserStart = Position + TextureCenter;
+            Vector2 direction = laserDirection;
             Vector2 laserEnd = laserStart + direction * LASER_LENGTH;
+            float thickness = LASER_THICKNESS;
 
-            // 1. เตรียมข้อมูลผู้เล่น
+            // 1. กำหนดจุดศูนย์กลางของผู้เล่นและรัศมี (แบบประมาณ)
             Rectangle playerBox = player.HitboxgetDamage;
             Vector2 playerCenter = playerBox.Center.ToVector2();
             float playerRadius = Math.Max(playerBox.Width, playerBox.Height) / 2f;
 
-            // 2. ตรวจสอบจุดที่ใกล้ที่สุดบนเส้นเลเซอร์ (Line-to-Point Projection)
+            // 2. ตรวจสอบว่าจุดใดบนเส้นเลเซอร์ (L1-L2) อยู่ใกล้ผู้เล่นที่สุด
             Vector2 closestPoint = Vector2.Zero;
             float dx = laserEnd.X - laserStart.X;
             float dy = laserEnd.Y - laserStart.Y;
@@ -166,65 +177,137 @@ namespace Ghost_blade
 
             if (lineLengthSquared != 0)
             {
+                // คำนวณ t (ตัวประกอบการฉายภาพ)
                 float t = ((playerCenter.X - laserStart.X) * dx + (playerCenter.Y - laserStart.Y) * dy) / lineLengthSquared;
+
+                // จำกัดค่า t ให้อยู่ระหว่าง 0 ถึง 1 (เพื่อให้จุดใกล้สุดอยู่บนส่วนของเส้นตรง)
                 t = MathHelper.Clamp(t, 0, 1);
+
+                // คำนวณจุดที่ใกล้ที่สุดบนส่วนของเส้นตรง
                 closestPoint = new Vector2(laserStart.X + t * dx, laserStart.Y + t * dy);
-            }
-            else
-            {
-                closestPoint = laserStart;
-            }
 
-            // 3. ตรวจสอบระยะห่างการชน
-            float distanceSquared = Vector2.DistanceSquared(playerCenter, closestPoint);
-            float hitDistance = thickness / 2f + playerRadius;
+                // 3. ตรวจสอบระยะห่างการชน
+                float distanceSquared = Vector2.DistanceSquared(playerCenter, closestPoint);
+                float hitDistance = thickness / 2f + playerRadius; // รวมรัศมีการชนของเลเซอร์และผู้เล่น
 
-            if (distanceSquared <= hitDistance * hitDistance)
-            {
-                // Collision detected! ตรวจสอบ Damage Cooldown ก่อนโจมตี
-                if (damageCooldownTimer <= 0)
+                if (distanceSquared <= hitDistance * hitDistance)
                 {
-                    player.TakeDamage(LASER_DAMAGE);
-                    damageCooldownTimer = DAMAGE_COOLDOWN_DURATION;
+                    // Collision detected! ลดเลือดผู้เล่น
+                    player.TakeDamage(LASER_DAMAGE_INSTANT);
                 }
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        private void UpdateFlipDirection(Player player)
         {
-            base.Draw(spriteBatch); // วาด Enemy Texture
-
-            if (currentAttackState == LaserState.Charging)
+            // (โค้ดเหมือนเดิม)
+            if (player.position.X > Position.X)
             {
-                // เลเซอร์กระพริบขณะชาร์จ
-                if ((int)(chargeTimer * 8) % 2 == 0)
-                {
-                    DrawLaser(spriteBatch, LASER_THICKNESS_CHARGE, Color.Red * 0.5f);
-                }
+                flip = false; // หันขวา
             }
-            else if (currentAttackState == LaserState.Firing)
+            else if (player.position.X < Position.X)
             {
-                // วาดเลเซอร์เต็มกำลัง
-                DrawLaser(spriteBatch, LASER_THICKNESS_FIRE, Color.Red);
+                flip = true; // หันซ้าย
             }
         }
 
+        private void ShootLaser(Vector2 direction)
+        {
+            // ส่งสัญญาณไปยัง Game Manager ให้สร้าง Laser Line 
+            // โดยใช้ Position และ Direction ที่ล็อกไว้ เพื่อจัดการ Damage และ Draw Laser Line
+            // Damage handling ได้ถูกย้ายไปที่ ApplyContinuousLaserDamage แล้ว
+            OnShootLaser?.Invoke(this, direction);
+        }
+
+        public override void TakeDamage(int damage, Vector2 damageSourcePosition, bool issword)
+        {
+            base.TakeDamage(damage, damageSourcePosition, issword);
+            // เมื่อถูกดาบฟันขณะชาร์จ ให้เข้าสู่สถานะ Cooldown สั้นลง
+            if (issword && currentState == EnemyState.Charging)
+            {
+                currentState = EnemyState.Cooldown;
+                stateTimer = ATTACK_COOLDOWN * 0.5f;
+            }
+        }
+
+        // === Helper method สำหรับวาดเส้นเลเซอร์ (ตามแบบ LaserAttack) ===
         private void DrawLaser(SpriteBatch spriteBatch, float thickness, Color color)
         {
-            // ตั้งค่า Origin ให้อยู่ตรงกลางของความหนา (แกน Y)
-            Vector2 origin = new Vector2(0, 0);
+            if (laserDirection == Vector2.Zero) return;
 
+            // 1. คำนวณมุมของเลเซอร์จากทิศทางที่ล็อกไว้
+            float laserAngle = (float)Math.Atan2(laserDirection.Y, laserDirection.X);
+
+            // 2. กำหนดจุดเริ่มต้นของเลเซอร์ (จากกึ่งกลางของ Texture)
+            Vector2 laserStart = Position + TextureCenter;
+
+            // 3. Draw the line using the 1x1 pixel texture
             spriteBatch.Draw(
                 pixelTexture,
-                Position,
+                laserStart,
                 null,
                 color,
                 laserAngle,
-                origin,
+                // Origin (0, 0.5f) ทำให้เส้นเลเซอร์ถูกวาดโดยมีจุดเริ่มต้นอยู่กึ่งกลางความหนา
+                new Vector2(0f, 0.5f),
                 new Vector2(LASER_LENGTH, thickness),
                 SpriteEffects.None,
                 0f
             );
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            TexturePosition = Position;
+            SpriteEffects spriteEffect = flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+            if (isDying)
+            {
+                if (!hasPlayedDeath)
+                {
+                    Anim_Death.DrawFrame(spriteBatch, TexturePosition, flip);
+                }
+                return;
+            }
+
+            if (!IsActive) return;
+
+            // 2. กำหนดแอนิเมชันตามสถานะ
+            if (currentState == EnemyState.Charging)
+            {
+                // วาด Animation Charging
+                Anim_Charging.DrawFrame(spriteBatch, TexturePosition, flip);
+
+                // NEW: สร้างเอฟเฟกต์กระพริบโดยใช้ Sin wave เพื่อเปลี่ยนความทึบ (Alpha)
+                float pulse = (float)Math.Abs(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 8)); // ความเร็วการกระพริบ 8
+                Color flashColor = Color.Red * (0.3f + pulse * 0.7f); // Alpha เปลี่ยนจาก 0.3 ถึง 1.0 (กระพริบ)
+
+                // วาดเลเซอร์เส้นบางๆ เพื่อแสดงการเล็งขณะชาร์จ
+                DrawLaser(spriteBatch, 2f, flashColor);
+            }
+            else if (currentState == EnemyState.Firing)
+            {
+                // 1. วาด Texture2D สำหรับ Firing (Turret Sprite)
+                spriteBatch.Draw(Anim_Firing, TexturePosition, null, Color.White, 0f, Vector2.Zero, 1f, spriteEffect, 0f);
+
+                // 2. วาดเส้นเลเซอร์หนา (ตามแบบ LaserAttack)
+                DrawLaser(spriteBatch, LASER_THICKNESS, Color.Red);
+            }
+            else // Idle หรือ Cooldown 
+            {
+                // วาด Texture2D สำหรับ Idle
+                spriteBatch.Draw(Anim_Idle, TexturePosition, null, Color.White, 0f, Vector2.Zero, 1f, spriteEffect, 0f);
+            }
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            isDying = false;
+            hasPlayedDeath = false;
+            Health = 250;
+            currentState = EnemyState.Idle;
+            stateTimer = 0f;
         }
     }
 }

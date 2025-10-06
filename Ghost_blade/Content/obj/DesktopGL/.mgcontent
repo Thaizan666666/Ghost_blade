@@ -7,8 +7,11 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/../../../../../../Downloads/GB_Idle-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/A_job.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Ammo.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Bullet_boss.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/ChargingLaser-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/crosshairs_reload-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/DeathLaser16Frame-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Door_city_Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Door_lab_Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Enemy_Bullet.png</File>
@@ -38,6 +41,8 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/hp_boss_1.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/hp_boss_2.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/HP-Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/IdleLaser.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Laser.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Main_title-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_boss.png</File>
@@ -66,6 +71,11 @@
   </SourceFiles>
   <DestFiles>
     <File>GB_Idle-Sheet.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
