@@ -56,3 +56,7 @@ nunit-*.xml
 .vs/Ghost_blade/v17/.suo
 .vs/Ghost_blade/v17/.dtbcache.v2
 .vs/Ghost_blade/v17/.futdcache.v2
+Ghost_blade/obj/Debug/net8.0/Ghost_blade.AssemblyInfoInputs.cache
+Ghost_blade/obj/Debug/net8.0/Ghost_blade.assets.cache
+Ghost_blade/obj/Debug/net8.0/Ghost_blade.csproj.AssemblyReference.cache
+Ghost_blade/obj/Debug/net8.0/Ghost_blade.AssemblyInfo.cs
