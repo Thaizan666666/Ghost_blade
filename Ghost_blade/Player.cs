@@ -24,6 +24,7 @@ namespace Ghost_blade
         public Vector2 velocity { get; private set; }
 
         private float speed;
+        private float mutiplyspeed = 1;
         private float rotation;
         
         private float fireDelay = 0.2f;
@@ -358,7 +359,7 @@ namespace Ghost_blade
 
             if (isDashing)
             {
-                Vector2 newPosition = position + dashDirection * speed * DashSpeedMultiplier;
+                Vector2 newPosition = position + dashDirection * speed * DashSpeedMultiplier * mutiplyspeed;
                 position = newPosition;
 
                 dashTimer -= deltaTime;
@@ -382,6 +383,9 @@ namespace Ghost_blade
                 if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; }
                 else if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1;}
 
+                if (kState.IsKeyDown(Keys.LeftShift)) { mutiplyspeed = 2.5f; }
+                else { mutiplyspeed = 1f; }
+
                 velocity = newVelocity;
 
                 if (velocity != Vector2.Zero)
@@ -390,7 +394,7 @@ namespace Ghost_blade
                     lastMovementDirection = velocity;
                 }
                 
-                Vector2 newPosition = position + velocity * speed;
+                Vector2 newPosition = position + velocity * speed * mutiplyspeed;
                 position = newPosition;
             }
             else
@@ -401,7 +405,7 @@ namespace Ghost_blade
 
         private void HandleWeaponSwitching(KeyboardState kState)
         {
-            if (kState.IsKeyDown(Keys.E) && !previousKState.IsKeyDown(Keys.E))
+            if (kState.IsKeyDown(Keys.Tab) && !previousKState.IsKeyDown(Keys.Tab))
             {
                 isSwordEquipped = !isSwordEquipped;
                 isWeaponSwitching = true;

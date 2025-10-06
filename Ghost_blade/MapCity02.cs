@@ -85,6 +85,17 @@ namespace Ghost_blade
             AddObstacle(36, 30, 7, 1);
             AddObstacle(36, 31, 1, 1);
             AddObstacle(41, 31, 1, 1);
+
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(114 * tileSize, 58 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(94 * tileSize, 58 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(118 * tileSize, 46 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTexture, new Vector2(90 * tileSize, 45 * tileSize), 1.0f, 1000f, bulletTexture, parry));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(99 * tileSize, 10 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(110 * tileSize, 10 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(47 * tileSize, 59 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTexture, new Vector2(34 * tileSize, 59 * tileSize), 1.0f, 1000f, bulletTexture, parry));
+            AddEnemy(new Enemy_Melee(Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, enemyTexture, new Vector2(58 * tileSize, 45 * tileSize), 1.5f, 1000f));
+            AddEnemy(new Enemy_Shooting(EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTexture, new Vector2(49 * tileSize, 37 * tileSize), 1.0f, 1000f, bulletTexture, parry));
         }
     }
 }
