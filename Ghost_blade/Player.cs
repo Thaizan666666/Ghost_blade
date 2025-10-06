@@ -14,6 +14,7 @@ namespace Ghost_blade
         Idle,
         Running,
         Attacking,
+        parry,
         Dashing
     }
     public class Player
@@ -97,6 +98,7 @@ namespace Ghost_blade
         public AnimatedTexture AttackingTextureDown;
         public AnimatedTexture GunDashingTexture;
         public AnimatedTexture BladeDashingTexture;
+        public AnimatedTexture ParryTexture;
         public Texture2D Hand;
         public float HandRotation;
         public Vector2 HandOrigin;
@@ -107,7 +109,7 @@ namespace Ghost_blade
             {
                 {
                     return new Rectangle(
-                        (int)(position.X - texture.Width / 2 + 48),
+                        (int)(position.X - texture.Width / 2),
                         (int)(position.Y - texture.Height + 48),
                         48,
                         (texture.Height - 24)*2
@@ -120,7 +122,7 @@ namespace Ghost_blade
             get
             {
                 return new Rectangle(
-                            (int)(position.X - texture.Width / 2 + 48),
+                            (int)(position.X - texture.Width / 2),
                             (int)(position.Y - texture.Height),
                             48,
                             texture.Height * 2
@@ -152,6 +154,7 @@ namespace Ghost_blade
             AttackingTexture2 = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTextureUp = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTextureDown = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            ParryTexture = new AnimatedTexture(Vector2.Zero, 0f,2f, 0f);
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
@@ -169,6 +172,7 @@ namespace Ghost_blade
             AttackingTexture2.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTextureUp.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTextureDown.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+            ParryTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalMilliseconds);
             //เติมเลือด
             if(kState.IsKeyDown(Keys.H) && !previousKState.IsKeyDown(Keys.H))
             {
@@ -206,6 +210,14 @@ namespace Ghost_blade
                     // Reset _isSlash or any other state-specific flags
                 }
             }
+            else if (currentState == PlayerState.parry)
+            {
+                meleeWeapon.Update(gameTime, position, cameraPosition);
+                if (!meleeWeapon._isParryActive)
+                {
+                    currentState = PlayerState.Idle;
+                }
+            }
             else // Not Dashing or Attacking
             {
                 HandleMovement(kState);
@@ -222,7 +234,7 @@ namespace Ghost_blade
                     meleeWeapon.Update(gameTime, position, cameraPosition);
                 }
             }
-            if (parryCooldownTimer > 0)
+            if(parryCooldownTimer > 0)
             {
                 parryCooldownTimer -= deltaTime;
             }
@@ -237,6 +249,8 @@ namespace Ghost_blade
                 // Add more cases for Attacking and Dashing animation if you have them
                 case PlayerState.Attacking:
                     // Use a specific animation for attacking
+                    break;
+                case PlayerState.parry: 
                     break;
             }
 
@@ -284,7 +298,7 @@ namespace Ghost_blade
         private void HandleAttacks(KeyboardState kState, MouseState mState, Vector2 cameraPosition) // ต้องเพิ่ม cameraPosition เป็น parameter
         {
             bool _iscanattack = isDashing;
-            if (!_iscanattack || meleeWeapon._ultTimer > 0)
+            if (!_iscanattack || meleeWeapon._isULTActive)
             {
                 if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released && meleeWeapon._parryTimer <= 0)
                 {
@@ -300,6 +314,7 @@ namespace Ghost_blade
                     if (isSwordEquipped && currentState != PlayerState.Attacking && !isDashing && parryCooldownTimer <= 0)
                     {
                         meleeWeapon.PerformParry(position, cameraPosition);
+                        currentState = PlayerState.parry;
                         parryCooldownTimer = ParryCooldown;
                     }
                 }
@@ -309,7 +324,7 @@ namespace Ghost_blade
         // ** (ส่วนอื่นๆ ของคลาสที่ไม่ได้เปลี่ยนแปลง) **
         private void HandleDash(KeyboardState kState, float deltaTime)
         {
-            bool isActionActive = currentState == PlayerState.Attacking || meleeWeapon._parryTimer > 0 || meleeWeapon._ultTimer > 0 || meleeWeapon._ultTimer > 0;
+            bool isActionActive = currentState == PlayerState.Attacking || meleeWeapon._isParryActive || meleeWeapon._isULTActive;
             if (dashCooldownTimer > 0)
             {
                 dashCooldownTimer -= deltaTime;
@@ -356,7 +371,7 @@ namespace Ghost_blade
 
         private void HandleMovement(KeyboardState kState)
         {
-            bool isActionActive = isDashing || currentState == PlayerState.Attacking || meleeWeapon._parryTimer > 0 || meleeWeapon._ultTimer > 0;
+            bool isActionActive = isDashing || currentState == PlayerState.Attacking || meleeWeapon._isParryActive || meleeWeapon._isULTActive ;
             if (!isActionActive)
             {
                 Vector2 newVelocity = Vector2.Zero;
@@ -610,7 +625,7 @@ namespace Ghost_blade
                 {
                     if (isSwordEquipped) { IdleBladeTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48),flip); }
                     else if (!isSwordEquipped && flip == false) { IdleGunTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
-                    else if (!isSwordEquipped && flip == true) { IdleGunTexture.DrawFrame(spriteBatch, position - new Vector2(96, 48), flip); }
+                    else if (!isSwordEquipped && flip == true) { IdleGunTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
                 }
                 else if (currentState == PlayerState.Running)
                 {
@@ -669,6 +684,10 @@ namespace Ghost_blade
                         }
                     }
                 }
+                else if (currentState == PlayerState.parry)
+                {
+                    ParryTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip);
+                }
                 if (!isSwordEquipped && currentState != PlayerState.Dashing)
                 {
                     if (mousePos.X < screenCenter.X)
@@ -679,7 +698,6 @@ namespace Ghost_blade
                     {
                         spriteBatch.Draw(Hand, new Vector2(position.X - 32, position.Y - 14), null, drawColor, HandRotation, HandOrigin, 2f, SpriteEffects.None, 0f);
                     }
-
                 }
             }
         }

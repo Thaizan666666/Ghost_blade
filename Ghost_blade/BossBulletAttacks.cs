@@ -69,7 +69,7 @@ namespace Ghost_blade
 
                 // **เรียกใช้ Update และรับค่ากระสุน Parry คืนมา**
                 // (ต้องแน่ใจว่าได้แก้ไข EnemyBullet.Update เป็น public Bullet Update(...) แล้ว)
-                Bullet newParriedBullet = currentEnemyBullet.Update(gameTime, Obstacles, player,boss.Position);
+                Bullet newParriedBullet = currentEnemyBullet.Update(gameTime, Obstacles, player,boss.Position + new Vector2(boss.Position.X/2,boss.Position.Y/2));
 
                 // **ถ้ามีการ Parry เกิดขึ้น**
                 if (newParriedBullet != null)
@@ -89,11 +89,11 @@ namespace Ghost_blade
                     parriedBullet.Update(gameTime, Obstacles);
 
                     // *[TODO: เพิ่มโค้ดตรวจสอบการชนกับ Boss ที่นี่]*
-                    // if (parriedBullet.boundingBox.Intersects(boss.Hitbox)) 
-                    // { 
-                    //    boss.TakeDamage(1); 
-                    //    parriedBullet.IsActive = false; 
-                    // }
+                    if (parriedBullet.boundingBox.Intersects(boss.HitboxgetDamage))
+                    {
+                        boss.TakeDamage(40);
+                        parriedBullet.IsActive = false;
+                    }
 
                     if (!parriedBullet.IsActive)
                     {
