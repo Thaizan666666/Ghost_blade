@@ -60,7 +60,7 @@ public class Boss
 
         // Pass the pixel texture for attacks that use it
         attacks.Add(new LaserAttack(this, pixelTexture));
-        attacks.Add(new BossBulletAttacks(this, bulletTexture, parry));
+        //attacks.Add(new BossBulletAttacks(this, bulletTexture, parry));
         attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Death, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTex1, enemyTex2, bulletTexture, parry));
 
         currentState = BossState.Idle;

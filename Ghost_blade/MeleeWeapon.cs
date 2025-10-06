@@ -18,7 +18,7 @@ public class MeleeWeapon
     private float _attackDuration = 0.2f; // ระยะเวลาการโจมตี
 
     // ** New variables for Parry State **
-    private bool _isParryActive = false;
+    public bool _isParryActive { get; private set; } = false;
     public float _parryTimer { get; private set; } = 0f;
     // Set a very short window for parry at the start of the swing
     private float _parryDuration = 1f;

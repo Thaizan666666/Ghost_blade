@@ -47,7 +47,7 @@ namespace Ghost_blade
             }
             return parriedBullet;
         }
-        public Bullet Update(GameTime gameTime, List<Rectangle> obstacles, Player player,Vector2 enemyposition)
+    public Bullet Update(GameTime gameTime, List<Rectangle> obstacles, Player player, Vector2 enemyposition)
         {
             // First, call the base class's Update method to handle generic bullet logic.
             base.Update(gameTime, obstacles);
@@ -58,18 +58,18 @@ namespace Ghost_blade
             {
                 player.TakeDamage(1);
                 IsActive = false;
-                Debug.WriteLine($"Hp = {player.Health}");
             }
 
             if (IsActive && boundingBox.Intersects(player.meleeWeapon.ParryHitbox))
             {
                 IsActive = false;
-                Vector2 parryDirection = player.position - enemyposition;
+                Vector2 parryDirection = enemyposition - player.position;
+                parryDirection.Normalize();
                 parriedBullet = new Bullet(
                     this.parry,
                     this.position,
                     parryDirection,
-                    this.speed * 1.5f, // ให้กระสุน Parry เร็วขึ้น
+                    this.speed, // ให้กระสุน Parry เร็วขึ้น
                     this.rotation,
                     this.lifeTime
                 );

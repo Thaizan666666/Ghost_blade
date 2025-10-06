@@ -86,7 +86,7 @@ namespace Ghost_blade
                     currentRotationSpeed = MathHelper.Lerp(0, MAX_ROTATION_SPEED, fireTimer / FIRE_DURATION);
 
                     // Calculate the angle to the player (ใช้ 'player' parameter โดยตรง)
-                    float desiredAngle = (float)Math.Atan2(player.position.Y - (boss.Position.Y + 1055), player.position.X - (boss.Position.X + boss.Boss_width));
+                    float desiredAngle = (float)Math.Atan2(player.position.Y - (boss.Position.Y + 1056 / 2), player.position.X - (boss.Position.X + boss.Boss_width));
 
                     // Use a slightly modified version of the previous logic to handle the overshoot
                     float angleDifference = MathHelper.WrapAngle(desiredAngle - laserAngle);
@@ -150,7 +150,7 @@ namespace Ghost_blade
                     if (distanceSquared <= hitDistance * hitDistance)
                     {
                         // Collision detected!
-                        player.TakeDamage(2);
+                        player.TakeDamage(1);
                     }
                     // **********************************
 
@@ -192,7 +192,7 @@ namespace Ghost_blade
         private void DrawLaser(SpriteBatch spriteBatch, float thickness, Color color)
         {
             float laserLength = 2000f;
-            Vector2 origin = new Vector2(0, thickness / 2);
+            Vector2 origin = new Vector2(0,0);
             Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width, boss.Boss_height);
 
             // Hitbox calculation is now in Update()

@@ -36,10 +36,12 @@ namespace Ghost_blade
         private Boss boss;
         private Texture2D _pixel;
         private Texture2D EnemyTexture;
+        private Texture2D ActiveEnemyTexture;
         private Texture2D AmmoDrop;
         private Texture2D HealDrop;
         private Texture2D Boss_Max_Hp;
         private Texture2D Boss_Current_Hp;
+        private bool _isSlashUlt;
 
         private GameState gameState = GameState.MainMenu;
         private MainMenuScreen mainMenu;
@@ -62,6 +64,8 @@ namespace Ghost_blade
         private AnimatedTexture EnemyShooting_Walk;
         private AnimatedTexture Enemymelee_Death;
         private AnimatedTexture EnemyShooting_Death;
+        private AnimatedTexture EnemyLaser_Death;
+        private AnimatedTexture EnemyLaser_ChargingLaser;
         private AnimatedTexture stat_tutorial_Sheet;
         private AnimatedTexture start_obivionlab_Sheet;
         private AnimatedTexture start_city_Sheet;
@@ -109,6 +113,8 @@ namespace Ghost_blade
             EnemyShooting_Walk = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             Enemymelee_Death = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             EnemyShooting_Death = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            EnemyLaser_Death = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            EnemyLaser_ChargingLaser = new AnimatedTexture(Vector2.Zero,0f,2f,0f);
             stat_tutorial_Sheet = new AnimatedTexture(Vector2.Zero, 0f, 0.4f, 0f);
             start_obivionlab_Sheet = new AnimatedTexture(Vector2.Zero, 0f, 0.4f, 0f);
             start_city_Sheet = new AnimatedTexture(Vector2.Zero, 0f, 0.4f, 0f);
@@ -134,7 +140,8 @@ namespace Ghost_blade
             AmmoDrop = Content.Load<Texture2D>("Ammo");
             HealDrop = Content.Load<Texture2D>("Heal");
             Texture2D playerTexture = Content.Load<Texture2D>("GB_Idle-Sheet");
-            EnemyTexture = Content.Load<Texture2D>("enemy-Idle-12Frame_Sheet");
+            EnemyTexture = Content.Load<Texture2D>("IdleLaser");
+            ActiveEnemyTexture = Content.Load<Texture2D>("Laser");
             Boss_Max_Hp = Content.Load<Texture2D>("hp_boss_1");
             Boss_Current_Hp = Content.Load<Texture2D>("hp_boss_2");
 
@@ -188,6 +195,7 @@ namespace Ghost_blade
             _player.AttackingTexture2.Load(Content, "GB_Slash4-Sheet", 4, 1, 20);
             _player.AttackingTextureUp.Load(Content, "GB_SlashUp-Sheet", 4, 1, 20);
             _player.AttackingTextureDown.Load(Content, "GB_SlashDown-Sheet", 4, 1, 20);
+            _player.ParryTexture.Load(Content, "GB_Parry-Sheet", 8, 1, 8);
             DoorCityOpenTexture.Load(Content, "Door_city_Sheet", 4, 1, 8);
             DoorLabOpenTexture.Load(Content, "Door_lab_Sheet", 5, 1, 8);
             Enemymelee_Idle.Load(Content, "enemy-Idle-12Frame_Sheet", 12, 1, 8);
@@ -197,6 +205,8 @@ namespace Ghost_blade
             EnemyShooting_Walk.Load(Content, "enemyshooting_walk-Sheet", 8, 1, 4);
             Enemymelee_Death.Load(Content, "enemydeath-25FrameSheet", 25, 1, 12);
             EnemyShooting_Death.Load(Content, "enemyshooting_death-25FrameSheet", 25, 1, 10);
+            EnemyLaser_ChargingLaser.Load(Content, "ChargingLaser-Sheet",14 ,1, 8);
+            EnemyLaser_Death.Load(Content, "DeathLaser16Frame-Sheet", 16, 1, 8);
             stat_tutorial_Sheet.Load(Content, "stat_tutorial-Sheet", 3, 3, 8);
             start_obivionlab_Sheet.Load(Content, "start_obivionlab-Sheet", 3, 3, 10);
             start_city_Sheet.Load(Content, "start_city-Sheet", 3, 3, 10);
@@ -207,14 +217,14 @@ namespace Ghost_blade
             // Now, pass the textures to the Room constructors
             rooms = new List<Room>
             {
-                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture,_parrybullet),
-                new MapCity01(Map_city_01, Map_city_01_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet),
-                new MapCity02(Map_city_02, Map_city_02_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet),
-                new MapCity03(Map_city_03, Map_city_03_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet),
-                new MapLab01(Map_lab_01, Map_lab_01_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet),
-                new MapLab02(Map_lab_02, Map_lab_02_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet),
-                new MapLab03(Map_lab_03, Map_lab_03_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture,_parrybullet),
-                new MapBoss01(Map_Boss_01, Map_Boss_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture,_parrybullet),
+                new MapTutorial01(Map_tutorial_01, Map_tutorial_01_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture,_parrybullet,_pixel),
+                new MapCity01(Map_city_01, Map_city_01_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet,_pixel),
+                new MapCity02(Map_city_02, Map_city_02_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet,_pixel),
+                new MapCity03(Map_city_03, Map_city_03_void, DoorCityOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet,_pixel),
+                new MapLab01(Map_lab_01, Map_lab_01_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet,_pixel),
+                new MapLab02(Map_lab_02, Map_lab_02_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture, _parrybullet,_pixel),
+                new MapLab03(Map_lab_03, Map_lab_03_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture,EnemyLaser_ChargingLaser,EnemyLaser_Death,EnemyTexture, _EnemybulletTexture,_parrybullet,_pixel),
+                new MapBoss01(Map_Boss_01, Map_Boss_void, DoorLabOpenTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, _EnemybulletTexture,_parrybullet,_pixel),
             };
 
 
@@ -275,6 +285,11 @@ namespace Ghost_blade
             if (currentKState.IsKeyDown(Keys.I))
             {
                 currentRoomIndex = 7;
+                _player.position = rooms[currentRoomIndex].StartPosition;
+            }
+            if (currentKState.IsKeyDown(Keys.U))
+            {
+                currentRoomIndex = 6;
                 _player.position = rooms[currentRoomIndex].StartPosition;
             }
 
@@ -519,6 +534,23 @@ namespace Ghost_blade
                         }
                     }
                 }
+                for (int i = _enemyBullets.Count - 1; i >= 0; i--)
+                {
+                    EnemyBullet bullet = _enemyBullets[i];
+                    Bullet newParriedBullet = bullet.Update(gameTime, currentRoom.Obstacles, _player);
+
+                    // 2. ตรวจสอบว่ามีกระสุน Parry ถูกสร้างขึ้นมาหรือไม่
+                    if (newParriedBullet != null)
+                    {
+                        // 3. เพิ่มกระสุน Parry เข้าไปใน List ของกระสุนฝ่ายผู้เล่น
+                        _playerBullets.Add(newParriedBullet);
+                    }
+
+                    if (!bullet.IsActive)
+                    {
+                        _enemyBullets.RemoveAt(i);
+                    }
+                }
 
                 // Update and check for player bullet collisions with all enemies
                 for (int i = _playerBullets.Count - 1; i >= 0; i--)
@@ -543,40 +575,6 @@ namespace Ghost_blade
 
                     // Remove inactive bullets
                     if (!bullet.IsActive)
-                    {
-                        _playerBullets.RemoveAt(i);
-                    }
-                }
-
-                // Enemy bullets update and collision checks
-                for (int i = _enemyBullets.Count - 1; i >= 0; i--)
-                {
-                    EnemyBullet bullet = _enemyBullets[i];
-                    Bullet newParriedBullet = bullet.Update(gameTime, currentRoom.Obstacles, _player);
-
-                    // 2. ตรวจสอบว่ามีกระสุน Parry ถูกสร้างขึ้นมาหรือไม่
-                    if (newParriedBullet != null)
-                    {
-                        // 3. เพิ่มกระสุน Parry เข้าไปใน List ของกระสุนฝ่ายผู้เล่น
-                        _playerBullets.Add(newParriedBullet);
-                    }
-
-                    if (!bullet.IsActive)
-                    {
-                        _enemyBullets.RemoveAt(i);
-                    }
-                }
-                for (int i = _playerBullets.Count - 1; i >= 0; i--)
-                {
-                    Bullet parriedBullet = _playerBullets[i];
-
-                    // (คุณอาจต้องสร้าง Method Update สำหรับ Bullet ธรรมดา ที่ไม่รับ Player)
-                    // หรือถ้า Bullet มี Update(GameTime, List<Rectangle>) ก็เรียกใช้ตัวนั้นได้เลย
-                    parriedBullet.Update(gameTime, currentRoom.Obstacles);
-
-                    // *คุณอาจต้องเพิ่มโค้ดตรวจการชนกับ Boss ที่นี่ด้วย*
-
-                    if (!parriedBullet.IsActive)
                     {
                         _playerBullets.RemoveAt(i);
                     }
@@ -641,6 +639,7 @@ namespace Ghost_blade
                     _player.meleeWeapon.getULTHitbox(_player.position);
                     _player.meleeWeapon._ultTimer = 2f; // <-- ตั้งค่าเป็น 2f
                     _player.meleeWeapon._isULTActive = true; // <-- ต้องแน่ใจว่าตั้งค่านี้ด้วย
+                    _isSlashUlt = true;
                 }
             }
             if (gameState == GameState.justmentcut)
@@ -651,17 +650,21 @@ namespace Ghost_blade
                 // 2. จัดการ ULT Timer และ Hitbox
                 if (_player.meleeWeapon._isULTActive) // ตรวจสอบว่า ULT กำลังทำงาน
                 {
-                    // *คุณต้องมีตัวแปร Timer ใน MeleeWeapon*
-                    foreach (var enemy in currentRoom.Enemies)
+                    if (_isSlashUlt)
                     {
-                        if (enemy.IsActive && _player.meleeWeapon.ULTHitbox.Intersects(enemy.boundingBox))
+                        // *คุณต้องมีตัวแปร Timer ใน MeleeWeapon*
+                        foreach (var enemy in currentRoom.Enemies)
                         {
-                            enemy.TakeDamage(500, _player.position, false);
+                            if (enemy.IsActive && _player.meleeWeapon.ULTHitbox.Intersects(enemy.boundingBox))
+                            {
+                                enemy.TakeDamage(500, _player.position, false);
+                            }
                         }
-                    }
-                    if (boss.IsbossAticve && _player.meleeWeapon.ULTHitbox.Intersects(boss.HitboxgetDamage))
-                    {
-                        boss.TakeDamage(500);
+                        if (boss.IsbossAticve && _player.meleeWeapon.ULTHitbox.Intersects(boss.HitboxgetDamage))
+                        {
+                            boss.TakeDamage(500);
+                        }
+                        _isSlashUlt = false;
                     }
                     _player.meleeWeapon._ultTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -767,9 +770,10 @@ namespace Ghost_blade
                 // Draw hitboxes
                 if (_isOpenhitbox)
                 {
-                    //DrawRectangle(_spriteBatch, _player.drect, Color.Black, 1);
+                    DrawRectangle(_spriteBatch, _player.drect, Color.Black, 1);
                     DrawRectangle(_spriteBatch, boss.HitboxgetDamage, Color.Yellow, 1);
                     DrawRectangle(_spriteBatch, _player.HitboxgetDamage, Color.Blue, 1);
+                    DrawRectangle(_spriteBatch, _player.meleeWeapon.AttackHitbox, Color.Yellow, 1);
                     DrawRectangle(_spriteBatch, _player.meleeWeapon.ParryHitbox, Color.Red, 1);
                     DrawRectangle(_spriteBatch, _player.meleeWeapon.ULTHitbox, Color.Red, 1);
                     foreach (var room in rooms)
