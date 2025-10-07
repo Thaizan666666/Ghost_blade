@@ -133,7 +133,6 @@ namespace Ghost_blade
 
                         currentState = EnemyState.Firing;
                         stateTimer = FIRING_DURATION;
-
                         // *** เรียกเมธอดสร้างเลเซอร์หนา (Hitscan) สำหรับสัญญาณภายนอก ***
                         ShootLaser(laserDirection);
                     }
@@ -216,6 +215,7 @@ namespace Ghost_blade
             // ส่งสัญญาณไปยัง Game Manager ให้สร้าง Laser Line 
             // โดยใช้ Position และ Direction ที่ล็อกไว้ เพื่อจัดการ Damage และ Draw Laser Line
             // Damage handling ได้ถูกย้ายไปที่ ApplyContinuousLaserDamage แล้ว
+            Sound.Play(Sound.enemy_attack_laser, 0.5f);
             OnShootLaser?.Invoke(this, direction);
         }
 
@@ -239,7 +239,7 @@ namespace Ghost_blade
             float laserAngle = (float)Math.Atan2(laserDirection.Y, laserDirection.X);
 
             // 2. กำหนดจุดเริ่มต้นของเลเซอร์ (จากกึ่งกลางของ Texture)
-            Vector2 laserStart = Position - new Vector2(20,20);
+            Vector2 laserStart = Position - new Vector2(20, 20);
 
             // 3. Draw the line using the 1x1 pixel texture
             spriteBatch.Draw(
@@ -257,7 +257,7 @@ namespace Ghost_blade
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            TexturePosition = Position - new Vector2(48,48);
+            TexturePosition = Position - new Vector2(48, 48);
             SpriteEffects spriteEffect = flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
             if (IsActive) { spriteBatch.Draw(Anim_Idle, TexturePosition, null, Color.White, 0f, Vector2.Zero, 2f, spriteEffect, 0f); }

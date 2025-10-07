@@ -199,6 +199,7 @@ public class Enemy
     }
     public Rectangle Die()
     {
+        Sound.Play(Sound.s_enemydie, 0.05f);
         int currentrandomDrop = randomDrop.Next(1, 10);
         Debug.WriteLine($"Niggar Drop Item {currentrandomDrop}");
         if (currentrandomDrop == 2 || currentrandomDrop == 3 || currentrandomDrop == 4 || currentrandomDrop == 5)

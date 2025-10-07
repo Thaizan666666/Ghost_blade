@@ -17,6 +17,7 @@ namespace Ghost_blade
         private float distanceToPlayer;
         // New state variable
         private bool isAttacking = false;
+        private bool isSound = false;
 
         private Vector2 TexturePosition;
         private bool flip = false;
@@ -64,6 +65,7 @@ namespace Ghost_blade
                 {
                     isAttacking = false;
                     AttackHitbox = Rectangle.Empty;
+                    isSound = false;
                 }
             }
             // Priority 3: Normal behavior (chasing/attacking)
@@ -85,6 +87,11 @@ namespace Ghost_blade
                             isAttacking = true;
                             attackAnimationTimer = AttackAnimationDuration;
                             attackTimer = attackCooldown;
+                        }
+                        if (isAttacking == true && isSound == false)
+                        {
+                            Sound.Play(Sound.enemy_attack_punch, 0.3f);
+                            isSound = true;
                         }
                         desiredMovement = Vector2.Zero; // Stop movement to prepare for attack
                     }

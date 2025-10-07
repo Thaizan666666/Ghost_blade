@@ -98,6 +98,10 @@ namespace Ghost_blade
                     Shoot(player.position);
                     bulletsShotInBurst++;
                     burstTimer = BURST_DELAY;
+                    if (bulletsShotInBurst == 1)
+                    {
+                        Sound.Play(Sound.s_shooting, 0.05f);
+                    }
                 }
 
                 // เมื่อยิงครบ Burst แล้ว: เข้าสู่ Cooldown
