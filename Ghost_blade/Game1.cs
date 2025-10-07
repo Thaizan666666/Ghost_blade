@@ -79,6 +79,8 @@ namespace Ghost_blade
         private AnimatedTexture boss_gun_start;
         private AnimatedTexture boss_gun_done;
         private AnimatedTexture boss_death;
+        private AnimatedTexture GB_Death_Sheet;
+        private AnimatedTexture Ultimate;
 
         private int Enemy_Count;
         SpriteFont uiFont;
@@ -136,6 +138,8 @@ namespace Ghost_blade
             boss_laser_done = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             boss_laser_start = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             boss_death = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            GB_Death_Sheet = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
+            Ultimate = new AnimatedTexture(Vector2.Zero, 0f, 1.25f, 0f);
         }
 
         protected override void Initialize()
@@ -162,7 +166,7 @@ namespace Ghost_blade
             ActiveEnemyTexture = Content.Load<Texture2D>("Laser");
             Boss_Max_Hp = Content.Load<Texture2D>("hp_boss_1");
             Boss_Current_Hp = Content.Load<Texture2D>("hp_boss_2");
-            Energy_Max_bar = Content.Load<Texture2D>("energy");
+            Energy_Max_bar = Content.Load<Texture2D>("energy_0");
             Energy_Current_bar = Content.Load<Texture2D>("energy");
             shadow = Content.Load<Texture2D>("shadow (1)");
 
@@ -199,7 +203,7 @@ namespace Ghost_blade
             Texture2D Map_lab_01_void = Content.Load<Texture2D>("Map_lab_01_void");
             Texture2D Map_lab_02_void = Content.Load<Texture2D>("Map_lab_02_void");
             Texture2D Map_lab_03_void = Content.Load<Texture2D>("Map_lab_03_void");
-            Texture2D Map_Boss_void = Content.Load<Texture2D>("Map_boss-void");
+            Texture2D Map_Boss_void = Content.Load<Texture2D>("Map_boss_void");
 
             Hp_bar.Load(Content, "HP-Sheet", 6, 1, 8);
             cursorTexture.Load(Content, "crosshairs-Sheet", 4, 1, 20);
@@ -221,7 +225,7 @@ namespace Ghost_blade
             DoorLabOpenTexture.Load(Content, "Door_lab_Sheet", 5, 1, 8);
             Enemymelee_Idle.Load(Content, "enemy-Idle-12Frame_Sheet", 12, 1, 8);
             Enemymelee_Walk.Load(Content, "enemywalk-Sheet", 8, 1, 4);
-            Enemymelee_Attack.Load(Content, "enemyattack-Sheet", 11, 1, 4);
+            Enemymelee_Attack.Load(Content, "enemyattack-Sheet", 11, 1, 5);
             EnemyShooting_Idle.Load(Content, "enemyshooting-Sheet", 12, 1, 8);
             EnemyShooting_Walk.Load(Content, "enemyshooting_walk-Sheet", 8, 1, 4);
             Enemymelee_Death.Load(Content, "enemydeath-25FrameSheet", 25, 1, 12);
@@ -231,7 +235,7 @@ namespace Ghost_blade
             stat_tutorial_Sheet.Load(Content, "stat_tutorial-Sheet", 3, 4, 12);
             start_obivionlab_Sheet.Load(Content, "start_obivionlab-Sheet", 3, 4, 12);
             start_city_Sheet.Load(Content, "start_city-Sheet", 3, 4, 12);
-            fullenergy_Sheet.Load(Content, "energy-Sheet", 8, 1, 4);
+            fullenergy_Sheet.Load(Content, "energy-Sheet", 7, 1, 4);
             boss_gun.Load(Content, "boss_gun", 4, 1, 12);
             boss_gun_start.Load(Content, "boss_gun_start", 6, 3, 9);
             boss_gun_done.Load(Content, "boss_gun_done", 4, 2, 8);
@@ -239,6 +243,8 @@ namespace Ghost_blade
             boss_laser_start.Load(Content, "boss_laser_start", 6, 3, 9);
             boss_laser_done.Load(Content, "boss_laser_done", 4, 2, 4);
             boss_death.Load(Content, "boss_death", 4, 4, 8);
+            GB_Death_Sheet.Load(Content, "GB_Death2-Sheet", 5, 4, 10);
+            Ultimate.Load(Content, "Ult-Sheet", 6, 6, 9);
 
             // Pass the pixel texture to the Beholster constructor
             boss = new Boss(_bossTexture, new Vector2(41 * 48, 8 * 48), _pixel, 
@@ -375,6 +381,7 @@ namespace Ghost_blade
                 if (mainMenu.tutorial)
                 {
                     currentRoomIndex = 0;
+                    _player.meleeWeapon.ultCharge = 100f;
                     gameState = GameState.Playing;
                     boss.Reset();
                     mainMenu.tutorial = false;
@@ -392,22 +399,25 @@ namespace Ghost_blade
             {
                 if (_player.Health <= 0)
                 {
-                    gameState = GameState.GameOver;
-
-                    _player.SetPosition(rooms[currentRoomIndex].StartPosition);
-                    _player.Reset();
-                    boss.Reset();
-                    currentRoomIndex = random.Next(1, 4);
-                    stageStep = 0;
-                    currentRoom.ResetRoom();
-                    Door_Open = false;
-                    DoorCityOpenTexture.Reset();
-                    DoorLabOpenTexture.Reset();
-                    _enemyBullets.Clear();
-                    _playerBullets.Clear();
-                    gameOver.StartGame = false;
-                    gameOver.Menu = false;
-                    return;
+                    if (GB_Death_Sheet.IsEnd)
+                    {
+                        gameState = GameState.GameOver;
+                        _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                        _player.Reset();
+                        boss.Reset();
+                        currentRoomIndex = random.Next(1, 4);
+                        stageStep = 0;
+                        currentRoom.ResetRoom();
+                        Door_Open = false;
+                        DoorCityOpenTexture.Reset();
+                        DoorLabOpenTexture.Reset();
+                        _enemyBullets.Clear();
+                        _playerBullets.Clear();
+                        gameOver.StartGame = false;
+                        gameOver.Menu = false;
+                        GB_Death_Sheet.Reset();
+                        return;
+                    }
                 }
             }
             
@@ -687,7 +697,7 @@ namespace Ghost_blade
                 {
                     gameState = GameState.justmentcut;
                     _player.meleeWeapon.getULTHitbox(_player.position);
-                    _player.meleeWeapon._ultTimer = 2f; // <-- ตั้งค่าเป็น 2f
+                    _player.meleeWeapon._ultTimer = 4f; // <-- ตั้งค่าเป็น 2f
                     _player.meleeWeapon._isULTActive = true; // <-- ต้องแน่ใจว่าตั้งค่านี้ด้วย
                     _isSlashUlt = true;
                 }
@@ -726,6 +736,7 @@ namespace Ghost_blade
                         _player.meleeWeapon.CanUseUlt = false;
                         _player.meleeWeapon.ultCharge = 0f;
                         gameState = GameState.Playing;
+                        Ultimate.Reset();
                     }
                 }
             }
@@ -735,6 +746,7 @@ namespace Ghost_blade
 
         protected override void Draw(GameTime gameTime)
         {
+            
             GraphicsDevice.Clear(Color.Black);
             if (gameState == GameState.Paused)
             {
@@ -785,6 +797,11 @@ namespace Ghost_blade
                     }
                 }
                 // Draw the player
+                if (_player.Health <= 0)
+                {
+                    GB_Death_Sheet.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                    GB_Death_Sheet.DrawFrame(_spriteBatch, _player.position - new Vector2(48, 48), _player.flip);
+                }
                 _player.Draw(_spriteBatch, camera.position);
                 _spriteBatch.Draw(shadow, _player.position + new Vector2(-48, 40), null, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f);
 
@@ -996,8 +1013,8 @@ namespace Ghost_blade
                 float EnergyPercent = _player.meleeWeapon.ultCharge / _player.meleeWeapon.ultChargeMax;
                 if (EnergyPercent < 0f) EnergyPercent = 0f;
                 _spriteBatch.Draw(Energy_Max_bar, EnergyPos, Color.White);
-                Rectangle Energy_srcRect = new Rectangle(0, 0, (int)(Energy_Current_bar.Width * EnergyPercent), Energy_Current_bar.Height);
-                Rectangle Energy_destRect = new Rectangle((int)EnergyPos.X, (int)EnergyPos.Y, Energy_srcRect.Width, Energy_srcRect.Height);
+                Rectangle Energy_srcRect = new Rectangle(84, 0, (int)((Energy_Current_bar.Width - 84 ) * EnergyPercent), Energy_Current_bar.Height);
+                Rectangle Energy_destRect = new Rectangle((int)EnergyPos.X + 84, (int)EnergyPos.Y, Energy_srcRect.Width, Energy_srcRect.Height);
                 _spriteBatch.Draw(Energy_Current_bar, Energy_destRect, Energy_srcRect, Color.White);
 
                 if (_player.meleeWeapon.CanUseUlt) 
@@ -1005,7 +1022,7 @@ namespace Ghost_blade
                     fullenergy_Sheet.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                     fullenergy_Sheet.DrawFrame(_spriteBatch, EnergyPos);
                 }
-
+                
                 if (gameState == GameState.Playing)
                 {
                     if (currentRoomIndex == 0)
@@ -1070,6 +1087,11 @@ namespace Ghost_blade
             if (fadeAlpha > 0f)
             {
                 _spriteBatch.Draw(whiteTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White * fadeAlpha);
+            }
+            if (_player.meleeWeapon._isULTActive)
+            {
+                Ultimate.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                Ultimate.DrawFrame(_spriteBatch, new Vector2(0, 0));
             }
             _spriteBatch.End();
             base.Draw(gameTime);
