@@ -43,8 +43,8 @@ namespace Ghost_blade
         private Texture2D Boss_Current_Hp;
         private Texture2D Energy_Max_bar;
         private Texture2D Energy_Current_bar;
+        private Texture2D shadow;
         private bool _isSlashUlt;
-
         private GameState gameState = GameState.MainMenu;
         private MainMenuScreen mainMenu;
         private GameOverScreen gameOver;
@@ -107,6 +107,7 @@ namespace Ghost_blade
 
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
 
             camera = new FollowsCamera(Vector2.Zero);
@@ -163,6 +164,7 @@ namespace Ghost_blade
             Boss_Current_Hp = Content.Load<Texture2D>("hp_boss_2");
             Energy_Max_bar = Content.Load<Texture2D>("energy");
             Energy_Current_bar = Content.Load<Texture2D>("energy");
+            shadow = Content.Load<Texture2D>("shadow (1)");
 
             _swordTexture = new Texture2D(GraphicsDevice, 50, 20); // Create a 50x20 pixel texture
             Color[] data = new Color[50 * 20];
@@ -374,6 +376,7 @@ namespace Ghost_blade
                 {
                     currentRoomIndex = 0;
                     gameState = GameState.Playing;
+                    boss.Reset();
                     mainMenu.tutorial = false;
                     _player.SetPosition(rooms[currentRoomIndex].StartPosition);
                     stat_tutorial_Sheet.Play();
@@ -448,7 +451,17 @@ namespace Ghost_blade
                         {
                             fadeAlpha = 1f;
                             gameState = GameState.MainMenu;
-
+                            currentRoomIndex = random.Next(1, 4);
+                            stageStep = 0;
+                            _player.Reset();
+                            boss.Reset();
+                            rooms[currentRoomIndex].ResetRoom();
+                            _playerBullets.Clear();
+                            _enemyBullets.Clear();
+                            _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                            Door_Open = false;
+                            DoorCityOpenTexture.Reset();
+                            DoorLabOpenTexture.Reset();
                             isBossDead = false;
                             timer = 0f;
                             fadeAlpha = 0f;
@@ -490,7 +503,7 @@ namespace Ghost_blade
                                     break;
                                 default:
                                     gameState = GameState.MainMenu;
-                                    currentRoomIndex = 0;
+                                    currentRoomIndex = random.Next(1, 4);
                                     stageStep = 0;
                                     _player.Reset();
                                     boss.Reset();
@@ -555,6 +568,7 @@ namespace Ghost_blade
                             if (_player._isSlash)
                             {
                                 enemy.TakeDamage(70, _player.position, true);
+                                _player.meleeWeapon.ultCharge += 6f;
                                 _player._isSlash = false;
                                 break; // Exit the loop after hitting the first enemy
                             }
@@ -565,6 +579,7 @@ namespace Ghost_blade
                         if (_player._isSlash)
                         {
                             boss.TakeDamage(70);
+                            _player.meleeWeapon.ultCharge += 6f;
                             _player._isSlash = false;
                         }
                     }
@@ -771,8 +786,8 @@ namespace Ghost_blade
                 }
                 // Draw the player
                 _player.Draw(_spriteBatch, camera.position);
+                _spriteBatch.Draw(shadow, _player.position + new Vector2(-48, 40), null, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f);
 
-                
                 // Draw all active enemies in the current room
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
                 {
@@ -825,6 +840,14 @@ namespace Ghost_blade
                                 boss_gun_done.DrawFrame(_spriteBatch, boss.Position);
                             }
                         }
+                        else if (previous_randomIndex == 2)
+                        {
+                            if (!boss_gun_done.IsEnd)
+                            {
+                                boss_gun_done.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_gun_done.DrawFrame(_spriteBatch, boss.Position);
+                            }
+                        }
                     }
                     else if (boss.currentState == Boss.BossState.Attacking)
                     {
@@ -846,6 +869,21 @@ namespace Ghost_blade
                             }
                         }
                         else if (boss.randomIndex == 1)
+                        {
+                            if (!boss_gun_start.IsEnd)
+                            {
+                                boss_gun_start.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_gun_start.DrawFrame(_spriteBatch, boss.Position);
+                                previous_randomIndex = boss.randomIndex;
+                            }
+                            else if (boss_gun_start.IsEnd)
+                            {
+                                attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                                boss_gun.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_gun.DrawFrame(_spriteBatch, boss.Position);
+                            }
+                        }
+                        else if (boss.randomIndex == 2)
                         {
                             if (!boss_gun_start.IsEnd)
                             {

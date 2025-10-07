@@ -55,7 +55,7 @@ namespace Ghost_blade
 
             foreach (var rect in Obstacles)
             {
-                spriteBatch.Draw(pixel, rect, null, Color.Gray * 0.6f, 0f, Vector2.Zero, SpriteEffects.None, 1f);
+                //spriteBatch.Draw(pixel, rect, null, Color.Gray * 0.6f, 0f, Vector2.Zero, SpriteEffects.None, 1f);
             }
         }
         public virtual void DrawLayer2(SpriteBatch spriteBatch)

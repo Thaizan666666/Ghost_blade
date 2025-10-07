@@ -239,7 +239,7 @@ namespace Ghost_blade
             float laserAngle = (float)Math.Atan2(laserDirection.Y, laserDirection.X);
 
             // 2. กำหนดจุดเริ่มต้นของเลเซอร์ (จากกึ่งกลางของ Texture)
-            Vector2 laserStart = Position + TextureCenter;
+            Vector2 laserStart = Position - new Vector2(20,20);
 
             // 3. Draw the line using the 1x1 pixel texture
             spriteBatch.Draw(
@@ -248,7 +248,6 @@ namespace Ghost_blade
                 null,
                 color,
                 laserAngle,
-                // Origin (0, 0.5f) ทำให้เส้นเลเซอร์ถูกวาดโดยมีจุดเริ่มต้นอยู่กึ่งกลางความหนา
                 new Vector2(0f, 0.5f),
                 new Vector2(LASER_LENGTH, thickness),
                 SpriteEffects.None,

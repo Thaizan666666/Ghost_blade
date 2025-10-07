@@ -85,7 +85,6 @@ public class MeleeWeapon
         // --- END NEW PARRY LOGIC ---
         if (!CanUseUlt)
         {
-            ultCharge += deltaTime * 10f; // เพิ่ม 10 หน่วยต่อวินาที
             if (ultCharge >= ultChargeMax) 
             { 
                 ultCharge = ultChargeMax;

@@ -215,5 +215,18 @@ public class SpawnAttack : BossAttack
         nextPendingSpawn = null;
         spawnedEnemies.Clear();
         newlySpawnedEnemies.Clear();
+        ClearSpawnedEnemies();
+    }
+    public void ClearSpawnedEnemies()
+    {
+        // สั่งให้ศัตรูทั้งหมดหยุดทำงานหรือลบตัวเองออกจากเกม
+        // ในทางปฏิบัติ คุณอาจต้องการทำดังนี้:
+        // 1. สั่งให้ศัตรูแต่ละตัว 'ตาย' หรือ 'ไม่ Active'
+        foreach (var enemy in spawnedEnemies)
+        {
+            enemy.IsActive = false; // หรือเมธอดที่ทำให้ศัตรูหายไป
+        }
+        // 2. ล้างรายการศัตรูที่ถูกเสกออกมา
+        spawnedEnemies.Clear();
     }
 }

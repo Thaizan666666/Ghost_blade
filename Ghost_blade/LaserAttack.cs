@@ -109,7 +109,7 @@ namespace Ghost_blade
 
                     float laserLength = 2000f;
                     float thickness = 10f; // ความหนาของเลเซอร์ในสถานะ Firing
-                    Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width, boss.Boss_height);
+                    Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width-144, boss.Boss_height+24);
 
                     // 1. กำหนดจุดปลายของเส้นเลเซอร์
                     Vector2 direction = new Vector2((float)Math.Cos(laserAngle), (float)Math.Sin(laserAngle));
@@ -193,7 +193,7 @@ namespace Ghost_blade
         {
             float laserLength = 2000f;
             Vector2 origin = new Vector2(0,0);
-            Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width, boss.Boss_height);
+            Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width-144, boss.Boss_height-24);
 
             // Hitbox calculation is now in Update()
 

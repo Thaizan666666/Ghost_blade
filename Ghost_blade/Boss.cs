@@ -63,7 +63,7 @@ public class Boss
         // Pass the pixel texture for attacks that use it
         attacks.Add(new LaserAttack(this, pixelTexture));
         attacks.Add(new BossBulletAttacks(this, bulletTexture, parry));
-        //attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Death, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTex1, enemyTex2, bulletTexture, parry));
+        attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Death, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTex1, enemyTex2, bulletTexture, parry));
 
         currentState = BossState.Idle;
         attackTimer = 0.1f;
@@ -188,17 +188,27 @@ public class Boss
         }
     }
 
-    public void Reset() 
+    public void Reset()
     {
-        IsbossAticve = false ;
+        IsbossAticve = false;
         Health = MaxHealth;
         currentState = BossState.Idle;
         attackTimer = 0f;
         currentAttack = null;
+
+        // 1. รีเซ็ตสถานะการโจมตีทั้งหมด
         foreach (var attack in attacks)
         {
             attack.Reset();
+
+            // 2. ตรวจสอบว่าเป็นการโจมตีแบบ SpawnAttack หรือไม่
+            if (attack is SpawnAttack spawnAttack)
+            {
+                // 3. เรียกเมธอดเพื่อรีเซ็ต/ล้างศัตรูที่ถูกเสกออกมา
+                spawnAttack.ClearSpawnedEnemies();
+            }
         }
-        
+        // ส่วนเดิมที่วนลูปผ่าน 'Enemy' จะถูกลบออกไป เพราะตัวแปรนี้ไม่มีอยู่จริง
+        // และการจัดการศัตรูถูกย้ายไปทำใน SpawnAttack แล้ว
     }
 }
