@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using Ghost_blade;
 
 public class MeleeWeapon
 {
@@ -24,8 +25,11 @@ public class MeleeWeapon
     private float _parryDuration = 1f;
 
     public bool _isULTActive;
+    public bool CanUseUlt {  get; set; }
     public float _ultTimer { get; set; }
-
+    public float ultCharge { get; set; } = 0f;
+    public float ultChargeMax { get; private set; } = 100f;
+    public bool IsULTReady => ultCharge >= ultChargeMax;
 
     public Rectangle AttackHitbox { get; private set; }
     public Rectangle ParryHitbox { get; private set; }
@@ -79,6 +83,15 @@ public class MeleeWeapon
             ParryHitbox = Rectangle.Empty;
         }
         // --- END NEW PARRY LOGIC ---
+        if (!CanUseUlt)
+        {
+            ultCharge += deltaTime * 10f; // เพิ่ม 10 หน่วยต่อวินาที
+            if (ultCharge >= ultChargeMax) 
+            { 
+                ultCharge = ultChargeMax;
+                CanUseUlt = true;
+            }
+        }
     }
 
     // เมธอดใหม่สำหรับเริ่มการโจมตี ซึ่งจะถูกเรียกเมื่อกดปุ่มโจมตี

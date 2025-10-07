@@ -710,6 +710,8 @@ namespace Ghost_blade
             IsAlive = true;
             Health = 5;
             currentAmmo = 10;
+            meleeWeapon.ultCharge = 0f;
+            meleeWeapon.CanUseUlt = false;
             isSwordEquipped = true;
             currentWeaponFrame = 0;
         }

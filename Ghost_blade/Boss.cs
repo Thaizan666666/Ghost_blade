@@ -19,17 +19,19 @@ public class Boss
     public int Boss_width = 1056;
     public int Boss_height = 528;
     public bool IsbossAticve { get; set; }
+    public int randomIndex { get; set; }
+    public bool isValidAttack {  get; private set; }
 
     // Boss State
-    private enum BossState { Idle, Attacking, Damaged };
-    private BossState currentState;
+    public enum BossState { Idle, Attacking, Damaged };
+    public BossState currentState { get;private set; }
     private float attackTimer;
 
     // Attack management
     private List<BossAttack> attacks;
     private BossAttack currentAttack;
     private Random random;
-    private float timeBetweenAttacks;
+    public float timeBetweenAttacks {  get; private set; }
     public Rectangle HitboxgetDamage
     {
         get
@@ -54,14 +56,14 @@ public class Boss
         this.bulletTexture = bulletTexture;
         this.parrybulletTexture = parry;
         this.random = new Random();
-        this.timeBetweenAttacks = 0.5f;
+        this.timeBetweenAttacks = 1.0f;
 
         attacks = new List<BossAttack>();
 
         // Pass the pixel texture for attacks that use it
         attacks.Add(new LaserAttack(this, pixelTexture));
-        //attacks.Add(new BossBulletAttacks(this, bulletTexture, parry));
-        attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Death, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTex1, enemyTex2, bulletTexture, parry));
+        attacks.Add(new BossBulletAttacks(this, bulletTexture, parry));
+        //attacks.Add(new SpawnAttack(this, pixelTexture, Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Death, Enemymelee_Attack, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, enemyTex1, enemyTex2, bulletTexture, parry));
 
         currentState = BossState.Idle;
         attackTimer = 0.1f;
@@ -116,7 +118,7 @@ public class Boss
         );
 
             // Draw the red square using the 1x1 pixel texture
-            spriteBatch.Draw(pixel, bossRect, Color.Brown);
+            //spriteBatch.Draw(pixel, bossRect, Color.Brown);
 
             // THIS IS THE MISSING PART: Draw the current attack's visuals
             if (currentAttack != null)
@@ -128,9 +130,9 @@ public class Boss
     private void SelectNewAttack(Player player)
     {
         // เก็บดัชนีของการโจมตีที่ถูกเลือกไว้
-        int randomIndex;
-        BossAttack selectedAttack;
-        bool isValidAttack = false;
+        
+        BossAttack selectedAttack = attacks[randomIndex];
+        isValidAttack = false;
 
         // วนลูปเพื่อสุ่มการโจมตีจนกว่าจะได้การโจมตีที่ถูกต้องตามเงื่อนไข
         while (!isValidAttack)
