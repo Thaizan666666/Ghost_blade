@@ -4,6 +4,8 @@ using System.Diagnostics;
 using _321_Lab05_3;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace Ghost_blade
 {
@@ -44,6 +46,8 @@ namespace Ghost_blade
         private float fleeRadius = 500f;
 
         public Action<Bullet> OnShoot;
+
+
 
         public Enemy_Shooting(AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death, Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture, Texture2D parry)
             : base(texture, startPosition, speed, detectionRadius)
@@ -98,6 +102,10 @@ namespace Ghost_blade
                     Shoot(player.position);
                     bulletsShotInBurst++;
                     burstTimer = BURST_DELAY;
+                    if(bulletsShotInBurst == 1)
+                    {
+                        Sound.Play(Sound.s_shooting,0.05f);
+                    }
                 }
 
                 // เมื่อยิงครบ Burst แล้ว: เข้าสู่ Cooldown

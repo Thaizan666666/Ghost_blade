@@ -37,6 +37,12 @@
 /processorParam:TextureFormat=Color
 /build:Ammo.png
 
+#begin attack.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:attack.WAV
+
 #begin boss_death.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -48,6 +54,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:boss_death.png
+
+#begin boss_explosio.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:boss_explosio.WAV
 
 #begin boss_gun_done.png
 /importer:TextureImporter
@@ -121,6 +133,12 @@
 /processorParam:TextureFormat=Color
 /build:boss_laser.png
 
+#begin boss.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:boss.wav
+
 #begin Bullet_boss.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -132,6 +150,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Bullet_boss.png
+
+#begin Change_weapon.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Change_weapon.WAV
 
 #begin ChargingLaser-Sheet.png
 /importer:TextureImporter
@@ -169,6 +193,12 @@
 /processorParam:TextureFormat=Color
 /build:crosshairs-Sheet.png
 
+#begin dash.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:dash.WAV
+
 #begin DeathLaser16Frame-Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -205,6 +235,24 @@
 /processorParam:TextureFormat=Color
 /build:Door_lab_Sheet.png
 
+#begin enemy_attack_gun.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:enemy_attack_gun.WAV
+
+#begin enemy_attack_laser.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:enemy_attack_laser.wav
+
+#begin enemy_attack_punch.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:enemy_attack_punch.WAV
+
 #begin Enemy_Bullet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -216,6 +264,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Enemy_Bullet.png
+
+#begin enemy_explosion.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:enemy_explosion.WAV
+
+#begin enemy_hit.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:enemy_hit.WAV
 
 #begin enemy-Idle-12Frame_Sheet.png
 /importer:TextureImporter
@@ -349,6 +409,18 @@
 /processorParam:TextureFormat=Color
 /build:gameover-Sheet.png
 
+#begin gameover.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gameover.wav
+
+#begin Gatling_gun .WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Gatling_gun .WAV
+
 #begin GB_Dash-Blade_Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -481,6 +553,12 @@
 /processorParam:TextureFormat=Color
 /build:GB_SlashUp-Sheet.png
 
+#begin gun_reload.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gun_reload.WAV
+
 #begin Gun.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -553,6 +631,18 @@
 /processorParam:TextureFormat=Color
 /build:IdleLaser.png
 
+#begin ingame.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:ingame.wav
+
+#begin laser_boss.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:laser_boss.WAV
+
 #begin Laser.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -564,6 +654,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Laser.png
+
+#begin lobby.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:lobby.wav
 
 #begin Main_title_Sheet.png
 /importer:TextureImporter
@@ -793,6 +889,24 @@
 /processorParam:TextureFormat=Color
 /build:Parry_Bullet.png
 
+#begin parry_got.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:parry_got.wav
+
+#begin parry.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:parry.WAV
+
+#begin player_attack_gun.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:player_attack_gun.WAV
+
 #begin Player_Bullet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -804,6 +918,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Player_Bullet.png
+
+#begin player_hit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:player_hit.wav
 
 #begin shadow (1).png
 /importer:TextureImporter
@@ -883,4 +1003,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI_weapon-Sheet.png
+
+#begin Ultimate.WAV
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Ultimate.WAV
 

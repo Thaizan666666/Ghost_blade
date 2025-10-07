@@ -34,6 +34,7 @@ namespace Ghost_blade
 
             if (IsActive && boundingBox.Intersects(player.meleeWeapon.ParryHitbox))
             {
+                Sound.Play(Sound.parry_got, 0.5f);
                 player.meleeWeapon.ultCharge += 3f;
                 IsActive = false;
                 Vector2 parryDirection = -this.velocity;
@@ -63,6 +64,7 @@ namespace Ghost_blade
 
             if (IsActive && boundingBox.Intersects(player.meleeWeapon.ParryHitbox))
             {
+                Sound.Play(Sound.parry_got, 0.5f);
                 player.meleeWeapon.ultCharge += 3f;
                 IsActive = false;
                 Vector2 parryDirection = enemyposition - player.position;

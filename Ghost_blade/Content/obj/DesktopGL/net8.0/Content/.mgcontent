@@ -6,21 +6,31 @@
   <SourceFiles>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/A_job.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Ammo.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/attack.WAV</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/boss_death.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/boss_explosio.WAV</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/boss_gun_done.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/boss_gun_start.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/boss_gun.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/boss_laser_done.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/boss_laser_start.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/boss_laser.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/boss.wav</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Bullet_boss.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Change_weapon.WAV</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/ChargingLaser-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/crosshairs_reload-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/crosshairs-Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/dash.WAV</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/DeathLaser16Frame-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Door_city_Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Door_lab_Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemy_attack_gun.WAV</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemy_attack_laser.wav</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemy_attack_punch.WAV</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Enemy_Bullet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemy_explosion.WAV</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemy_hit.WAV</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemy-Idle-12Frame_Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemyattack-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/enemydeath-25FrameSheet.png</File>
@@ -32,6 +42,8 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/energy.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/firefoxBall.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/gameover-Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/gameover.wav</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Gatling_gun .WAV</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Dash-Blade_Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Dash-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Idle-Blade_Sheet.png</File>
@@ -43,13 +55,17 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Slash4-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_SlashDown-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_SlashUp-Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/gun_reload.WAV</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Gun.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Heal.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/hp_boss_1.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/hp_boss_2.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/HP-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/IdleLaser.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/ingame.wav</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/laser_boss.WAV</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Laser.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/lobby.wav</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Main_title_Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Main_title-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_boss-void.png</File>
@@ -69,7 +85,11 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_tutorial_void.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Map_tutorial.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Parry_Bullet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/parry_got.wav</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/parry.WAV</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/player_attack_gun.WAV</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Player_Bullet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/player_hit.wav</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/shadow (1).png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Spotgame-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/start_city-Sheet.png</File>
@@ -77,8 +97,30 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/stat_tutorial-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/UI_Font.spritefont</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/UI_weapon-Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Ultimate.WAV</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

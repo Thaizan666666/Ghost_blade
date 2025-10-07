@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Reflection.Metadata;
 using _321_Lab05_3;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -155,7 +156,7 @@ namespace Ghost_blade
             AttackingTexture2 = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTextureUp = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
             AttackingTextureDown = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
-            ParryTexture = new AnimatedTexture(Vector2.Zero, 0f,2f, 0f);
+            ParryTexture = new AnimatedTexture(Vector2.Zero, 0f, 2f, 0f);
         }
 
         public void Update(GameTime gameTime, Vector2 cameraPosition)
@@ -299,7 +300,7 @@ namespace Ghost_blade
         private void HandleAttacks(KeyboardState kState, MouseState mState, Vector2 cameraPosition) // ต้องเพิ่ม cameraPosition เป็น parameter
         {
             bool _iscanattack = isDashing;
-            if (!_iscanattack || meleeWeapon._isULTActive)
+            if (!_iscanattack && !meleeWeapon._isULTActive)
             {
                 if (mState.LeftButton == ButtonState.Pressed && previousMState.LeftButton == ButtonState.Released && meleeWeapon._parryTimer <= 0)
                 {
@@ -314,6 +315,7 @@ namespace Ghost_blade
                 {
                     if (isSwordEquipped && currentState != PlayerState.Attacking && !isDashing && parryCooldownTimer <= 0)
                     {
+                        Sound.Play(Sound.parry, 0.5f);
                         meleeWeapon.PerformParry(position, cameraPosition);
                         currentState = PlayerState.parry;
                         parryCooldownTimer = ParryCooldown;
@@ -334,6 +336,7 @@ namespace Ghost_blade
 
             if (kState.IsKeyDown(Keys.Space) && !previousKState.IsKeyDown(Keys.Space) && !isDashing && dashCooldownTimer <= 0 && !isActionActive)
             {
+                Sound.Play(Sound.sounddash, 0.3f);
                 isDashing = true;
                 dashTimer = DashDuration;
                 dashCooldownTimer = DashCooldown;
@@ -405,8 +408,9 @@ namespace Ghost_blade
 
         private void HandleWeaponSwitching(KeyboardState kState)
         {
-            if (kState.IsKeyDown(Keys.Tab) && !previousKState.IsKeyDown(Keys.Tab))
+            if (kState.IsKeyDown(Keys.Q) && !previousKState.IsKeyDown(Keys.Q))
             {
+                Sound.Play(Sound.Change_weapon,0.7f);
                 isSwordEquipped = !isSwordEquipped;
                 isWeaponSwitching = true;
 
@@ -437,6 +441,7 @@ namespace Ghost_blade
                 if ((!isReloading && kState.IsKeyDown(Keys.R) && currentAmmo < MAG_SIZE && maxAmmo > 0)||
                 (currentAmmo == 0 && mState.LeftButton == ButtonState.Pressed && !isReloading && maxAmmo > 0))
                 {
+                    Sound.Play(Sound.gun_reload, 0.5f);
                     isReloading = true;
                     reloadTimer = ReloadTime;
                     Debug.WriteLine("Reloading...");
@@ -531,6 +536,7 @@ namespace Ghost_blade
                 }
                 if (timer >= fireDelay)
                 {
+                    Sound.Play(Sound.p_shooting, 0.1f);
                     timer = 0f;
                     Vector2 direction = mousePosition - position + new Vector2(24, 24);
                     if (direction != Vector2.Zero)
@@ -561,7 +567,7 @@ namespace Ghost_blade
             {
                 return; // Do nothing if invincible
             }
-
+            Sound.Play(Sound.player_hit, 0.5f);
             Health -= damage;
             Debug.WriteLine($"Player took {damage} damage. Health is now {Health}");
 

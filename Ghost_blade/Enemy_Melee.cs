@@ -8,7 +8,7 @@ namespace Ghost_blade
 {
     public class Enemy_Melee : Enemy
     {
-        public int Damage { get; set; } = 2;
+        public int Damage { get; set; } = 1;
         public Rectangle AttackHitbox { get; private set; } = Rectangle.Empty;
 
         private float attackAnimationTimer = 0f;
@@ -17,6 +17,7 @@ namespace Ghost_blade
         private float distanceToPlayer;
         // New state variable
         private bool isAttacking = false;
+        private bool isSound = false;
 
         private Vector2 TexturePosition;
         private bool flip = false;
@@ -55,7 +56,6 @@ namespace Ghost_blade
             {
                 // The enemy stands still
                 attackAnimationTimer -= deltaTime;
-
                 // Check for damage only during the animation
                 CheckMeleeAttack(player);
 
@@ -64,6 +64,7 @@ namespace Ghost_blade
                 {
                     isAttacking = false;
                     AttackHitbox = Rectangle.Empty;
+                    isSound = false;
                 }
             }
             // Priority 3: Normal behavior (chasing/attacking)
@@ -85,6 +86,11 @@ namespace Ghost_blade
                             isAttacking = true;
                             attackAnimationTimer = AttackAnimationDuration;
                             attackTimer = attackCooldown;
+                        }
+                        if (isAttacking == true && isSound == false)
+                        {
+                            Sound.Play(Sound.enemy_attack_punch, 0.3f);
+                            isSound = true;
                         }
                         desiredMovement = Vector2.Zero; // Stop movement to prepare for attack
                     }
@@ -144,8 +150,8 @@ namespace Ghost_blade
 
             if (attackHitbox.Intersects(player.HitboxgetDamage))
             {
-                // Prevent damage from being applied multiple times per attack
-                if (attackAnimationTimer > 0.1f)
+                // Prevent damage from being applied multiple times per attack
+                if (attackAnimationTimer > 0.1f)
                 {
                     player.TakeDamage(this.Damage);
                     Console.WriteLine("Melee Enemy hit the player!");

@@ -5,8 +5,10 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using _321_Lab05_3;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 
 namespace Ghost_blade
@@ -89,7 +91,9 @@ namespace Ghost_blade
         private Texture2D whiteTexture;
         float attackTimer = 0;
         public const float SCALE = 2f;
-
+        private bool _issoundULT = false;
+        private bool _isSoundBoss = false;
+        private bool _isSoundbossDead = false;
         public enum GameState
         {
             MainMenu,
@@ -151,6 +155,7 @@ namespace Ghost_blade
 
         protected override void LoadContent()
         {
+            Sound.LoadContent(Content);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _PlayerbulletTexture = Content.Load<Texture2D>("Player_Bullet");
             _EnemybulletTexture = Content.Load<Texture2D>("Enemy_Bullet");
@@ -329,6 +334,10 @@ namespace Ghost_blade
                 currentRoomIndex += 1;
                 _player.position = rooms[currentRoomIndex].StartPosition;
             }
+            if (currentKState.IsKeyDown(Keys.Y) && !previousKState.IsKeyDown(Keys.Y))
+            {
+                _player.meleeWeapon.ultCharge = 100;
+            }
 
             if (gameState == GameState.Paused) 
             {
@@ -439,33 +448,41 @@ namespace Ghost_blade
                 {
                     isBossDead = true;
                     timer = 0f;
+                    _isSoundbossDead = true;
                 }
                 if (isBossDead)
                 {
+                    if(_isSoundbossDead)
+                    {
+                        Sound._bossExplosionInstance = Sound.Loop(Sound.boss_explosio, 0.2f);
+                        _isSoundbossDead = false;
+                    }
                     timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                     if (timer >= 3f && fadeAlpha < 1f) // ดีเลย์ 3 วิ แล้วเริ่ม fade
                     {
                         fadeAlpha += (float)gameTime.ElapsedGameTime.TotalSeconds / 3f; // 3 วิ ให้เต็ม
-                        if (fadeAlpha >= 1f)
-                        {
-                            fadeAlpha = 1f;
-                            gameState = GameState.MainMenu;
-                            currentRoomIndex = random.Next(1, 4);
-                            stageStep = 0;
-                            _player.Reset();
-                            boss.Reset();
-                            rooms[currentRoomIndex].ResetRoom();
-                            _playerBullets.Clear();
-                            _enemyBullets.Clear();
-                            _player.SetPosition(rooms[currentRoomIndex].StartPosition);
-                            Door_Open = false;
-                            DoorCityOpenTexture.Reset();
-                            DoorLabOpenTexture.Reset();
-                            isBossDead = false;
-                            timer = 0f;
-                            fadeAlpha = 0f;
-                        }
+                    }
+                    if (fadeAlpha >= 1f)
+                    {
+                        fadeAlpha = 1f;
+                        gameState = GameState.MainMenu;
+                        currentRoomIndex = random.Next(1, 4);
+                        stageStep = 0;
+                        _player.Reset();
+                        boss.Reset();
+                        rooms[currentRoomIndex].ResetRoom();
+                        _playerBullets.Clear();
+                        _enemyBullets.Clear();
+                        _player.SetPosition(rooms[currentRoomIndex].StartPosition);
+                        Door_Open = false;
+                        DoorCityOpenTexture.Reset();
+                        DoorLabOpenTexture.Reset();
+                        isBossDead = false;
+                        timer = 0f;
+                        fadeAlpha = 0f;
+                        Sound.StopLoop(Sound._bossExplosionInstance);
+                        _isSoundbossDead = true;
                     }
                 }
 
@@ -547,7 +564,6 @@ namespace Ghost_blade
                     Bullet newBullet = _player.Shoot(mouseWorld);
                     if (newBullet != null) _playerBullets.Add(newBullet);
                 }
-
                 // Update all enemies in the current room
                 foreach (var enemy in currentRoom.Enemies)
                 {
@@ -567,10 +583,9 @@ namespace Ghost_blade
                         {
                             if (_player._isSlash)
                             {
+                                Sound.Play(Sound.soundhitenemy, 0.1f);
                                 enemy.TakeDamage(70, _player.position, true);
                                 _player.meleeWeapon.ultCharge += 6f;
-                                _player._isSlash = false;
-                                break; // Exit the loop after hitting the first enemy
                             }
                         }
                     }
@@ -579,10 +594,9 @@ namespace Ghost_blade
                         if (_player._isSlash)
                         {
                             boss.TakeDamage(70);
-                            _player.meleeWeapon.ultCharge += 6f;
-                            _player._isSlash = false;
                         }
                     }
+                    _player._isSlash = false;
                 }
                 for (int i = _enemyBullets.Count - 1; i >= 0; i--)
                 {
@@ -633,10 +647,20 @@ namespace Ghost_blade
                 if (currentRoomIndex == 7 && boss.Health > 0)
                 {
                     boss.IsbossAticve = true;
+                    if (_isSoundBoss == true && boss.IsbossAticve == true)
+                    {
+                        Sound._bossMusicInstance = Sound.Loop(Sound.boss, 0.3f);
+                        _isSoundBoss = false;
+                    }
                 }
                 else
                 {
                     boss.IsbossAticve = false;
+                    if(boss.IsbossAticve == false)
+                    {
+                        Sound.StopLoop(Sound._bossMusicInstance);
+                    }
+                    _isSoundBoss = true;
                 }
                 if (boss.IsbossAticve)
                 {
@@ -687,7 +711,7 @@ namespace Ghost_blade
                 {
                     gameState = GameState.justmentcut;
                     _player.meleeWeapon.getULTHitbox(_player.position);
-                    _player.meleeWeapon._ultTimer = 2f; // <-- ตั้งค่าเป็น 2f
+                    _player.meleeWeapon._ultTimer = 5.2f; // <-- ตั้งค่าเป็น 5.2f
                     _player.meleeWeapon._isULTActive = true; // <-- ต้องแน่ใจว่าตั้งค่านี้ด้วย
                     _isSlashUlt = true;
                 }
@@ -696,7 +720,7 @@ namespace Ghost_blade
             {
                 // 1. อัปเดต Player เพื่อให้ Animation ขยับ
                 _player.Update(gameTime, camera.position); // Update Player แต่ไม่ให้รับ Input/เคลื่อนที่
-
+                if(_issoundULT == false) { Sound.Play(Sound.ULT,1f); _issoundULT=true; }
                 // 2. จัดการ ULT Timer และ Hitbox
                 if (_player.meleeWeapon._isULTActive) // ตรวจสอบว่า ULT กำลังทำงาน
                 {
@@ -726,6 +750,7 @@ namespace Ghost_blade
                         _player.meleeWeapon.CanUseUlt = false;
                         _player.meleeWeapon.ultCharge = 0f;
                         gameState = GameState.Playing;
+                        _issoundULT = false;
                     }
                 }
             }

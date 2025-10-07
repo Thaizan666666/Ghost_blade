@@ -133,7 +133,6 @@ namespace Ghost_blade
 
                         currentState = EnemyState.Firing;
                         stateTimer = FIRING_DURATION;
-
                         // *** เรียกเมธอดสร้างเลเซอร์หนา (Hitscan) สำหรับสัญญาณภายนอก ***
                         ShootLaser(laserDirection);
                     }
@@ -216,6 +215,7 @@ namespace Ghost_blade
             // ส่งสัญญาณไปยัง Game Manager ให้สร้าง Laser Line 
             // โดยใช้ Position และ Direction ที่ล็อกไว้ เพื่อจัดการ Damage และ Draw Laser Line
             // Damage handling ได้ถูกย้ายไปที่ ApplyContinuousLaserDamage แล้ว
+            Sound.Play(Sound.enemy_attack_laser, 0.5f);
             OnShootLaser?.Invoke(this, direction);
         }
 
