@@ -78,6 +78,9 @@ namespace Ghost_blade
         private AnimatedTexture boss_gun;
         private AnimatedTexture boss_gun_start;
         private AnimatedTexture boss_gun_done;
+        private AnimatedTexture boss_summon;
+        private AnimatedTexture boss_summon_start;
+        private AnimatedTexture boss_summon_done;
         private AnimatedTexture boss_death;
         private AnimatedTexture GB_Death_Sheet;
         private AnimatedTexture Ultimate;
@@ -140,6 +143,9 @@ namespace Ghost_blade
             boss_gun = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             boss_gun_done = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             boss_gun_start = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            boss_summon = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            boss_summon_done = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            boss_summon_start = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             boss_laser = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             boss_laser_done = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
             boss_laser_start = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
@@ -249,6 +255,9 @@ namespace Ghost_blade
             boss_laser.Load(Content, "boss_laser", 4, 1, 12);
             boss_laser_start.Load(Content, "boss_laser_start", 6, 3, 9);
             boss_laser_done.Load(Content, "boss_laser_done", 4, 2, 4);
+            boss_summon.Load(Content, "boss_summoning-Sheet", 4, 1, 2);
+            boss_summon_start.Load(Content, "boss_summon-Sheet", 5, 4, 40);
+            boss_summon_done.Load(Content, "boss_done_summon-Sheet", 4, 1, 4);
             boss_death.Load(Content, "boss_death", 4, 4, 8);
             GB_Death_Sheet.Load(Content, "GB_Death2-Sheet", 5, 4, 10);
             Ultimate.Load(Content, "Ult-Sheet", 6, 6, 9);
@@ -482,9 +491,9 @@ namespace Ghost_blade
             {
                 if (boss.Health <= 0 && !isBossDead)
                 {
-                    isBossDead = true;
                     timer = 0f;
                     _isSoundbossDead = true;
+                    isBossDead = true;
                 }
                 if (isBossDead)
                 {
@@ -752,8 +761,8 @@ namespace Ghost_blade
                     _player.meleeWeapon._ultTimer = 4f; // <-- ตั้งค่าเป็น 2f
                     _player.meleeWeapon._isULTActive = true; // <-- ต้องแน่ใจว่าตั้งค่านี้ด้วย
                     _isSlashUlt = true;
-                    Sound.Gatling_gunMusicInstance.Pause();
-                    Sound.laser_bossMusicInstance.Pause();
+                    if(Sound.Gatling_gunMusicInstance != null) { Sound.Gatling_gunMusicInstance.Pause(); }
+                    if (Sound.laser_bossMusicInstance != null) { Sound.laser_bossMusicInstance.Pause(); }
                 }
             }
             if (gameState == GameState.justmentcut)
@@ -792,8 +801,8 @@ namespace Ghost_blade
                         _issoundULT = false;
                         gameState = GameState.Playing;
                         Ultimate.Reset();
-                        Sound.Gatling_gunMusicInstance.Resume();
-                        Sound.laser_bossMusicInstance.Resume();
+                        if (Sound.Gatling_gunMusicInstance != null){Sound.Gatling_gunMusicInstance.Resume();}
+                        if (Sound.laser_bossMusicInstance != null){Sound.laser_bossMusicInstance.Resume();}
                     }
                 }
             }
@@ -890,6 +899,7 @@ namespace Ghost_blade
                     {
                         boss_laser_start.Reset();
                         boss_gun_start.Reset();
+                        boss_summon_start.Reset();
                         previous_randomIndex = boss.randomIndex;
                         if (previous_randomIndex == 0)
                         {
@@ -909,10 +919,10 @@ namespace Ghost_blade
                         }
                         else if (previous_randomIndex == 2)
                         {
-                            if (!boss_gun_done.IsEnd)
+                            if (!boss_summon_done.IsEnd)
                             {
-                                boss_gun_done.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-                                boss_gun_done.DrawFrame(_spriteBatch, boss.Position);
+                                boss_summon_done.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_summon_done.DrawFrame(_spriteBatch, boss.Position);
                             }
                         }
                     }
@@ -920,6 +930,7 @@ namespace Ghost_blade
                     {
                         boss_gun_done.Reset();
                         boss_laser_done.Reset();
+                        boss_summon_done.Reset();
                         if (boss.randomIndex == 0)
                         {
                             if (!boss_laser_start.IsEnd)
@@ -952,17 +963,17 @@ namespace Ghost_blade
                         }
                         else if (boss.randomIndex == 2)
                         {
-                            if (!boss_gun_start.IsEnd)
+                            if (!boss_summon_start.IsEnd)
                             {
-                                boss_gun_start.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-                                boss_gun_start.DrawFrame(_spriteBatch, boss.Position);
+                                boss_summon_start.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_summon_start.DrawFrame(_spriteBatch, boss.Position);
                                 previous_randomIndex = boss.randomIndex;
                             }
-                            else if (boss_gun_start.IsEnd)
+                            else if (boss_summon_start.IsEnd)
                             {
                                 attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                                boss_gun.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-                                boss_gun.DrawFrame(_spriteBatch, boss.Position);
+                                boss_summon.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_summon.DrawFrame(_spriteBatch, boss.Position);
                             }
                         }
                     }

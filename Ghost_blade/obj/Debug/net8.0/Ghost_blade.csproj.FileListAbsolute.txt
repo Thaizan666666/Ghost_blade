@@ -274,3 +274,6 @@ D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\parry_got.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\player_attack_gun.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\player_hit.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Ultimate.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_done_summon-Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_summon-Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_summoning-Sheet.xnb
