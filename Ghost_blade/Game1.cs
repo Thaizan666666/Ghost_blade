@@ -94,6 +94,9 @@ namespace Ghost_blade
         private bool _issoundULT = false;
         private bool _isSoundBoss = false;
         private bool _isSoundbossDead = false;
+        private bool _isSoundloby = false;
+        private bool _isSoundingame = false;
+        private bool _isSoundgameover = false;
 
         public enum GameState
         {
@@ -347,9 +350,15 @@ namespace Ghost_blade
             if (gameState == GameState.Paused) 
             {
                 paused.Update(gameTime);
+                boss.IsbossAticve = false;
+                Sound.StopLoop(Sound.Gatling_gunMusicInstance);
+                Sound.StopLoop(Sound._bossMusicInstance);
                 if (paused.StartGame) 
                 {
                     gameState = GameState.Playing;
+                    boss.IsbossAticve = true;
+
+
                     paused.StartGame = false;
                     paused.Menu = false;
                 }
@@ -376,7 +385,13 @@ namespace Ghost_blade
             if (gameState == GameState.MainMenu)
             {
                 mainMenu.Update(gameTime);
-
+                _isSoundingame = false; Sound.StopLoop(Sound.ingameMusicInstance);
+                _isSoundgameover = false; Sound.StopLoop(Sound.gameoverMusicInstance);
+                if (_isSoundloby == false) 
+                { 
+                    Sound.lobbyMusicInstance = Sound.Loop(Sound.lobby, 0.3f); 
+                    _isSoundloby = true;
+                }
                 if (mainMenu.StartGame)
                 {
                     gameState = GameState.Playing;
@@ -401,7 +416,7 @@ namespace Ghost_blade
                     Exit();
                 }
                 return;
-            }
+            }else if (gameState != GameState.MainMenu) { _isSoundloby = false; Sound.StopLoop(Sound.lobbyMusicInstance); }
 
             if (gameState == GameState.Playing)
             {
@@ -427,12 +442,26 @@ namespace Ghost_blade
                         return;
                     }
                 }
-            }
-            
+                if (_isSoundingame == false)
+                {
+                    Sound.ingameMusicInstance = Sound.Loop(Sound.ingame, 0.3f);
+                    _isSoundingame = true;
+                }
+            } 
+            if(currentRoomIndex == 7) { _isSoundingame = false; Sound.StopLoop(Sound.ingameMusicInstance); }
+
             if (gameState == GameState.GameOver)
             {
                 gameOver.Update(gameTime);
-
+                boss.IsbossAticve = false;
+                Sound.StopLoop(Sound.Gatling_gunMusicInstance);
+                Sound.StopLoop(Sound._bossMusicInstance);
+                _isSoundingame = false; Sound.StopLoop(Sound.ingameMusicInstance);
+                if (_isSoundgameover == false)
+                {
+                    Sound.gameoverMusicInstance = Sound.Loop(Sound.gameover, 0.3f);
+                    _isSoundgameover = true;
+                }
                 if (gameOver.StartGame)
                 {
                     gameState = GameState.Playing;
@@ -450,6 +479,7 @@ namespace Ghost_blade
                 }
                 return;
             }
+            else if (gameState != GameState.GameOver) { _isSoundgameover = false; Sound.StopLoop(Sound.gameoverMusicInstance); }
 
             if (gameState == GameState.Playing)
             {
@@ -603,6 +633,7 @@ namespace Ghost_blade
                     {
                         if (_player._isSlash)
                         {
+                            _player.meleeWeapon.ultCharge += 4f;
                             boss.TakeDamage(70);
                         }
                     }
@@ -659,7 +690,7 @@ namespace Ghost_blade
                     boss.IsbossAticve = true;
                     if (_isSoundBoss == true && boss.IsbossAticve == true)
                     {
-                        Sound._bossMusicInstance = Sound.Loop(Sound.boss, 0.3f);
+                        Sound._bossMusicInstance = Sound.Loop(Sound.boss, 0.1f);
                         _isSoundBoss = false;
                     }
                 }
@@ -821,14 +852,7 @@ namespace Ghost_blade
                         }
                     }
                 }
-                // Draw the player
-                if (_player.Health <= 0)
-                {
-                    GB_Death_Sheet.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-                    GB_Death_Sheet.DrawFrame(_spriteBatch, _player.position - new Vector2(48, 48), _player.flip);
-                }
-                _player.Draw(_spriteBatch, camera.position);
-                _spriteBatch.Draw(shadow, _player.position + new Vector2(-48, 40), null, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f);
+                
 
                 // Draw all active enemies in the current room
                 foreach (var enemy in rooms[currentRoomIndex].Enemies)
@@ -947,6 +971,14 @@ namespace Ghost_blade
                     boss_death.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
                     boss_death.DrawFrame(_spriteBatch, boss.Position);
                 }
+                // Draw the player
+                if (_player.Health <= 0)
+                {
+                    GB_Death_Sheet.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                    GB_Death_Sheet.DrawFrame(_spriteBatch, _player.position - new Vector2(48, 48), _player.flip);
+                }
+                _player.Draw(_spriteBatch, camera.position);
+                _spriteBatch.Draw(shadow, _player.position + new Vector2(-48, 40), null, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 0f);
                 rooms[currentRoomIndex].DrawLayer2(_spriteBatch);
 
                 // Draw hitboxes

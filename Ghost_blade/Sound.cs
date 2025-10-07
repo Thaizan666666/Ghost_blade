@@ -32,14 +32,19 @@ namespace Ghost_blade
         public static SoundEffect enemy_attack_punch { get; private set; }
         public static SoundEffect enemy_attack_laser { get; private set; }
         public static SoundEffect ingame { get; private set; }
+        public static SoundEffectInstance ingameMusicInstance;
         public static SoundEffect gameover { get; private set; }
+        public static SoundEffectInstance gameoverMusicInstance;
         public static SoundEffect lobby { get; private set; }
+        public static SoundEffectInstance lobbyMusicInstance;
         public static SoundEffect boss { get; private set; }
         public static SoundEffectInstance _bossMusicInstance;
         public static SoundEffectInstance _bossExplosionInstance;
         public static SoundEffect boss_explosio { get; private set; }
         public static SoundEffect Gatling_gun { get; private set; }
+        public static SoundEffectInstance Gatling_gunMusicInstance;
         public static SoundEffect laser_boss { get; private set; }
+        public static SoundEffectInstance laser_bossMusicInstance;
 
         public static void LoadContent(ContentManager content)
         {
@@ -64,7 +69,7 @@ namespace Ghost_blade
             lobby = content.Load<SoundEffect>("lobby");
             boss = content.Load<SoundEffect>("boss");
             boss_explosio = content.Load<SoundEffect>("boss_explosio");
-            Gatling_gun = content.Load<SoundEffect>("Gatling_gun");
+            Gatling_gun = content.Load<SoundEffect>("Gatling_gun ");
             laser_boss = content.Load<SoundEffect>("laser_boss");
         }
         public static void Play(SoundEffect effect, float volume = 1.0f)

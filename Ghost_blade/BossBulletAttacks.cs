@@ -19,7 +19,7 @@ namespace Ghost_blade
 
         private int bulletsShotInBurst;
         private float burstTimer;
-        private float attackTimer;
+        private float attackTimer = 1.5f;
 
         public BossBulletAttacks(Boss owner, Texture2D bulletTexture,Texture2D parry) : base(owner, bulletTexture)
         {
@@ -34,7 +34,6 @@ namespace Ghost_blade
             isFiring = true;
             bulletsShotInBurst = 0;
             burstTimer = BURST_DELAY;
-            attackTimer = ATTACK_DURATION;
             IsFinished = false;
             position = boss.Position + new Vector2(144, boss.Boss_height-48);
         }
@@ -49,17 +48,24 @@ namespace Ghost_blade
             burstTimer -= deltaTime;
 
             // Fire a bullet if the timer is ready and we haven't fired all bullets yet
-            if (burstTimer <= 0 && bulletsShotInBurst < BURST_COUNT)
+            if (attackTimer <= 0)
             {
-                // Calculate bullet direction towards the player
-                Vector2 directionToPlayer = player.position - position;
-                directionToPlayer.Normalize();
+                if (burstTimer <= 0 && bulletsShotInBurst < BURST_COUNT)
+                {
+                    // Calculate bullet direction towards the player
+                    Vector2 directionToPlayer = player.position - position;
+                    directionToPlayer.Normalize();
 
-                // Create and add the new bullet
-                bullets.Add(new EnemyBullet(pixelTexture, position, directionToPlayer, 8f, 0f, 3f,parry));
+                    // Create and add the new bullet
+                    bullets.Add(new EnemyBullet(pixelTexture, position, directionToPlayer, 8f, 0f, 3f, parry));
 
-                bulletsShotInBurst++;
-                burstTimer = BURST_DELAY; // Reset the timer for the next shot
+                    bulletsShotInBurst++;
+                    burstTimer = BURST_DELAY; // Reset the timer for the next shot
+                    if (bulletsShotInBurst == 1)
+                    {
+                        Sound.Gatling_gunMusicInstance = Sound.Loop(Sound.Gatling_gun, 0.3f);
+                    }
+                }
             }
 
             // Update all active bullets and check for collision
@@ -105,7 +111,9 @@ namespace Ghost_blade
             // End the attack when all bullets are fired or the attack duration is over
             if (bulletsShotInBurst >= BURST_COUNT && bullets.Count == 0)
             {
+                Sound.StopLoop(Sound.Gatling_gunMusicInstance);
                 isFiring = false;
+                attackTimer = 1.5f;
                 IsFinished = true;
             }
         }
