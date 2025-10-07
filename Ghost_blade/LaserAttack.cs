@@ -21,8 +21,8 @@ namespace Ghost_blade
         private float coolDownTimer;
         private float coolDowmRealTimer;
 
-        private const float CHARGE_DURATION = 1.5f;
-        private const float FIRE_DURATION = 5.0f;
+        private const float CHARGE_DURATION = 4f;
+        private const float FIRE_DURATION = 6.2f;
         private const float COOL_DOWN_DURATION = 1.0f;
 
         private float laserAngle;
@@ -30,8 +30,7 @@ namespace Ghost_blade
         private const float MAX_ROTATION_SPEED = 2f;
         private float rotationDirection;
         private const float OVERSHOOT_TOLERANCE = 0.5f;
-
-        private Random random = new Random();
+        private bool _issoundlaser = false;
 
         public LaserAttack(Boss owner, Texture2D pixelTexture) : base(owner, pixelTexture)
         {
@@ -69,6 +68,11 @@ namespace Ghost_blade
             switch (currentState)
             {
                 case LaserState.Charging:
+                    if(_issoundlaser == false)
+                    {
+                        Sound.laser_bossMusicInstance = Sound.Played(Sound.laser_boss,0.2f);
+                        _issoundlaser = true;
+                    }
                     chargeTimer += delta;
                     if (chargeTimer >= CHARGE_DURATION)
                     {
@@ -109,7 +113,7 @@ namespace Ghost_blade
 
                     float laserLength = 2000f;
                     float thickness = 10f; // ความหนาของเลเซอร์ในสถานะ Firing
-                    Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width-144, boss.Boss_height+24);
+                    Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width-144, boss.Boss_height-48);
 
                     // 1. กำหนดจุดปลายของเส้นเลเซอร์
                     Vector2 direction = new Vector2((float)Math.Cos(laserAngle), (float)Math.Sin(laserAngle));
@@ -158,6 +162,7 @@ namespace Ghost_blade
                     {
                         currentState = LaserState.CoolingDown;
                         coolDownTimer = 0f;
+                        _issoundlaser = false;
                     }
                     break;
 
@@ -193,7 +198,7 @@ namespace Ghost_blade
         {
             float laserLength = 2000f;
             Vector2 origin = new Vector2(0,0);
-            Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width-144, boss.Boss_height-24);
+            Vector2 laserStart = boss.Position + new Vector2(boss.Boss_width-144, boss.Boss_height-48);
 
             // Hitbox calculation is now in Update()
 

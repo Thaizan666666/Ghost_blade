@@ -81,7 +81,7 @@ public class SpawnAttack : BossAttack
         spawnedEnemies.Clear();
         newlySpawnedEnemies.Clear();
         // Assuming position is the general area for spawning
-        position = boss.Position + new Vector2(0, boss.Boss_height);
+        position = boss.Position + new Vector2(boss.Boss_width/2, boss.Boss_height);
         // Start the first spawn immediately by preparing the pending spawn
         PrepareNextSpawn();
     }
@@ -91,7 +91,7 @@ public class SpawnAttack : BossAttack
     {
         if (enemiesSpawnedCount < maxEnemiesToSpawn)
         {
-            Vector2 spawnPosition = position + new Vector2(random.Next(-100, 100), random.Next(0, 500));
+            Vector2 spawnPosition = position + new Vector2(random.Next(-48, 48), random.Next(0, 24));
             int enemyType = random.Next(2); // 0 or 1
 
             nextPendingSpawn = new PendingSpawn

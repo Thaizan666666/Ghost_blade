@@ -351,14 +351,12 @@ namespace Ghost_blade
             {
                 paused.Update(gameTime);
                 boss.IsbossAticve = false;
-                Sound.StopLoop(Sound.Gatling_gunMusicInstance);
-                Sound.StopLoop(Sound._bossMusicInstance);
+                Sound.PauseAllLoopingSounds();
                 if (paused.StartGame) 
                 {
                     gameState = GameState.Playing;
                     boss.IsbossAticve = true;
-
-
+                    Sound.ResumeAllLoopingSounds();
                     paused.StartGame = false;
                     paused.Menu = false;
                 }
@@ -454,8 +452,7 @@ namespace Ghost_blade
             {
                 gameOver.Update(gameTime);
                 boss.IsbossAticve = false;
-                Sound.StopLoop(Sound.Gatling_gunMusicInstance);
-                Sound.StopLoop(Sound._bossMusicInstance);
+                Sound.StopAllLoopingSounds();
                 _isSoundingame = false; Sound.StopLoop(Sound.ingameMusicInstance);
                 if (_isSoundgameover == false)
                 {
@@ -699,7 +696,7 @@ namespace Ghost_blade
                     boss.IsbossAticve = false;
                     if (boss.IsbossAticve == false)
                     {
-                        Sound.StopLoop(Sound._bossMusicInstance);
+                        Sound.StopAllLoopingSounds();
                     }
                     _isSoundBoss = true;
                 }
@@ -755,6 +752,8 @@ namespace Ghost_blade
                     _player.meleeWeapon._ultTimer = 4f; // <-- ตั้งค่าเป็น 2f
                     _player.meleeWeapon._isULTActive = true; // <-- ต้องแน่ใจว่าตั้งค่านี้ด้วย
                     _isSlashUlt = true;
+                    Sound.Gatling_gunMusicInstance.Pause();
+                    Sound.laser_bossMusicInstance.Pause();
                 }
             }
             if (gameState == GameState.justmentcut)
@@ -793,6 +792,8 @@ namespace Ghost_blade
                         _issoundULT = false;
                         gameState = GameState.Playing;
                         Ultimate.Reset();
+                        Sound.Gatling_gunMusicInstance.Resume();
+                        Sound.laser_bossMusicInstance.Resume();
                     }
                 }
             }

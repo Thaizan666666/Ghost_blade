@@ -80,6 +80,29 @@ namespace Ghost_blade
                 effect.Play(volume, 0.0f, 0.0f);
             }
         }
+        public static SoundEffectInstance Played(SoundEffect effect, float volume = 1.0f)
+        {
+            if (effect == null)
+            {
+                return null;
+            }
+
+            // 1. สร้าง Instance จาก SoundEffect
+            SoundEffectInstance instance = effect.CreateInstance();
+
+            // 2. ตั้งค่าการวนซ้ำ (IsLooped = false)
+            instance.IsLooped = false;
+
+            // 3. ตั้งค่า Volume (และ Pitch/Pan)
+            instance.Volume = volume;
+            instance.Pitch = 0.0f;
+            instance.Pan = 0.0f;
+
+            // 4. สั่งเล่น
+            instance.Play();
+
+            return instance;
+        }
         public static SoundEffectInstance Loop(SoundEffect effect, float volume = 1.0f)
         {
             if (effect == null)
@@ -110,6 +133,44 @@ namespace Ghost_blade
             {
                 instance.Stop();
             }
+        }
+        public static void PauseLoop(SoundEffectInstance instance)
+        {
+            // ตรวจสอบว่า Instance มีอยู่ และกำลังเล่นอยู่ (Playing)
+            if (instance != null && instance.State == SoundState.Playing)
+            {
+                instance.Pause(); // สั่งหยุดชั่วคราว
+            }
+        }
+        public static void ResumeLoop(SoundEffectInstance instance)
+        {
+            // ตรวจสอบว่า Instance มีอยู่ และถูกหยุดชั่วคราวไว้ (Paused)
+            if (instance != null && instance.State == SoundState.Paused)
+            {
+                instance.Resume(); // สั่งเล่นต่อ
+            }
+        }
+        public static void PauseAllLoopingSounds()
+        {
+            PauseLoop(_bossMusicInstance);
+            PauseLoop(_bossExplosionInstance);
+            PauseLoop(Gatling_gunMusicInstance);
+            PauseLoop(laser_bossMusicInstance);
+        }
+
+        public static void ResumeAllLoopingSounds()
+        {
+            ResumeLoop(_bossMusicInstance);
+            ResumeLoop(_bossExplosionInstance);
+            ResumeLoop(Gatling_gunMusicInstance);
+            ResumeLoop(laser_bossMusicInstance);
+        }
+        public static void StopAllLoopingSounds()
+        {
+            StopLoop(_bossMusicInstance);
+            StopLoop(_bossExplosionInstance);
+            StopLoop(Gatling_gunMusicInstance);
+            StopLoop(laser_bossMusicInstance);
         }
     }
 }
