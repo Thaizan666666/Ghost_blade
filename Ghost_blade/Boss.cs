@@ -32,6 +32,7 @@ public class Boss
     private BossAttack currentAttack;
     private Random random;
     public float timeBetweenAttacks {  get; private set; }
+    private bool _isSoundlaser_boss = false;
     public Rectangle HitboxgetDamage
     {
         get
@@ -71,40 +72,40 @@ public class Boss
 
     public void Update(GameTime gameTime, Player player, List<Rectangle> obstacles)
     {
-            // Update logic based on the current state
-            switch (currentState)
-            {
-                case BossState.Idle:
-                    // Count down to the next attack
-                    attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    if (attackTimer >= timeBetweenAttacks)
+        // Update logic based on the current state
+        switch (currentState)
+        {
+            case BossState.Idle:
+                // Count down to the next attack
+                attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (attackTimer >= timeBetweenAttacks)
+                {
+                    SelectNewAttack(player);
+                }
+                break;
+
+            case BossState.Attacking:
+                // Update the current attack
+                if (currentAttack != null)
+                {
+                    currentAttack.Update(gameTime, player, obstacles);
+
+                    // Check if the attack is finished
+                    if (currentAttack.IsFinished)
                     {
-                        SelectNewAttack(player);
+                        currentAttack = null; // Clear the current attack
+                        currentState = BossState.Idle; // Return to Idle state
+                        attackTimer = 0f; // Reset the timer for the next attack
                     }
-                    break;
+                }
+                break;
 
-                case BossState.Attacking:
-                    // Update the current attack
-                    if (currentAttack != null)
-                    {
-                        currentAttack.Update(gameTime, player, obstacles);
-
-                        // Check if the attack is finished
-                        if (currentAttack.IsFinished)
-                        {
-                            currentAttack = null; // Clear the current attack
-                            currentState = BossState.Idle; // Return to Idle state
-                            attackTimer = 0f; // Reset the timer for the next attack
-                        }
-                    }
-                    break;
-
-                case BossState.Damaged:
-                    // Handle a brief stun or visual effect
-                    break;
-            }
-            // NOTE: The code to get spawned enemies must be called from Game1's Update method
-            // You cannot add them to the main list from here.
+            case BossState.Damaged:
+                // Handle a brief stun or visual effect
+                break;
+        }
+        // NOTE: The code to get spawned enemies must be called from Game1's Update method
+        // You cannot add them to the main list from here.
     }
 
     public void Draw(SpriteBatch spriteBatch)
