@@ -87,7 +87,7 @@ namespace Ghost_blade
         private int framefinish;
         public bool isDamageFlickering = false;
 
-        private bool flip = false;
+        public bool flip {  get; private set; }
         private bool attackf = false;
         public AnimatedTexture IdleBladeTexture;
         public AnimatedTexture IdleGunTexture;
