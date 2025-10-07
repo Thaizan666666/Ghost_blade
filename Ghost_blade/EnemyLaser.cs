@@ -77,12 +77,12 @@ namespace Ghost_blade
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (Health <= 0)
+            if (Health <= 0 && !hasPlayedDeath)
             {
-                // (Death Logic เหมือนเดิม)
-                if (!isDying) { this.Die(); isDying = true; Anim_Death.Reset(); }
-                if (!hasPlayedDeath) { Anim_Death.UpdateFrame(deltaTime); return; }
-                IsActive = false; return;
+                this.Die();
+                IsActive = false;
+                isDying = true;
+                Anim_Death.Reset();
             }
 
             if (stateTimer > 0)
@@ -258,16 +258,22 @@ namespace Ghost_blade
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            TexturePosition = Position;
+            TexturePosition = Position - new Vector2(48,48);
             SpriteEffects spriteEffect = flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
+            if (IsActive) { spriteBatch.Draw(Anim_Idle, TexturePosition, null, Color.White, 0f, Vector2.Zero, 2f, spriteEffect, 0f); }
             if (isDying)
             {
-                if (!hasPlayedDeath)
+                if (!Anim_Death.IsEnd)
                 {
-                    Anim_Death.DrawFrame(spriteBatch, TexturePosition, flip);
+                    Anim_Death.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                    Anim_Death.DrawFrame(spriteBatch, TexturePosition);
+
                 }
-                return;
+                else
+                {
+                    hasPlayedDeath = true;
+                }
             }
 
             if (!IsActive) return;
@@ -278,25 +284,16 @@ namespace Ghost_blade
                 // วาด Animation Charging
                 Anim_Charging.DrawFrame(spriteBatch, TexturePosition, flip);
 
-                // NEW: สร้างเอฟเฟกต์กระพริบโดยใช้ Sin wave เพื่อเปลี่ยนความทึบ (Alpha)
                 float pulse = (float)Math.Abs(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 8)); // ความเร็วการกระพริบ 8
                 Color flashColor = Color.Red * (0.3f + pulse * 0.7f); // Alpha เปลี่ยนจาก 0.3 ถึง 1.0 (กระพริบ)
 
-                // วาดเลเซอร์เส้นบางๆ เพื่อแสดงการเล็งขณะชาร์จ
                 DrawLaser(spriteBatch, 2f, flashColor);
             }
             else if (currentState == EnemyState.Firing)
             {
-                // 1. วาด Texture2D สำหรับ Firing (Turret Sprite)
-                spriteBatch.Draw(Anim_Firing, TexturePosition, null, Color.White, 0f, Vector2.Zero, 1f, spriteEffect, 0f);
+                spriteBatch.Draw(Anim_Firing, TexturePosition, null, Color.White, 0f, Vector2.Zero, 2f, spriteEffect, 0f);
 
-                // 2. วาดเส้นเลเซอร์หนา (ตามแบบ LaserAttack)
                 DrawLaser(spriteBatch, LASER_THICKNESS, Color.Red);
-            }
-            else // Idle หรือ Cooldown 
-            {
-                // วาด Texture2D สำหรับ Idle
-                spriteBatch.Draw(Anim_Idle, TexturePosition, null, Color.White, 0f, Vector2.Zero, 1f, spriteEffect, 0f);
             }
         }
 

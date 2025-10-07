@@ -41,6 +41,8 @@ namespace Ghost_blade
         private Texture2D HealDrop;
         private Texture2D Boss_Max_Hp;
         private Texture2D Boss_Current_Hp;
+        private Texture2D Energy_Max_bar;
+        private Texture2D Energy_Current_bar;
         private bool _isSlashUlt;
 
         private GameState gameState = GameState.MainMenu;
@@ -69,6 +71,14 @@ namespace Ghost_blade
         private AnimatedTexture stat_tutorial_Sheet;
         private AnimatedTexture start_obivionlab_Sheet;
         private AnimatedTexture start_city_Sheet;
+        private AnimatedTexture fullenergy_Sheet;
+        private AnimatedTexture boss_laser;
+        private AnimatedTexture boss_laser_start;
+        private AnimatedTexture boss_laser_done;
+        private AnimatedTexture boss_gun;
+        private AnimatedTexture boss_gun_start;
+        private AnimatedTexture boss_gun_done;
+        private AnimatedTexture boss_death;
 
         private int Enemy_Count;
         SpriteFont uiFont;
@@ -77,8 +87,7 @@ namespace Ghost_blade
         private float timer = 0f;
         private float fadeAlpha = 0f;
         private Texture2D whiteTexture;
-
-
+        float attackTimer = 0;
         public const float SCALE = 2f;
 
         public enum GameState
@@ -118,6 +127,14 @@ namespace Ghost_blade
             stat_tutorial_Sheet = new AnimatedTexture(Vector2.Zero, 0f, 0.4f, 0f);
             start_obivionlab_Sheet = new AnimatedTexture(Vector2.Zero, 0f, 0.4f, 0f);
             start_city_Sheet = new AnimatedTexture(Vector2.Zero, 0f, 0.4f, 0f);
+            fullenergy_Sheet = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
+            boss_gun = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            boss_gun_done = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            boss_gun_start = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            boss_laser = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            boss_laser_done = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            boss_laser_start = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
+            boss_death = new AnimatedTexture(Vector2.Zero, 0f, 4f, 0f);
         }
 
         protected override void Initialize()
@@ -144,6 +161,8 @@ namespace Ghost_blade
             ActiveEnemyTexture = Content.Load<Texture2D>("Laser");
             Boss_Max_Hp = Content.Load<Texture2D>("hp_boss_1");
             Boss_Current_Hp = Content.Load<Texture2D>("hp_boss_2");
+            Energy_Max_bar = Content.Load<Texture2D>("energy");
+            Energy_Current_bar = Content.Load<Texture2D>("energy");
 
             _swordTexture = new Texture2D(GraphicsDevice, 50, 20); // Create a 50x20 pixel texture
             Color[] data = new Color[50 * 20];
@@ -178,7 +197,7 @@ namespace Ghost_blade
             Texture2D Map_lab_01_void = Content.Load<Texture2D>("Map_lab_01_void");
             Texture2D Map_lab_02_void = Content.Load<Texture2D>("Map_lab_02_void");
             Texture2D Map_lab_03_void = Content.Load<Texture2D>("Map_lab_03_void");
-            Texture2D Map_Boss_void = Content.Load<Texture2D>("Gun");
+            Texture2D Map_Boss_void = Content.Load<Texture2D>("Map_boss-void");
 
             Hp_bar.Load(Content, "HP-Sheet", 6, 1, 8);
             cursorTexture.Load(Content, "crosshairs-Sheet", 4, 1, 20);
@@ -207,9 +226,18 @@ namespace Ghost_blade
             EnemyShooting_Death.Load(Content, "enemyshooting_death-25FrameSheet", 25, 1, 10);
             EnemyLaser_ChargingLaser.Load(Content, "ChargingLaser-Sheet",14 ,1, 8);
             EnemyLaser_Death.Load(Content, "DeathLaser16Frame-Sheet", 16, 1, 8);
-            stat_tutorial_Sheet.Load(Content, "stat_tutorial-Sheet", 3, 3, 8);
-            start_obivionlab_Sheet.Load(Content, "start_obivionlab-Sheet", 3, 3, 10);
-            start_city_Sheet.Load(Content, "start_city-Sheet", 3, 3, 10);
+            stat_tutorial_Sheet.Load(Content, "stat_tutorial-Sheet", 3, 4, 12);
+            start_obivionlab_Sheet.Load(Content, "start_obivionlab-Sheet", 3, 4, 12);
+            start_city_Sheet.Load(Content, "start_city-Sheet", 3, 4, 12);
+            fullenergy_Sheet.Load(Content, "energy-Sheet", 8, 1, 4);
+            boss_gun.Load(Content, "boss_gun", 4, 1, 12);
+            boss_gun_start.Load(Content, "boss_gun_start", 6, 3, 9);
+            boss_gun_done.Load(Content, "boss_gun_done", 4, 2, 8);
+            boss_laser.Load(Content, "boss_laser", 4, 1, 12);
+            boss_laser_start.Load(Content, "boss_laser_start", 6, 3, 9);
+            boss_laser_done.Load(Content, "boss_laser_done", 4, 2, 4);
+            boss_death.Load(Content, "boss_death", 4, 4, 8);
+
             // Pass the pixel texture to the Beholster constructor
             boss = new Boss(_bossTexture, new Vector2(41 * 48, 8 * 48), _pixel, 
                 Enemymelee_Idle, Enemymelee_Walk, Enemymelee_Attack, Enemymelee_Death, EnemyShooting_Idle, EnemyShooting_Walk, EnemyShooting_Death, EnemyTexture, EnemyTexture, _EnemybulletTexture,_parrybullet);
@@ -259,6 +287,8 @@ namespace Ghost_blade
 
         protected override void Update(GameTime gameTime)
         {
+            Debug.WriteLine($"ULT Charge: {_player.meleeWeapon.ultCharge:F2} / {_player.meleeWeapon.ultChargeMax} | Active: {_player.meleeWeapon._isULTActive}");
+
             currentKState = Keyboard.GetState();
 
             if (currentKState.IsKeyDown(Keys.Escape))
@@ -289,7 +319,7 @@ namespace Ghost_blade
             }
             if (currentKState.IsKeyDown(Keys.U))
             {
-                currentRoomIndex = 1;
+                currentRoomIndex = 4;
                 _player.position = rooms[currentRoomIndex].StartPosition;
             }
             if (currentKState.IsKeyDown(Keys.P) && !previousKState.IsKeyDown(Keys.P))
@@ -638,7 +668,7 @@ namespace Ghost_blade
             }
             if (currentKState.IsKeyDown(Keys.X) && !previousKState.IsKeyDown(Keys.X) && _player.isSwordEquipped)
             {
-                if (gameState == GameState.Playing)
+                if (gameState == GameState.Playing && _player.meleeWeapon.CanUseUlt)
                 {
                     gameState = GameState.justmentcut;
                     _player.meleeWeapon.getULTHitbox(_player.position);
@@ -678,6 +708,8 @@ namespace Ghost_blade
                         // สิ้นสุด ULT
                         _player.meleeWeapon._isULTActive = false;
                         _player.meleeWeapon.ULTHitbox = Rectangle.Empty;
+                        _player.meleeWeapon.CanUseUlt = false;
+                        _player.meleeWeapon.ultCharge = 0f;
                         gameState = GameState.Playing;
                     }
                 }
@@ -769,6 +801,71 @@ namespace Ghost_blade
                 if (boss.IsbossAticve)
                 {
                     boss.Draw(_spriteBatch);
+
+                    int previous_randomIndex;
+
+                    if (boss.currentState == Boss.BossState.Idle)
+                    {
+                        boss_laser_start.Reset();
+                        boss_gun_start.Reset();
+                        previous_randomIndex = boss.randomIndex;
+                        if (previous_randomIndex == 0)
+                        {
+                            if (!boss_laser_done.IsEnd) 
+                            {
+                                boss_laser_done.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_laser_done.DrawFrame(_spriteBatch, boss.Position);
+                            }
+                        }
+                        else if (previous_randomIndex == 1)
+                        {
+                            if (!boss_gun_done.IsEnd)
+                            {
+                                boss_gun_done.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_gun_done.DrawFrame(_spriteBatch, boss.Position);
+                            }
+                        }
+                    }
+                    else if (boss.currentState == Boss.BossState.Attacking)
+                    {
+                        boss_gun_done.Reset();
+                        boss_laser_done.Reset();
+                        if (boss.randomIndex == 0)
+                        {
+                            if (!boss_laser_start.IsEnd)
+                            {
+                                boss_laser_start.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_laser_start.DrawFrame(_spriteBatch, boss.Position);
+                                previous_randomIndex = boss.randomIndex;
+                            }
+                            if (boss_laser_start.IsEnd)
+                            {
+                                attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                                boss_laser.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_laser.DrawFrame(_spriteBatch, boss.Position);
+                            }
+                        }
+                        else if (boss.randomIndex == 1)
+                        {
+                            if (!boss_gun_start.IsEnd)
+                            {
+                                boss_gun_start.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_gun_start.DrawFrame(_spriteBatch, boss.Position);
+                                previous_randomIndex = boss.randomIndex;
+                            }
+                            else if (boss_gun_start.IsEnd)
+                            {
+                                attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                                boss_gun.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                                boss_gun.DrawFrame(_spriteBatch, boss.Position);
+                            }
+                        }
+                    }
+                }
+                if (boss.Health <= 0)
+                {
+                    boss_death.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                    boss_death.DrawFrame(_spriteBatch, boss.Position);
                 }
                 rooms[currentRoomIndex].DrawLayer2(_spriteBatch);
 
@@ -822,6 +919,7 @@ namespace Ghost_blade
                     Rectangle destRect = new Rectangle((int)bossHpPos.X, (int)bossHpPos.Y, srcRect.Width, srcRect.Height);
                     _spriteBatch.Draw(Boss_Current_Hp, destRect, srcRect, Color.White);
                 }
+                
                 switch (_player.Health)
                 {
                     case 5:
@@ -855,6 +953,21 @@ namespace Ghost_blade
                             break;
                         }
                 }
+
+                Vector2 EnergyPos = new Vector2(0,120);
+                float EnergyPercent = _player.meleeWeapon.ultCharge / _player.meleeWeapon.ultChargeMax;
+                if (EnergyPercent < 0f) EnergyPercent = 0f;
+                _spriteBatch.Draw(Energy_Max_bar, EnergyPos, Color.White);
+                Rectangle Energy_srcRect = new Rectangle(0, 0, (int)(Energy_Current_bar.Width * EnergyPercent), Energy_Current_bar.Height);
+                Rectangle Energy_destRect = new Rectangle((int)EnergyPos.X, (int)EnergyPos.Y, Energy_srcRect.Width, Energy_srcRect.Height);
+                _spriteBatch.Draw(Energy_Current_bar, Energy_destRect, Energy_srcRect, Color.White);
+
+                if (_player.meleeWeapon.CanUseUlt) 
+                {
+                    fullenergy_Sheet.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
+                    fullenergy_Sheet.DrawFrame(_spriteBatch, EnergyPos);
+                }
+
                 if (gameState == GameState.Playing)
                 {
                     if (currentRoomIndex == 0)

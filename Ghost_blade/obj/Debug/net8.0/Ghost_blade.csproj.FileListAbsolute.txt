@@ -197,3 +197,17 @@ C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\DeathLaser16Frame-Sheet.xnb
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\IdleLaser.xnb
 C:\Users\Thaizan\source\repos\monogame\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Laser.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Bullet_boss.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\ChargingLaser-Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\DeathLaser16Frame-Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\GB_Parry-Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\IdleLaser.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Laser.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Map_boss-void.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_gun.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_gun_done.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_gun_start.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_laser.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_laser_done.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_laser_start.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_death.xnb
