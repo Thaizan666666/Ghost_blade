@@ -39,8 +39,8 @@ namespace Ghost_blade
         public static SoundEffectInstance lobbyMusicInstance;
         public static SoundEffect boss { get; private set; }
         public static SoundEffectInstance _bossMusicInstance;
-        public static SoundEffectInstance _bossExplosionInstance;
         public static SoundEffect boss_explosio { get; private set; }
+        public static SoundEffectInstance _bossExplosionInstance;
         public static SoundEffect Gatling_gun { get; private set; }
         public static SoundEffectInstance Gatling_gunMusicInstance;
         public static SoundEffect laser_boss { get; private set; }
@@ -168,7 +168,7 @@ namespace Ghost_blade
         public static void StopAllLoopingSounds()
         {
             StopLoop(_bossMusicInstance);
-            StopLoop(_bossExplosionInstance);
+            
             StopLoop(Gatling_gunMusicInstance);
             StopLoop(laser_bossMusicInstance);
         }

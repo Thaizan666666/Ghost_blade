@@ -129,7 +129,6 @@ public class SpawnAttack : BossAttack
         enemiesSpawnedCount++;
 
         // Prepare the next spawn for the next cycle
-        timer = 0f;
         PrepareNextSpawn();
     }
 
@@ -152,8 +151,9 @@ public class SpawnAttack : BossAttack
         // 2. Update and remove dead enemies from our local list
         spawnedEnemies.RemoveAll(e => !e.IsActive);
 
-        if (hasFinishedInitialSpawns)
+        if (hasFinishedInitialSpawns && timer >= 3)
         {
+            timer = 0f;
             IsFinished = true;
         }
     }
