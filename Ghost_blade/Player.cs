@@ -173,7 +173,7 @@ namespace Ghost_blade
             AttackingTexture2.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTextureUp.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             AttackingTextureDown.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
-            ParryTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalMilliseconds);
+            ParryTexture.UpdateFrame((float)gameTime.ElapsedGameTime.TotalSeconds);
             //เติมเลือด
             if(kState.IsKeyDown(Keys.H) && !previousKState.IsKeyDown(Keys.H))
             {
@@ -221,6 +221,7 @@ namespace Ghost_blade
             }
             else // Not Dashing or Attacking
             {
+                ParryTexture.Reset();
                 HandleMovement(kState);
                 if (velocity != Vector2.Zero)
                 {
