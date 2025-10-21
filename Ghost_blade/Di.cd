@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Boss" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQACAIASAACDwUkICEAAAAAAAAQAAAAAAQEggAAAAA=</HashCode>
+      <FileName>Boss.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossAttack" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQAAAAAACAABgAAAAAAAEAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>BossAttack.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.BossBulletAttacks" Collapsed="true">
+    <Position X="1.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAEAAAKACAgAAgAAAMBAAAAAAAAAAABAAAAABAAA=</HashCode>
+      <FileName>BossBulletAttacks.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bullet" Collapsed="true">
+    <Position X="11.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABAAAAAAQgAAEACAIAAAAAAACwAgAAQAAAAAAAA=</HashCode>
+      <FileName>Bullet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_321_Lab05_3.AnimatedTexture" Collapsed="true">
+    <Position X="9.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAKggAABAAAABIEAAQMAEIAAAAhABAAg4AAgAEkAAhE=</HashCode>
+      <FileName>AnimatedTexture.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.Enemy_Melee" Collapsed="true">
+    <Position X="5.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IASAgACAEAAAJgAIAYBRAAAAAAAAJAhAAAAAAAAAAAA=</HashCode>
+      <FileName>Enemy_Melee.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.Enemy_Shooting" Collapsed="true">
+    <Position X="3.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAgEAAQEAQJgAAIQAYABAAQAAAAAABABgAkkAJQAA=</HashCode>
+      <FileName>Enemy_Shooting.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.EnemyBullet" Collapsed="true">
+    <Position X="11.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>EnemyBullet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.EnemyLaser" Collapsed="true">
+    <Position X="7.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IESIgAABQAAgJgAFIQBQAAAAWQAQAAANACEAgBAAAAA=</HashCode>
+      <FileName>EnemyLaser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.FollowsCamera" Collapsed="true">
+    <Position X="9.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>FollowsCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.Game1" Collapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UQwVAggyAmBzUzECAWKJCGCABCAJNgBKssQsqEEIYeQ=</HashCode>
+      <FileName>Game1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.GameOverScreen" Collapsed="true">
+    <Position X="11.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAIAAAAAAgAAAIAAIAAAAAgAAAIAA=</HashCode>
+      <FileName>GameOverScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.LaserAttack" Collapsed="true">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYCAAAAACEUEgAAIABABgAAAQBQAAAIAAAAAAAAABA=</HashCode>
+      <FileName>LaserAttack.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.MainMenuScreen" Collapsed="true">
+    <Position X="11.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAEoAAIAAAAAAgAAAAAAIIAAAAgAAAIAA=</HashCode>
+      <FileName>MainMenuScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.MapBoss01" Collapsed="true">
+    <Position X="2.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MapBoss01.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.MapCity01" Collapsed="true">
+    <Position X="0.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MapCity01.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.MapCity02" Collapsed="true">
+    <Position X="5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MapCity02.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.MapCity03" Collapsed="true">
+    <Position X="9.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MapCity03.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.MapLab01" Collapsed="true">
+    <Position X="14" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MapLab01.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.MapLab02" Collapsed="true">
+    <Position X="15.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MapLab02.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.MapLab03" Collapsed="true">
+    <Position X="7.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MapLab03.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.MapTutorial01" Collapsed="true">
+    <Position X="11.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MapTutorial01.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.PausedScreen" Collapsed="true">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAIAAAAAAgAAAIAAIAAAAAgAAAIAA=</HashCode>
+      <FileName>PausedScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.Player" Collapsed="true">
+    <Position X="15" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>iSQICUhCyCiCHiIqMQiCpBAcIEMRY3GoIByIgyEgAQg=</HashCode>
+      <FileName>Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.Room" Collapsed="true">
+    <Position X="7.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAgAGAAEAAAAgAAACAgEAAAAAEAAAAAAAgABAAAIgA=</HashCode>
+      <FileName>Room.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost_blade.Sound" Collapsed="true">
+    <Position X="9.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gABKBAoZAgQgAECAAgBAAUAUAAAACECEgQgAARABAKY=</HashCode>
+      <FileName>Sound.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeleeWeapon" Collapsed="true">
+    <Position X="15" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SIQRAAIAAAAAAiAIAiCAIAAgAIAAAwgIIABAAAAAUAA=</HashCode>
+      <FileName>MeleeWeapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpawnAttack" Collapsed="true">
+    <Position X="1.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQADgAQADAAFgAAAQAJKJIIQABIJAAAAAQEAlEIAAA=</HashCode>
+      <FileName>SpawnAttack.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Enemy" Collapsed="true">
+    <Position X="5.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AlQASAAgAQAGJgAgEAAAAACBABAAAACgAAJAhAAoASA=</HashCode>
+      <FileName>Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Ghost_blade.PlayerState" Collapsed="true">
+    <Position X="16.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAABAAAAAAAIAAAAAAAAAAAAAAAAIAAAAAAABAAA=</HashCode>
+      <FileName>Player.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Leelawadee UI" Size="9" />
+</ClassDiagram>

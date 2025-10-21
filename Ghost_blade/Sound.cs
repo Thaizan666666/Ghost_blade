@@ -64,10 +64,10 @@ namespace Ghost_blade
             Change_weapon = content.Load<SoundEffect>("Change_weapon");
             enemy_attack_punch = content.Load<SoundEffect>("enemy_attack_punch");
             enemy_attack_laser = content.Load<SoundEffect>("enemy_attack_laser");
-            ingame = content.Load<SoundEffect>("ingame");
+            //ingame = content.Load<SoundEffect>("ingame");
             gameover = content.Load<SoundEffect>("gameover");
-            lobby = content.Load<SoundEffect>("lobby");
-            boss = content.Load<SoundEffect>("boss");
+            //lobby = content.Load<SoundEffect>("lobby");
+            //boss = content.Load<SoundEffect>("boss");
             boss_explosio = content.Load<SoundEffect>("boss_explosio");
             Gatling_gun = content.Load<SoundEffect>("Gatling_gun ");
             laser_boss = content.Load<SoundEffect>("laser_boss");

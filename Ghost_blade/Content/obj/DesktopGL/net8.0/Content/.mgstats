@@ -1,6 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/A_job.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/A_job.xnb","TextureProcessor","Texture2DContent",155,841,0.0853204
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/boss_done_summon-Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/boss_done_summon-Sheet.xnb","TextureProcessor","Texture2DContent",4978,506965,0.107018
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/boss_summon-Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/boss_summon-Sheet.xnb","TextureProcessor","Texture2DContent",18877,2534485,0.0630834
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/boss_summoning-Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/boss_summoning-Sheet.xnb","TextureProcessor","Texture2DContent",3509,506965,0.0127813
-"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/firefoxBall.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/firefoxBall.xnb","TextureProcessor","Texture2DContent",5449,9301,0.0032313
+"C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/A_job.png","C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/A_job.xnb","TextureProcessor","Texture2DContent",155,841,0.097193
+"C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/firefoxBall.png","C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/firefoxBall.xnb","TextureProcessor","Texture2DContent",5449,9301,0.0034361
