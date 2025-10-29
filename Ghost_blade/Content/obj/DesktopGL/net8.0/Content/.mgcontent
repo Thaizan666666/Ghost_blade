@@ -4,6 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/../../../../../../Downloads/GB_Dash-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/A_job.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Ammo.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/attack.WAV</File>
@@ -49,8 +50,7 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/gameover-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/gameover.wav</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Gatling_gun .WAV</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Dash-Blade_Sheet.png</File>
-    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Dash-Sheet.png</File>
+    <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Dash-SheetBlade.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Death-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Death2-Sheet.png</File>
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/GB_Idle-Blade_Sheet.png</File>
@@ -108,7 +108,7 @@
     <File>C:/Users/Thaizan/source/repos/monogame/Ghost_blade/Ghost_blade/Content/Ultimate.WAV</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
+    <File>GB_Dash-Sheet.png</File>
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

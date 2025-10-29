@@ -45,7 +45,8 @@ namespace Ghost_blade
 
         public Action<Bullet> OnShoot;
 
-        public Enemy_Shooting(AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death, Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture, Texture2D parry)
+        public Enemy_Shooting(AnimatedTexture EnemyShooting_Idle, AnimatedTexture EnemyShooting_Walk, AnimatedTexture EnemyShooting_Death, 
+            Texture2D texture, Vector2 startPosition, float speed, float detectionRadius, Texture2D bulletTexture, Texture2D parry)
             : base(texture, startPosition, speed, detectionRadius)
         {
             this.Health = 140;
@@ -185,27 +186,6 @@ namespace Ghost_blade
             if (player.position.X > Position.X) { flip = false; }
             else if (player.position.X < Position.X) { flip = true; }
             lastMovement = desiredMovement;
-        }
-
-        // Override the TakeDamage method to handle knockback logic
-        public override void TakeDamage(int damage, Vector2 damageSourcePosition, bool issword)
-        {
-            Health -= damage;
-
-            // Calculate knockback direction and start the timer immediately
-            knockbackDirection = Position - damageSourcePosition;
-            if (knockbackDirection != Vector2.Zero)
-            {
-                knockbackDirection.Normalize();
-            }
-            if (issword)
-            {
-                knockbackTimer = KnockbackDuration;
-            }
-            else
-            {
-                knockbackTimer = 0.05f;
-            }
         }
 
         private void Shoot(Vector2 targetPosition)

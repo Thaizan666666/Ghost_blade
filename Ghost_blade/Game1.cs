@@ -224,7 +224,7 @@ namespace Ghost_blade
             _player.change_Weapon = new AnimatedTexture(Vector2.Zero, 0f, 1f, 0f);
             _player.change_Weapon.Load(Content, "UI_weapon-Sheet", 4, 1, 1);
             _player.GunDashingTexture.Load(Content, "GB_Dash-Sheet", 4, 1, 10);
-            _player.BladeDashingTexture.Load(Content, "GB_Dash-Blade_Sheet", 4, 1, 10);
+            _player.BladeDashingTexture.Load(Content, "GB_Dash-SheetBlade", 4, 1, 10);
             _player.IdleBladeTexture.Load(Content, "GB_Idle-Blade_Sheet", 4, 1, 8);
             _player.IdleGunTexture.Load(Content, "GB_Idle-Sheet", 4, 1, 8);
             _player.RunningBladeTexture.Load(Content, "GB_Run_Blade-Sheet", 8, 1, 8);
@@ -752,7 +752,7 @@ namespace Ghost_blade
                     }
                 }
             }
-            if (currentKState.IsKeyDown(Keys.X) && !previousKState.IsKeyDown(Keys.X) && _player.isSwordEquipped)
+            if (currentKState.IsKeyDown(Keys.X) && !previousKState.IsKeyDown(Keys.X))
             {
                 if (gameState == GameState.Playing && _player.meleeWeapon.CanUseUlt)
                 {

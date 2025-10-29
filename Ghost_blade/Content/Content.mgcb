@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../../../../../../Downloads/GB_Dash-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../../../Downloads/GB_Dash-Sheet.png;GB_Dash-Sheet.png
+
 #begin A_job.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -475,7 +487,7 @@
 /processorParam:Quality=Best
 /build:Gatling_gun .WAV
 
-#begin GB_Dash-Blade_Sheet.png
+#begin GB_Dash-SheetBlade.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -485,19 +497,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:GB_Dash-Blade_Sheet.png
-
-#begin GB_Dash-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:GB_Dash-Sheet.png
+/build:GB_Dash-SheetBlade.png
 
 #begin GB_Death-Sheet.png
 /importer:TextureImporter

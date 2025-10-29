@@ -10,8 +10,8 @@ using System.Diagnostics;
 public class Boss
 {
     // Properties
-    public int MaxHealth { get; set; } = 1500;
-    public int Health { get; set; } = 1500;
+    public int MaxHealth { get; set; } = 3000;
+    public int Health { get; set; } = 3000;
     public Vector2 Position;
     public Texture2D pixel;
     public Texture2D bulletTexture;

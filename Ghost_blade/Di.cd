@@ -22,7 +22,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Bullet" Collapsed="true">
-    <Position X="11.5" Y="4.75" Width="1.5" />
+    <Position X="10.5" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAABAAAAAAQgAAEACAIAAAAAAACwAgAAQAAAAAAAA=</HashCode>
       <FileName>Bullet.cs</FileName>
@@ -45,12 +45,12 @@
   <Class Name="Ghost_blade.Enemy_Shooting" Collapsed="true">
     <Position X="3.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AASAgEAAQEAQJgAAIQAYABAAQAAAAAABABgAkkAJQAA=</HashCode>
+      <HashCode>AASAgEAAQEAQJgAAIQAYABAAQAAAAAABABgAEkAJQAA=</HashCode>
       <FileName>Enemy_Shooting.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Ghost_blade.EnemyBullet" Collapsed="true">
-    <Position X="11.5" Y="3.75" Width="1.5" />
+    <Position X="10.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
       <FileName>EnemyBullet.cs</FileName>
@@ -162,7 +162,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Ghost_blade.Player" Collapsed="true">
-    <Position X="15" Y="3" Width="1.5" />
+    <Position X="15" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>iSQICUhCyCiCHiIqMQiCpBAcIEMRY3GoIByIgyEgAQg=</HashCode>
       <FileName>Player.cs</FileName>
@@ -183,7 +183,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MeleeWeapon" Collapsed="true">
-    <Position X="15" Y="3.75" Width="1.5" />
+    <Position X="16.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>SIQRAAIAAAAAAiAIAiCAIAAgAIAAAwgIIABAAAAAUAA=</HashCode>
       <FileName>MeleeWeapon.cs</FileName>
@@ -204,7 +204,7 @@
     </TypeIdentifier>
   </Class>
   <Enum Name="Ghost_blade.PlayerState" Collapsed="true">
-    <Position X="16.75" Y="3.5" Width="1.5" />
+    <Position X="16.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAABAAAAAAAIAAAAAAAAAAAAAAAAIAAAAAAABAAA=</HashCode>
       <FileName>Player.cs</FileName>

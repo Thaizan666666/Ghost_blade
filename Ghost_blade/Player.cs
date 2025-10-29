@@ -24,7 +24,6 @@ namespace Ghost_blade
         public Vector2 velocity { get; private set; }
 
         private float speed;
-        private float mutiplyspeed = 1;
         private float rotation;
         
         private float fireDelay = 0.2f;
@@ -335,7 +334,7 @@ namespace Ghost_blade
                 dashCooldownTimer -= deltaTime;
             }
 
-            if (kState.IsKeyDown(Keys.Space) && !previousKState.IsKeyDown(Keys.Space) && !isDashing && dashCooldownTimer <= 0 && !isActionActive)
+            if (kState.IsKeyDown(Keys.LeftShift) && !previousKState.IsKeyDown(Keys.LeftShift) && !isDashing && dashCooldownTimer <= 0 && !isActionActive)
             {
                 Sound.Play(Sound.sounddash, 0.3f);
                 isDashing = true;
@@ -363,7 +362,7 @@ namespace Ghost_blade
 
             if (isDashing)
             {
-                Vector2 newPosition = position + dashDirection * speed * DashSpeedMultiplier * mutiplyspeed;
+                Vector2 newPosition = position + dashDirection * speed * DashSpeedMultiplier * 2.5f;
                 position = newPosition;
 
                 dashTimer -= deltaTime;
@@ -387,9 +386,6 @@ namespace Ghost_blade
                 if (kState.IsKeyDown(Keys.D)) { newVelocity.X += 1; }
                 else if (kState.IsKeyDown(Keys.A)) { newVelocity.X -= 1;}
 
-                if (kState.IsKeyDown(Keys.LeftShift)) { mutiplyspeed = 2.5f; }
-                else { mutiplyspeed = 1f; }
-
                 velocity = newVelocity;
 
                 if (velocity != Vector2.Zero)
@@ -398,7 +394,7 @@ namespace Ghost_blade
                     lastMovementDirection = velocity;
                 }
                 
-                Vector2 newPosition = position + velocity * speed * mutiplyspeed;
+                Vector2 newPosition = position + velocity * speed * 2.5f;
                 position = newPosition;
             }
             else
