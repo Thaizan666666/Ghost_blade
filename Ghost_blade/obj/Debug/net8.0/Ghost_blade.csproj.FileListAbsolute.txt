@@ -54,9 +54,6 @@ D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\android-arm\nat
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\android-arm64\native\libopenal.so
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\android-x64\native\libopenal.so
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\android-x86\native\libopenal.so
-D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\ios-arm64\native\libopenal.dylib
-D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\iossimulator-arm64\native\libopenal.dylib
-D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\iossimulator-x64\native\libopenal.dylib
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\linux-x64\native\libopenal.so
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\osx\native\libopenal.dylib
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\win-x64\native\openal.dll
@@ -277,3 +274,9 @@ D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\Ultimate.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_done_summon-Sheet.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_summon-Sheet.xnb
 D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\boss_summoning-Sheet.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\obj\Debug\net8.0\mgcb.tool.restore
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\Content\GB_Dash-SheetBlade.xnb
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\ios-arm64\native\libopenal.a
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\iossimulator-arm64\native\libopenal.a
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\iossimulator-x64\native\libopenal.a
+D:\Ghost_blade\Ghost_blade\Ghost_blade\bin\Debug\net8.0\runtimes\linux-arm64\native\libopenal.so

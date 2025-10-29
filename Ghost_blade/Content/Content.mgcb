@@ -13,18 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../../../Downloads/GB_Dash-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../../../../../Downloads/GB_Dash-Sheet.png;GB_Dash-Sheet.png
-
 #begin A_job.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -486,6 +474,18 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Gatling_gun .WAV
+
+#begin GB_Dash-Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GB_Dash-Sheet.png
 
 #begin GB_Dash-SheetBlade.png
 /importer:TextureImporter

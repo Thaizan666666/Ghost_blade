@@ -634,6 +634,8 @@ namespace Ghost_blade
                 {
                     if (isSwordEquipped) { IdleBladeTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48),flip); }
                     else if (!isSwordEquipped) { IdleGunTexture.DrawFrame(spriteBatch, position - new Vector2(48, 48), flip); }
+                    BladeDashingTexture.Reset();
+                    GunDashingTexture.Reset();
                 }
                 else if (currentState == PlayerState.Running)
                 {
