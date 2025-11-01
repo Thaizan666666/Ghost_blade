@@ -3,3 +3,4 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/firefoxBall.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/firefoxBall.xnb","TextureProcessor","Texture2DContent",5449,9301,0.0101319
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Dash-Sheet.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/GB_Dash-Sheet.xnb","TextureProcessor","Texture2DContent",3717,33877,0.0807486
 "D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/GB_Dash-SheetBlade.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/GB_Dash-SheetBlade.xnb","TextureProcessor","Texture2DContent",3284,33877,0.0064864
+"D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/Map_tutorial.png","D:/Ghost_blade/Ghost_blade/Ghost_blade/Content/bin/DesktopGL/Content/Map_tutorial.xnb","TextureProcessor","Texture2DContent",87281,21676117,0.4775811

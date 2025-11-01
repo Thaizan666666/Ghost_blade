@@ -752,7 +752,7 @@ namespace Ghost_blade
                     }
                 }
             }
-            if (currentKState.IsKeyDown(Keys.X) && !previousKState.IsKeyDown(Keys.X))
+            if (currentKState.IsKeyDown(Keys.F) && !previousKState.IsKeyDown(Keys.F))
             {
                 if (gameState == GameState.Playing && _player.meleeWeapon.CanUseUlt)
                 {
